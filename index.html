@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06304d">
+<meta name="description" content="AngelUp – Deine moderne Vorbereitung auf die Fischerprüfung. Lernen, üben, bestehen.">
+<title>AngelUp – Fischerprüfung einfach bestehen</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AngelUp">
+<style>
+  :root{
+    --tiefsee:#06304d; --wasser:#0b4f79; --welle:#1179ae; --hell:#e8f4fb;
+    --akzent:#ffb43a; --akzent2:#ff8c42;
+    --gruen:#19b47a; --gruen-dkl:#0e8a5c; --rot:#e85454; --rot-dkl:#c73e3e;
+    --karte:#ffffff; --text:#12293a; --grau:#5d7286; --linie:#dbe7ef;
+    --radius:18px; --radius-s:12px;
+    --schatten:0 4px 20px rgba(6,48,77,.10);
+    --schatten-hover:0 8px 28px rgba(6,48,77,.18);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(175deg,var(--hell) 0%,#f4fafd 40%,#eef6fb 100%);
+    color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+  /* ---------- Kopf ---------- */
+  header.top{background:linear-gradient(120deg,var(--tiefsee) 0%,var(--wasser) 60%,var(--welle) 100%);
+    color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    position:sticky;top:0;z-index:40;box-shadow:0 2px 14px rgba(6,48,77,.35)}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.12rem;letter-spacing:.2px;cursor:pointer}
+  .logo svg{width:30px;height:30px}
+  .logo .up{color:var(--akzent)}
+  .kopf-rechts{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .chip{font-size:.74rem;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+    padding:4px 11px;border-radius:20px;display:flex;gap:6px;align-items:center;white-space:nowrap}
+  .chip b{color:var(--akzent)}
+  .chip button{background:transparent;border:none;color:#fff;cursor:pointer;font-size:.74rem;
+    text-decoration:underline;padding:0}
+  main{max-width:960px;margin:0 auto;padding:22px 16px 80px}
+  h1{font-size:1.6rem;margin:.2em 0 .35em;font-weight:800}
+  h2{font-size:1.22rem;margin:1.4em 0 .55em;font-weight:750}
+  p.lead{color:var(--grau);margin-top:0;font-size:.97rem}
+  /* ---------- Karten & Buttons ---------- */
+  .karte{background:var(--karte);border-radius:var(--radius);padding:20px;box-shadow:var(--schatten);
+    border:1px solid rgba(219,231,239,.7);transition:.18s}
+  .karte.klick{cursor:pointer}
+  .karte.klick:hover{transform:translateY(-3px);box-shadow:var(--schatten-hover)}
+  .karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(120deg,var(--akzent),var(--akzent2));
+    color:#3a2200;border:none;border-radius:13px;padding:12px 20px;font-size:.95rem;font-weight:750;
+    cursor:pointer;transition:.15s;box-shadow:0 3px 12px rgba(255,140,66,.35)}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,140,66,.45)}
+  .btn.blau{background:linear-gradient(120deg,var(--wasser),var(--welle));color:#fff;box-shadow:0 3px 12px rgba(17,121,174,.35)}
+  .btn.gruen{background:linear-gradient(120deg,var(--gruen-dkl),var(--gruen));color:#fff;box-shadow:0 3px 12px rgba(25,180,122,.35)}
+  .btn.ghost{background:#fff;color:var(--wasser);border:2px solid var(--welle);box-shadow:none}
+  .btn.gross{width:100%;padding:15px;font-size:1.03rem}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+  .zurueck{background:none;border:none;color:var(--wasser);cursor:pointer;font-size:.92rem;font-weight:650;padding:6px 0;margin-bottom:8px}
+  .hinweis{background:#fff7e8;border:1px solid #f2ddab;border-radius:var(--radius-s);padding:11px 15px;
+    font-size:.83rem;color:#7d5c12;margin:14px 0}
+  .hinweis.blau{background:#e9f4fb;border-color:#bcdcf0;color:#155a86}
+  /* ---------- Region & Rollenwahl ---------- */
+  .held{position:relative;text-align:center;padding:34px 16px 10px;overflow:hidden}
+  .held h1{font-size:2rem}
+  .held .unter{color:var(--grau);max-width:560px;margin:0 auto 8px}
+  .fischschwarm{position:absolute;inset:0;pointer-events:none;opacity:.1;z-index:-1}
+  .region-karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:20px}
+  .region{position:relative;text-align:left}
+  .region h3{margin:0 0 3px;font-size:1.03rem}
+  .region p{margin:0;font-size:.82rem;color:var(--grau)}
+  .region .bald{position:absolute;top:12px;right:12px;font-size:.68rem;font-weight:800;letter-spacing:.5px;
+    background:var(--linie);color:var(--grau);padding:3px 9px;border-radius:20px;text-transform:uppercase}
+  .region .aktiv-tag{position:absolute;top:12px;right:12px;font-size:.68rem;font-weight:800;letter-spacing:.5px;
+    background:var(--gruen);color:#fff;padding:3px 9px;border-radius:20px;text-transform:uppercase}
+  .region.gesperrt{opacity:.55;cursor:default}
+  .region.gesperrt:hover{transform:none;box-shadow:var(--schatten)}
+  .rollen{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  @media(max-width:600px){.rollen{grid-template-columns:1fr}.held h1{font-size:1.55rem}}
+  /* ---------- Statuszeile / Gamification ---------- */
+  .statusleiste{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0 20px}
+  .stat{background:#fff;border-radius:var(--radius-s);padding:12px 14px;box-shadow:var(--schatten);
+    display:flex;align-items:center;gap:11px;border:1px solid rgba(219,231,239,.7)}
+  .stat .sym{font-size:1.5rem}
+  .stat .wert{font-weight:800;font-size:1.08rem;line-height:1.1}
+  .stat .label{font-size:.72rem;color:var(--grau)}
+  .xp-balken{height:7px;background:var(--linie);border-radius:8px;overflow:hidden;margin-top:5px}
+  .xp-balken>span{display:block;height:100%;background:linear-gradient(90deg,var(--akzent),var(--akzent2));transition:.4s}
+  /* ---------- Sachgebiets-Karten ---------- */
+  .gebiet-kopf{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+  .gebiet-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.25rem;color:#fff;flex:none}
+  .gebiet-karte h3{margin:0;font-size:.99rem}
+  .gebiet-karte .zahlen{font-size:.78rem;color:var(--grau)}
+  .fortschritt{height:8px;background:var(--linie);border-radius:8px;overflow:hidden;margin:9px 0 11px}
+  .fortschritt>span{display:block;height:100%;border-radius:8px;transition:.4s}
+  /* ---------- Quiz ---------- */
+  .quizbox{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--schatten);border:1px solid rgba(219,231,239,.7)}
+  .quiz-kopf{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--grau);
+    margin-bottom:13px;flex-wrap:wrap;gap:8px}
+  .badge{background:var(--hell);border-radius:20px;padding:5px 12px;font-weight:700;color:var(--wasser)}
+  .badge.timer{background:#fdecec;color:var(--rot-dkl);font-variant-numeric:tabular-nums}
+  .badge.timer.knapp{animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.5}}
+  .progressbalken{height:7px;background:var(--linie);border-radius:8px;overflow:hidden;margin-bottom:18px}
+  .progressbalken>span{display:block;height:100%;background:linear-gradient(90deg,var(--welle),var(--gruen));transition:.3s}
+  .frage-zeile{display:flex;gap:10px;align-items:flex-start;margin-bottom:16px}
+  .frage{font-size:1.14rem;font-weight:700;flex:1}
+  .sprecher{background:var(--hell);border:none;border-radius:10px;width:40px;height:40px;font-size:1.15rem;
+    cursor:pointer;flex:none;transition:.15s}
+  .sprecher:hover{background:#d8ecf7}
+  .sprecher.an{background:var(--welle);color:#fff}
+  .antwort{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;background:#fff;
+    border:2px solid var(--linie);border-radius:13px;padding:13px 15px;margin-bottom:10px;font-size:.95rem;
+    cursor:pointer;transition:.13s;font-family:inherit;color:var(--text)}
+  .antwort:hover{border-color:var(--welle);background:var(--hell)}
+  .antwort.gewaehlt{border-color:var(--wasser);background:var(--hell);font-weight:650}
+  .antwort.richtig{border-color:var(--gruen);background:#e9f9f2;font-weight:650}
+  .antwort.falsch{border-color:var(--rot);background:#fdeeee}
+  .antwort:disabled{cursor:default}
+  .antwort .buchstabe{display:grid;place-items:center;min-width:27px;height:27px;border-radius:8px;
+    background:var(--linie);font-weight:800;font-size:.8rem;flex:none;margin-top:1px}
+  .antwort.richtig .buchstabe{background:var(--gruen);color:#fff}
+  .antwort.falsch .buchstabe{background:var(--rot);color:#fff}
+  .erklaerung{border-radius:var(--radius-s);padding:14px 16px;font-size:.9rem;margin-top:8px;animation:auf .25s ease}
+  .erklaerung.gut{background:#e9f9f2;border-left:5px solid var(--gruen)}
+  .erklaerung.schlecht{background:#fdf0ec;border-left:5px solid var(--akzent2)}
+  .erklaerung .titel{font-weight:800;margin-bottom:3px}
+  .eselsbruecke{background:linear-gradient(120deg,#fff7e0,#ffefc2);border:1.5px dashed var(--akzent);
+    border-radius:var(--radius-s);padding:13px 15px;font-size:.9rem;margin-top:10px;animation:auf .3s ease}
+  .eselsbruecke .titel{font-weight:800;color:#8a6512;display:flex;gap:7px;align-items:center}
+  @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .quiz-fuss{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+  /* ---------- Ergebnis ---------- */
+  .ergebnis-kreis{width:160px;height:160px;border-radius:50%;display:grid;place-items:center;margin:12px auto;
+    background:conic-gradient(var(--gruen) var(--pct,0%),var(--linie) 0);position:relative}
+  .ergebnis-kreis::after{content:"";position:absolute;inset:13px;background:#fff;border-radius:50%}
+  .ergebnis-kreis .zahl{position:relative;z-index:1;text-align:center}
+  .ergebnis-kreis .zahl b{font-size:2rem;display:block}
+  .status-gross{text-align:center;font-size:1.45rem;font-weight:800;margin:8px 0}
+  .status-gross.bestanden{color:var(--gruen-dkl)}
+  .status-gross.durchgefallen{color:var(--rot-dkl)}
+  table.gebiete{width:100%;border-collapse:collapse;margin-top:14px;font-size:.88rem}
+  table.gebiete th,table.gebiete td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--linie)}
+  table.gebiete td.zahl{text-align:right;font-variant-numeric:tabular-nums}
+  .pill{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:20px}
+  .pill.ok{background:#e9f9f2;color:var(--gruen-dkl)}
+  .pill.no{background:#fdeeee;color:var(--rot-dkl)}
+  .konfetti{position:fixed;top:-12px;font-size:1.2rem;z-index:99;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+  /* ---------- Videos ---------- */
+  .video-karte{display:flex;gap:13px;align-items:center}
+  .video-karte .thumb{width:56px;height:56px;border-radius:14px;background:linear-gradient(120deg,var(--tiefsee),var(--welle));
+    display:grid;place-items:center;font-size:1.5rem;flex:none;color:#fff}
+  .video-karte h3{margin:0 0 2px;font-size:.95rem}
+  .video-karte p{margin:0;font-size:.78rem;color:var(--grau)}
+  a.extern{color:var(--wasser);font-weight:700;text-decoration:none;font-size:.85rem}
+  a.extern:hover{text-decoration:underline}
+  /* ---------- Ausbilder ---------- */
+  table.prueflinge{width:100%;border-collapse:collapse;font-size:.87rem;background:#fff;border-radius:var(--radius);
+    overflow:hidden;box-shadow:var(--schatten)}
+  table.prueflinge th{background:var(--wasser);color:#fff;text-align:left;padding:12px;font-size:.8rem}
+  table.prueflinge td{padding:12px;border-bottom:1px solid var(--linie)}
+  table.prueflinge tr:last-child td{border-bottom:none}
+  table.prueflinge tr.klick{cursor:pointer}
+  table.prueflinge tr.klick:hover td{background:var(--hell)}
+  .mini-balken{height:8px;width:90px;background:var(--linie);border-radius:8px;overflow:hidden;display:inline-block;
+    vertical-align:middle;margin-right:8px}
+  .mini-balken>span{display:block;height:100%}
+  .heat{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}
+  .heat .zelle{border-radius:var(--radius-s);padding:11px 8px;text-align:center;color:#fff;font-weight:800;font-size:1.02rem}
+  .heat .zelle small{display:block;font-weight:650;font-size:.62rem;opacity:.9;margin-top:2px;line-height:1.25}
+  @media(max-width:700px){.heat{grid-template-columns:repeat(3,1fr)}}
+  .code-box{background:linear-gradient(120deg,var(--tiefsee),var(--wasser));color:#fff;font-family:ui-monospace,monospace;
+    font-size:1.25rem;letter-spacing:3px;padding:12px 22px;border-radius:12px;display:inline-block;font-weight:800}
+  .fehlerfrage{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--linie);font-size:.88rem}
+  .fehlerfrage b{color:var(--rot-dkl)}
+  .abzeichen{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .abzeichen .ab{background:#fff;border:1.5px solid var(--linie);border-radius:14px;padding:9px 13px;font-size:.8rem;
+    display:flex;gap:7px;align-items:center}
+  .abzeichen .ab.holt{border-color:var(--akzent);background:#fff9ec}
+  .abzeichen .ab.grau{opacity:.45;filter:grayscale(1)}
+  .fisch-deko{display:block;margin:0 auto;max-width:230px}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+/* =========================================================================
+   ANGELUP – Fischerprüfung einfach bestehen (Prototyp v2)
+   Erreichbar später über: angelup.de + angelscheinwerk.de
+   Regionen: Weser-Ems aktiv · NRW / Niedersachsen (Binnen) / Bremen folgen
+   Prüfungsregeln Weser-Ems (offiziell, Prüfungsordnung AFV Stand 2026):
+   60 Fragen · 3 Antworten · 60 Min · bestanden ab 45/60 UND ≥6 je Sachgebiet
+   FRAGEN: aktuell selbst erstellte Beispiele – werden durch den offiziellen
+   Katalog (360 Fragen, Stand 2024) ersetzt, sobald sauber eingelesen.
+   ========================================================================= */
+
+const REGIONEN = [
+  {id:"weser-ems", name:"Weser-Ems", traeger:"Angelfischerverband im LFV Weser-Ems e.V.", aktiv:true,
+   regeln:{fragenGesamt:60, fragenProGebiet:10, zeitMinuten:60, bestehenGesamt:45, bestehenProGebiet:6}},
+  {id:"niedersachsen", name:"Niedersachsen (Binnen)", traeger:"AVN – Anglerverband Niedersachsen", aktiv:false},
+  {id:"nrw", name:"Nordrhein-Westfalen", traeger:"Staatliche Fischerprüfung NRW", aktiv:false},
+  {id:"bremen", name:"Bremen", traeger:"Fischerprüfung Land Bremen", aktiv:false}
+];
+
+const GEBIETE = [
+  {id:1, name:"Allgemeine Fischkunde", kurz:"Allg. Fischkunde", farbe:"#1179ae", icon:"🐟"},
+  {id:2, name:"Spezielle Fischkunde",  kurz:"Spez. Fischkunde", farbe:"#0e8a5c", icon:"🎣"},
+  {id:3, name:"Gewässerkunde",         kurz:"Gewässerkunde",    farbe:"#0d94a5", icon:"🌊"},
+  {id:4, name:"Fischfang & Gerätekunde",kurz:"Gerätekunde",     farbe:"#b07f1a", icon:"🪝"},
+  {id:5, name:"Natur-, Tier- & Umweltschutz",kurz:"Natur & Umwelt",farbe:"#4a8b2e",icon:"🌿"},
+  {id:6, name:"Fischereirecht",        kurz:"Fischereirecht",   farbe:"#7a4a8b", icon:"⚖️"}
+];
+
+const FRAGEN = [
+  /* 1 – Allgemeine Fischkunde */
+  {g:1,f:"Womit atmen Fische unter Wasser?",a:["Mit Kiemen","Mit einer Lunge","Über die Schwimmblase"],r:0,e:"Fische nehmen den im Wasser gelösten Sauerstoff über die Kiemen auf."},
+  {g:1,f:"Welche Funktion hat die Schwimmblase eines Fisches?",a:["Sie reguliert den Auftrieb","Sie dient der Verdauung","Sie filtert das Wasser"],r:0,e:"Über die Schwimmblase steuert der Fisch seinen Auftrieb und kann so ohne Kraftaufwand im Wasser stehen."},
+  {g:1,f:"Was nimmt ein Fisch mit dem Seitenlinienorgan wahr?",a:["Druckwellen und Strömungen","Farben","Gerüche an Land"],r:0,e:"Das Seitenlinienorgan registriert Druckänderungen und Wasserbewegungen – wichtig für Orientierung und Feindwahrnehmung."},
+  {g:1,f:"Wozu dienen die Flossen eines Fisches hauptsächlich?",a:["Zur Fortbewegung und Steuerung","Zur Atmung","Zur Nahrungsaufnahme"],r:0,e:"Die Flossen sorgen für Vortrieb, Steuerung und Stabilität im Wasser."},
+  {g:1,f:"Was versteht man unter dem Laichen der Fische?",a:["Die Fortpflanzung / das Ablegen der Eier","Die Nahrungssuche","Den Winterschlaf"],r:0,e:"Beim Laichen geben die Fische Eier (Rogen) und Samen (Milch) ab – die Fortpflanzung."},
+  {g:1,f:"Wie wird die Körpertemperatur von Fischen bestimmt?",a:["Sie hängt von der Wassertemperatur ab (wechselwarm)","Sie ist konstant wie beim Menschen","Sie wird über die Schwimmblase geregelt"],r:0,e:"Fische sind wechselwarm (poikilotherm): Ihre Körpertemperatur passt sich der Umgebung an."},
+  {g:1,f:"Was sind Schuppen bei Fischen?",a:["Teil der schützenden Haut","Atmungsorgane","Reste der Nahrung"],r:0,e:"Schuppen sind Hautbildungen, die den Fisch schützen; ihre Wachstumsringe geben Hinweise auf das Alter."},
+  {g:1,f:"Welche Nahrung nehmen Raubfische zu sich?",a:["Andere Fische und Wassertiere","Ausschließlich Wasserpflanzen","Nur Plankton"],r:0,e:"Raubfische wie Hecht oder Zander ernähren sich von anderen Fischen und Wassertieren."},
+  {g:1,f:"Was bezeichnet man als Rogen?",a:["Die Eier des weiblichen Fisches","Die Kiemen","Die Rückenflosse"],r:0,e:"Rogen sind die Eier des Weibchens; die Samenflüssigkeit des Männchens heißt Milch."},
+  {g:1,f:"Warum ist gelöster Sauerstoff im Wasser für Fische wichtig?",a:["Ohne ihn können sie nicht atmen","Er färbt das Wasser","Er dient nur den Pflanzen"],r:0,e:"Fische atmen den im Wasser gelösten Sauerstoff über die Kiemen – zu wenig davon führt zum Ersticken."},
+
+  /* 2 – Spezielle Fischkunde */
+  {g:2,f:"Woran erkennt man den Hecht eindeutig?",a:["Entenschnabelartiges Maul, weit hinten sitzende Rückenflosse","Rote Flossen und Barteln","Runder Körper mit Fettflosse"],r:0,e:"Der Hecht hat ein langes, flaches „Entenschnabel“-Maul und eine weit hinten stehende Rückenflosse."},
+  {g:2,f:"Welcher Fisch besitzt Barteln am Maul?",a:["Der Wels","Der Hecht","Die Rotfeder"],r:0,e:"Der Wels trägt zwei lange und vier kurze Barteln – Tastorgane zur Nahrungssuche."},
+  {g:2,f:"Zu welcher Gruppe gehört der Zander?",a:["Zu den Barschartigen","Zu den Karpfenartigen","Zu den Salmoniden"],r:0,e:"Der Zander ist ein Barschartiger und besitzt zwei Rückenflossen, die vordere mit harten Stacheln."},
+  {g:2,f:"Welches Merkmal ist typisch für Salmoniden (z.B. Forelle)?",a:["Eine Fettflosse zwischen Rücken- und Schwanzflosse","Lange Barteln","Ein Saugmaul"],r:0,e:"Salmoniden wie Forelle, Lachs und Äsche besitzen eine kleine Fettflosse."},
+  {g:2,f:"Der Karpfen gehört zu den …",a:["Friedfischen","Raubfischen","Meeresfischen"],r:0,e:"Der Karpfen ist ein Friedfisch und ernährt sich vorwiegend von Kleintieren und Pflanzen am Grund."},
+  {g:2,f:"Wie viele Barteln besitzt der Karpfen?",a:["Vier","Zwei","Keine"],r:0,e:"Der Karpfen hat vier Barteln – zwei kurze und zwei längere am Oberkiefer."},
+  {g:2,f:"Welcher Fisch ist ein typischer Grundfisch mit unterständigem Maul?",a:["Die Barbe","Der Hecht","Der Aal"],r:0,e:"Die Barbe hat ein unterständiges Maul mit Barteln und sucht ihre Nahrung am Gewässergrund."},
+  {g:2,f:"Woran erkennt man den Aal?",a:["Schlangenförmiger, langgestreckter Körper","Zwei Rückenflossen","Kräftige Bauchstacheln"],r:0,e:"Der Aal hat einen schlangenartigen Körper; Rücken-, Schwanz- und Afterflosse bilden einen durchgehenden Flossensaum."},
+  {g:2,f:"Welcher der folgenden Fische ist ein Raubfisch?",a:["Der Flussbarsch","Die Schleie","Das Rotauge"],r:0,e:"Der Flussbarsch ist ein Raubfisch; Schleie und Rotauge sind Friedfische."},
+  {g:2,f:"Die Regenbogenforelle stammt ursprünglich aus …",a:["Nordamerika","Europa","Asien"],r:0,e:"Die Regenbogenforelle wurde aus Nordamerika eingeführt und wird heute in vielen Gewässern besetzt."},
+
+  /* 3 – Gewässerkunde */
+  {g:3,f:"Was versteht man unter einem stehenden Gewässer?",a:["Ein See oder Teich ohne nennenswerte Strömung","Ein schnell fließender Bach","Das Meer"],r:0,e:"Seen, Teiche und Weiher sind stehende Gewässer ohne durchgehende Strömung."},
+  {g:3,f:"Welche Fischregion ist typischerweise die Forellenregion?",a:["Der sauerstoffreiche Oberlauf eines Fließgewässers","Die Flussmündung","Der ruhige Unterlauf"],r:0,e:"Die Forellenregion liegt im kühlen, sauerstoffreichen, schnell fließenden Oberlauf."},
+  {g:3,f:"Was bewirkt Wasserpflanzenwuchs tagsüber im Gewässer?",a:["Sauerstoffproduktion durch Fotosynthese","Sauerstoffentzug","Erwärmung des Grundes"],r:0,e:"Wasserpflanzen produzieren tagsüber durch Fotosynthese Sauerstoff; nachts verbrauchen sie welchen."},
+  {g:3,f:"Was ist Plankton?",a:["Kleinstlebewesen, die im Wasser schweben","Große Wasserpflanzen","Am Grund lebende Muscheln"],r:0,e:"Plankton sind schwebende Kleinstlebewesen (pflanzlich = Phyto-, tierisch = Zooplankton) und Grundlage der Nahrungskette."},
+  {g:3,f:"Wann ist der Sauerstoffgehalt in einem stehenden Gewässer oft am niedrigsten?",a:["In den frühen Morgenstunden","Am Mittag","Bei Sonnenuntergang"],r:0,e:"Nachts verbrauchen Pflanzen und Tiere Sauerstoff ohne Nachproduktion – morgens ist der Gehalt am geringsten."},
+  {g:3,f:"Was bezeichnet der Begriff „Eutrophierung“?",a:["Übermäßige Nährstoffanreicherung eines Gewässers","Die Reinigung eines Gewässers","Das Einfrieren im Winter"],r:0,e:"Eutrophierung ist die Anreicherung mit Nährstoffen, die zu starkem Algenwachstum und Sauerstoffmangel führen kann."},
+  {g:3,f:"Welche Wassertemperatur bevorzugen Karpfen zum Fressen?",a:["Wärmeres Wasser (etwa ab 15 °C)","Sehr kaltes Wasser unter 5 °C","Nur Temperaturen um den Gefrierpunkt"],r:0,e:"Karpfen sind wärmeliebend und fressen bei höheren Temperaturen deutlich aktiver."},
+  {g:3,f:"Was ist ein Uferbewuchs (Schilf, Röhricht) für das Gewässer?",a:["Wichtiger Lebens- und Laichraum","Nur störendes Unkraut","Eine Gefahr für die Fische"],r:0,e:"Röhricht bietet Laichplätze, Unterstand und Nahrung und schützt das Ufer – es ist ökologisch wertvoll und geschützt."},
+  {g:3,f:"Wodurch gelangt Sauerstoff hauptsächlich in ein Fließgewässer?",a:["Durch Verwirbelung an der Oberfläche und Pflanzen","Nur durch Regen","Ausschließlich durch Fische"],r:0,e:"Strömung und Verwirbelung reichern das Wasser mit Luftsauerstoff an, zusätzlich produzieren Pflanzen Sauerstoff."},
+  {g:3,f:"Was versteht man unter der „Brassenregion“?",a:["Den ruhigen, warmen Unterlauf eines Flusses","Die Quelle","Das Hochgebirge"],r:0,e:"Die Brassenregion ist der langsam fließende, nährstoffreiche Unterlauf mit warmem Wasser."},
+
+  /* 4 – Fischfang & Gerätekunde */
+  {g:4,f:"Wozu dient ein Unterfangkescher?",a:["Zum schonenden Landen des Fisches","Zum Auswerfen des Köders","Zum Messen des Fisches"],r:0,e:"Der Kescher landet den Fisch schonend und verhindert, dass er sich beim Herausheben verletzt oder losreißt."},
+  {g:4,f:"Welches Gerät wird zum sofortigen Betäuben eines Fisches verwendet?",a:["Ein Fischtöter (Totschläger)","Die Lösezange","Der Hakenlöser"],r:0,e:"Zum Betäuben dient ein kräftiger Schlag mit dem Fischtöter auf den Kopf, danach folgt der Herzstich (Töten)."},
+  {g:4,f:"Wofür benutzt man einen Hakenlöser?",a:["Zum schonenden Entfernen des Hakens","Zum Anfüttern","Zum Werfen"],r:0,e:"Der Hakenlöser hilft, den Haken schnell und schonend aus dem Maul des Fisches zu lösen."},
+  {g:4,f:"Was ist ein Vorfach?",a:["Ein Schnurstück zwischen Hauptschnur und Haken","Die Rolle","Der Rutengriff"],r:0,e:"Das Vorfach verbindet Hauptschnur und Haken; es kann dünner oder bissfest (z.B. Stahl beim Raubfisch) sein."},
+  {g:4,f:"Warum verwendet man beim Hechtangeln ein Stahl- oder Hardmono-Vorfach?",a:["Damit die scharfen Zähne die Schnur nicht durchtrennen","Um mehr Gewicht zu haben","Zur besseren Sichtbarkeit"],r:0,e:"Hechte haben scharfe Zähne; ein bissfestes Vorfach verhindert das Durchtrennen der Schnur."},
+  {g:4,f:"Was zeigt eine Pose (Schwimmer) beim Angeln an?",a:["Den Biss eines Fisches","Die Wassertiefe automatisch","Die Wassertemperatur"],r:0,e:"Die Pose signalisiert durch Bewegung oder Abtauchen, dass ein Fisch den Köder genommen hat."},
+  {g:4,f:"Welche Rute eignet sich zum Spinnfischen auf Raubfische?",a:["Eine Spinnrute","Eine schwere Grundrute","Eine Stipprute ohne Rolle"],r:0,e:"Die Spinnrute ist leicht und aktionsstark – ideal, um Kunstköder zu führen."},
+  {g:4,f:"Was gehört zur Grundausstattung, um einen gefangenen Fisch waidgerecht zu versorgen?",a:["Kescher, Hakenlöser, Betäubungsgerät und Messer","Nur eine zweite Rute","Ausschließlich Anfutter"],r:0,e:"Zur waidgerechten Versorgung gehören Kescher, Hakenlöser, Betäubungs-/Tötungsgerät und Messer."},
+  {g:4,f:"Wozu dient ein Zentimetermaß beim Angeln?",a:["Zum Überprüfen des Mindestmaßes","Zum Wiegen des Fisches","Zum Auswerfen"],r:0,e:"Mit dem Maßband prüft man, ob der Fisch das gesetzliche Mindestmaß erreicht – sonst muss er zurückgesetzt werden."},
+  {g:4,f:"Welche Hakenform sollte aus Tierschutzgründen bevorzugt werden?",a:["Einfachhaken (statt Mehrfachhaken, wo möglich)","Möglichst große Drillinge","Widerhaken mit mehreren Spitzen"],r:0,e:"Auf Mehrfachhaken sollte aus Tierschutzgründen möglichst verzichtet werden; Einfachhaken sind schonender."},
+
+  /* 5 – Natur-, Tier- & Umweltschutz */
+  {g:5,f:"Was schreibt der Tierschutzgedanke beim Angeln vor?",a:["Gefangene Fische schnell und schmerzarm zu behandeln","Fische möglichst lange am Haken zu lassen","Fische an der Luft zu transportieren"],r:0,e:"Fische sind waidgerecht, also schnell und ohne unnötige Schmerzen zu betäuben und zu töten oder schonend zurückzusetzen."},
+  {g:5,f:"Was bedeutet eine Schonzeit?",a:["Ein Zeitraum, in dem eine Fischart nicht gefangen werden darf","Die beste Fangzeit","Eine Pause für den Angler"],r:0,e:"In der Schonzeit – meist zur Laichzeit – darf die Art nicht entnommen werden, um den Bestand zu schützen."},
+  {g:5,f:"Was ist ein Mindestmaß?",a:["Die Mindestlänge, ab der ein Fisch entnommen werden darf","Die maximale Fangmenge","Die Tiefe des Gewässers"],r:0,e:"Fische unter dem Mindestmaß müssen schonend zurückgesetzt werden, damit sie sich fortpflanzen können."},
+  {g:5,f:"Wie sollte man einen untermaßigen Fisch zurücksetzen?",a:["Mit nassen Händen und schonend, möglichst ohne ihn abzuschuppen","Trocken anfassen und werfen","Erst an der Luft fotografieren, dann zurück"],r:0,e:"Nasse Hände schützen die Schleimhaut; der Fisch wird vorsichtig und zügig zurückgesetzt."},
+  {g:5,f:"Warum sind Uferpflanzen und Röhrichtzonen geschützt?",a:["Sie sind Laich- und Lebensraum vieler Tiere","Sie behindern nur das Angeln","Sie haben keine Bedeutung"],r:0,e:"Röhricht und Uferbewuchs bieten Laichplätze und Unterschlupf und sind daher besonders zu schonen."},
+  {g:5,f:"Wie verhält man sich als Angler gegenüber brütenden Wasservögeln?",a:["Abstand halten und nicht stören","Sie verscheuchen","Die Nester umsetzen"],r:0,e:"Brütende Vögel dürfen nicht gestört werden; der Angler hält Rücksicht und Abstand."},
+  {g:5,f:"Was gehört NICHT ins Gewässer bzw. an das Ufer?",a:["Müll, Schnurreste und Bleireste","Standort­gerechte Pflanzen","Sauberes Wasser"],r:0,e:"Abfälle, alte Schnüre und Bleireste sind Gefahrenquellen für Tiere und gehören fachgerecht entsorgt."},
+  {g:5,f:"Was versteht man unter „waidgerechtem Verhalten“?",a:["Verantwortungsvoller, tierschutzgerechter Umgang mit Fisch und Natur","Möglichst viel zu fangen","Nur die größten Fische mitzunehmen"],r:0,e:"Waidgerechtigkeit bedeutet Respekt vor dem Lebewesen und der Natur sowie die Einhaltung der Regeln."},
+  {g:5,f:"Warum darf man nur so viele Fische entnehmen, wie man verwerten kann?",a:["Zum Schutz des Bestands und aus Tierschutzgründen","Weil das Gewässer sonst überläuft","Aus optischen Gründen"],r:0,e:"Man entnimmt nur, was man vernünftig verwerten kann – Überfischung schädigt den Bestand."},
+  {g:5,f:"Welche Rolle spielen Angler oft aktiv im Naturschutz?",a:["Gewässerpflege, Besatz und Bestandshege","Keine","Sie schaden dem Gewässer grundsätzlich"],r:0,e:"Organisierte Angler betreiben Hege und Pflege, kümmern sich um Besatz, Gewässerreinigung und Artenschutz."},
+
+  /* 6 – Fischereirecht */
+  {g:6,f:"Was benötigt man in Niedersachsen grundsätzlich zum Angeln?",a:["Einen Fischereischein und die Erlaubnis für das Gewässer","Nur eine Angelrute","Gar nichts"],r:0,e:"Erforderlich sind der Fischereischein (nach bestandener Prüfung) und ein Fischereierlaubnisschein für das jeweilige Gewässer."},
+  {g:6,f:"Wozu berechtigt der Fischereierlaubnisschein?",a:["Zum Angeln an einem bestimmten Gewässer","Zum Angeln in ganz Deutschland","Zum Verkauf von Fischen"],r:0,e:"Der Erlaubnisschein (oft vom Verein/Pächter) erlaubt das Angeln am konkreten Gewässer – zusätzlich zum Fischereischein."},
+  {g:6,f:"Ab welchem Alter ist in der Regel die Teilnahme am Ausbildungslehrgang gestattet?",a:["Ab 13 Jahren","Ab 18 Jahren","Ohne Altersgrenze"],r:0,e:"Laut Prüfungsordnung ist die Zulassung zum Ausbildungslehrgang frühestens mit 13 Jahren möglich."},
+  {g:6,f:"Wie viele Fragen umfasst die theoretische Fischerprüfung in Weser-Ems?",a:["60 Fragen","30 Fragen","100 Fragen"],r:0,e:"Der Prüfungsbogen enthält 60 Fragen aus den sechs Sachgebieten; je Frage sind 3 Antworten vorgegeben."},
+  {g:6,f:"Wie viele Fragen muss man mindestens richtig beantworten, um zu bestehen?",a:["Mindestens 45 von 60","Alle 60","Genau 30"],r:0,e:"Zum Bestehen sind mindestens 45 richtige Antworten nötig UND in jedem Sachgebiet mindestens 6 richtige."},
+  {g:6,f:"Was gilt zusätzlich zur Gesamtpunktzahl für das Bestehen?",a:["In jedem Sachgebiet mind. 6 richtige Antworten","Nur die Gesamtzahl zählt","Man muss zuerst die Praxis bestehen"],r:0,e:"Neben mind. 45 gesamt müssen in jedem der 6 Gebiete mindestens 6 Fragen richtig sein."},
+  {g:6,f:"Wie lange dauert die theoretische Prüfung höchstens?",a:["Bis zu 60 Minuten","15 Minuten","3 Stunden"],r:0,e:"Für die Beantwortung der 60 Fragen stehen bis zu 60 Minuten zur Verfügung."},
+  {g:6,f:"Was prüft der praktische Teil der Fischerprüfung?",a:["Zusammenstellen und Handhaben gebrauchsfertiger Angelgeräte","Das Schwimmen","Das Kochen von Fisch"],r:0,e:"Im praktischen Teil weist der Prüfling nach, dass er Angelgeräte fachgerecht zusammenstellt und tierschutzgerecht anwendet."},
+  {g:6,f:"Was passiert, wenn ein Prüfling die Prüfung nicht besteht?",a:["Er kann sie gegen Gebühr wiederholen","Er darf nie wieder antreten","Er erhält den Schein trotzdem"],r:0,e:"Eine nicht bestandene Prüfung kann wiederholt werden; nach über 12 Monaten ist erneut ein kompletter Lehrgang nötig."},
+  {g:6,f:"Wer führt die offene Fischerprüfung in Weser-Ems durch?",a:["Der Angelfischerverband im Landesfischereiverband Weser-Ems","Die Polizei","Jeder Angelladen"],r:0,e:"Der AFV ist als anerkannter Landesfischereiverband für die Durchführung der Fischerprüfung zuständig."}
+];
+
+/* ---- Eselsbrücken: werden gezeigt, wenn eine Frage mehrfach falsch war ---- */
+const ESELSBRUECKEN = {
+  "Womit atmen Fische unter Wasser?": "KIEMEN wie ein KAMM – der Kamm „kämmt“ den Sauerstoff aus dem Wasser.",
+  "Welche Funktion hat die Schwimmblase eines Fisches?": "Schwimmblase = Schwimmweste des Fisches: Luft rein → schweben, Luft raus → sinken.",
+  "Was nimmt ein Fisch mit dem Seitenlinienorgan wahr?": "Die Seitenlinie ist das „Radar an der Seite“ – sie spürt jede Welle, bevor der Fisch sie sieht.",
+  "Was versteht man unter dem Laichen der Fische?": "LAICHEN klingt wie „Leichen“? Falsch gedacht – es ist das Gegenteil: neues LEBEN!",
+  "Wie wird die Körpertemperatur von Fischen bestimmt?": "Fisch = Thermometer des Sees: Wasser kalt → Fisch kalt. Er heizt nie selbst.",
+  "Was bezeichnet man als Rogen?": "ROGEN reimt sich auf „geborgen“ – die Eier liegen geborgen im Weibchen. MILCH kommt vom Mann (M wie Milch, M wie Männchen).",
+  "Woran erkennt man den Hecht eindeutig?": "Hecht = Ente + Torpedo: Entenschnabel vorn, Rückenflosse ganz hinten für den Blitzstart.",
+  "Welcher Fisch besitzt Barteln am Maul?": "Der Wels trägt einen „Schnurrbart“ – 6 Barteln wie Kater Carlo.",
+  "Welches Merkmal ist typisch für Salmoniden (z.B. Forelle)?": "Salmoniden sind „fett“ unterwegs – die kleine FETTflosse ist ihr Erkennungszeichen.",
+  "Wie viele Barteln besitzt der Karpfen?": "KARPFEN hat 4 Ecken im Wort „Karp-fen“? Nein – merk dir: 4 Barteln wie 4 Mundwinkel-Antennen.",
+  "Woran erkennt man den Aal?": "Aal = die Wasser-Schlange mit durchgehendem Flossensaum – ein Flossen-„Gürtel“ ohne Lücke.",
+  "Welche Fischregion ist typischerweise die Forellenregion?": "Forellen mögen's wie Bergsteiger: oben, kalt, frisch und schnell.",
+  "Was ist Plankton?": "Plankton = „Plan los“ – es treibt ohne Plan im Wasser und wird trotzdem von allen gefressen.",
+  "Wann ist der Sauerstoffgehalt in einem stehenden Gewässer oft am niedrigsten?": "Pflanzen machen nachts „Feierabend“ – morgens ist die Luft raus. Frühmorgens = Sauerstoff-Tief.",
+  "Was bezeichnet der Begriff „Eutrophierung“?": "„EUTRO“ klingt wie „Euter“ – überdüngt und übervoll: zu viele Nährstoffe im Wasser.",
+  "Wozu dient ein Unterfangkescher?": "Der Kescher ist das „Sicherheitsnetz“ – der Artist fällt nie, der Fisch reißt nie ab.",
+  "Was ist ein Vorfach?": "VOR dem Haken kommt das VORfach – der „Bodyguard“ zwischen Schnur und Zähnen.",
+  "Warum verwendet man beim Hechtangeln ein Stahl- oder Hardmono-Vorfach?": "Hechtzähne = Scheren. Gegen Scheren hilft nur Draht.",
+  "Was zeigt eine Pose (Schwimmer) beim Angeln an?": "Die Pose ist deine „Klingel“ – taucht sie ab, klingelt der Fisch an der Tür.",
+  "Was bedeutet eine Schonzeit?": "SCHONzeit = Zeit zum VerSCHONen – Babyzeit für Fische, Ruhe für die Art.",
+  "Was ist ein Mindestmaß?": "Unter dem Maß = Kind. Kinder lässt man wachsen – zurück ins Wasser.",
+  "Wie sollte man einen untermaßigen Fisch zurücksetzen?": "Nasse Hände = Handschuhe für den Fisch. Trockene Hände verbrennen seinen Schleim-Mantel.",
+  "Was benötigt man in Niedersachsen grundsätzlich zum Angeln?": "2 Scheine wie beim Auto: Führerschein (Fischereischein) + Fahrzeugschein (Erlaubnis fürs Gewässer).",
+  "Wie viele Fragen muss man mindestens richtig beantworten, um zu bestehen?": "45 + 6: Dreiviertel richtig (45 von 60) und in jedem Fach mindestens 6 – „45/6 und du bist dabei“.",
+  "Wie lange dauert die theoretische Prüfung höchstens?": "60 Fragen, 60 Minuten – pro Frage genau 1 Minute. Easy Takt.",
+  "Was prüft der praktische Teil der Fischerprüfung?": "Theorie = Kopf, Praxis = Hände: Rute richtig zusammenbauen und tierschutzgerecht handeln."
+};
+
+/* ---- Praxis-Videos (YouTube-Suchlinks – immer aktuelle Treffer, keine toten Links) ---- */
+const VIDEOS = [
+  {icon:"🪢", titel:"Angelknoten binden", text:"Clinch, Palomar & Schlaufenknoten Schritt für Schritt",
+   url:"https://www.youtube.com/results?search_query=angelknoten+binden+anleitung+anf%C3%A4nger"},
+  {icon:"🎣", titel:"Grundmontage bauen", text:"Einfache Grundblei-Montage für Einsteiger",
+   url:"https://www.youtube.com/results?search_query=grundmontage+angeln+anleitung+anf%C3%A4nger"},
+  {icon:"🎈", titel:"Posenmontage bauen", text:"Pose ausbleien und richtig einstellen",
+   url:"https://www.youtube.com/results?search_query=posenmontage+aufbauen+anleitung"},
+  {icon:"🧶", titel:"Rolle bespulen", text:"Schnur richtig und ohne Drall aufspulen",
+   url:"https://www.youtube.com/results?search_query=angelrolle+bespulen+anleitung"},
+  {icon:"🐡", titel:"Fisch waidgerecht versorgen", text:"Betäuben, töten, versorgen – tierschutzgerecht",
+   url:"https://www.youtube.com/results?search_query=fisch+waidgerecht+bet%C3%A4uben+t%C3%B6ten+anleitung"},
+  {icon:"🔧", titel:"Rute zusammenbauen", text:"Ringe fluchten, Rolle montieren – wichtig für die Praxisprüfung",
+   url:"https://www.youtube.com/results?search_query=angelrute+zusammenbauen+praxispr%C3%BCfung"}
+];
+
+/* ---- Level-Titel (Gamification) ---- */
+const LEVELS = ["Köderfisch","Jungangler","Posenprofi","Gewässerkenner","Rutenmeister","Prüfungsjäger","Fischerkönig"];
+const XP_PRO_LEVEL = 120;
+
+/* ---- Demo-Prüflinge (Ausbilder-Ansicht) ---- */
+const DEMO_PRUEFLINGE = [
+  {name:"Lena Bruns",  gebiete:{1:85,2:78,3:90,4:72,5:88,6:60}, sim:2, bestanden:1, letzte:"vor 2 Tagen", lernzeitMin:540, sollMin:600},
+  {name:"Tom Aden",    gebiete:{1:65,2:50,3:70,4:80,5:75,6:45}, sim:1, bestanden:0, letzte:"heute", lernzeitMin:310, sollMin:600},
+  {name:"Kevin Meyer", gebiete:{1:40,2:35,3:55,4:60,5:50,6:30}, sim:1, bestanden:0, letzte:"vor 5 Tagen", lernzeitMin:150, sollMin:720},
+  {name:"Sarah Ottjes",gebiete:{1:92,2:88,3:95,4:85,5:90,6:82}, sim:3, bestanden:2, letzte:"gestern", lernzeitMin:720, sollMin:600},
+  {name:"Jonas Frerichs",gebiete:{1:20,2:10,3:15,4:25,5:30,6:5}, sim:0, bestanden:0, letzte:"neu dabei", lernzeitMin:35, sollMin:600}
+];
+/* Meist-verfehlte Fragen im Kurs (Demo für Ausbilder-Auswertung) */
+const DEMO_TOP_FEHLER = [
+  {frage:"Wie viele Fragen muss man mindestens richtig beantworten, um zu bestehen?", gebiet:6, quote:62},
+  {frage:"Wann ist der Sauerstoffgehalt in einem stehenden Gewässer oft am niedrigsten?", gebiet:3, quote:55},
+  {frage:"Welches Merkmal ist typisch für Salmoniden (z.B. Forelle)?", gebiet:2, quote:48},
+  {frage:"Was bezeichnet der Begriff „Eutrophierung“?", gebiet:3, quote:45},
+  {frage:"Welche Hakenform sollte aus Tierschutzgründen bevorzugt werden?", gebiet:4, quote:38}
+];
+
+/* =========================== ZUSTAND =========================== */
+let state = {
+  region: null, rolle: null, view: 'region',
+  xp: 0, streak: 0, besteStreak: 0,
+  gelernt: {},            // frageIndex -> {richtig, versuche, fehlversuche}
+  fehlerkiste: new Set(), // frageIndizes, die zuletzt falsch waren
+  lernSitzung: null, pruefung: null, timerId: null,
+  vorlesen: false,
+  simsGesamt: 0, simsBestanden: 0,
+  lernzeitSek: 0, lernzeitTicker: null
+};
+
+/* Lernzeit läuft, solange aktiv gelernt/geprüft wird (Tab sichtbar) */
+function lernzeitStart(){
+  if(state.lernzeitTicker) return;
+  state.lernzeitTicker=setInterval(()=>{
+    if(document.hidden) return;
+    if(state.view==='lernsitzung'||state.view==='pruefung') state.lernzeitSek++;
+  },1000);
+}
+function lernzeitFormat(sek){
+  const h=Math.floor(sek/3600), m=Math.floor(sek%3600/60);
+  return h?`${h} h ${m} min`:`${m} min`;
+}
+
+/* =========================== HELFER =========================== */
+function regeln(){ const r=REGIONEN.find(r=>r.id===state.region); return (r&&r.regeln)||REGIONEN[0].regeln; }
+let _seed = 987654321;
+function rnd(){ _seed=(_seed*1103515245+12345)&0x7fffffff; return _seed/0x7fffffff; }
+function mische(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function level(){ return Math.min(LEVELS.length-1, Math.floor(state.xp/XP_PRO_LEVEL)); }
+function xpImLevel(){ return state.xp - level()*XP_PRO_LEVEL; }
+function gebietFortschritt(gid){
+  const fr=FRAGEN.map((f,i)=>({f,i})).filter(o=>o.f.g===gid);
+  const beantwortet=fr.filter(o=>state.gelernt[o.i]).length;
+  const richtig=fr.filter(o=>state.gelernt[o.i]&&state.gelernt[o.i].richtig).length;
+  return {gesamt:fr.length,beantwortet,richtig,pct:fr.length?Math.round(beantwortet/fr.length*100):0};
+}
+function sprich(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='de-DE'; u.rate=0.95;
+  window.speechSynthesis.speak(u);
+}
+function stopSprich(){ if('speechSynthesis' in window) window.speechSynthesis.cancel(); }
+function frageVorlesen(fr, perm){
+  const buchst=['A','B','C'];
+  const reihenfolge=perm||[0,1,2];
+  sprich(fr.f + ". " + reihenfolge.map((orig,i)=>"Antwort "+buchst[i]+": "+fr.a[orig]).join(". "));
+}
+function aktivePerm(idx){
+  if(state.lernSitzung&&state.lernSitzung.perms&&state.lernSitzung.perms[idx]) return state.lernSitzung.perms[idx];
+  if(state.pruefung&&state.pruefung.perms&&state.pruefung.perms[idx]) return state.pruefung.perms[idx];
+  return null;
+}
+function konfetti(){
+  const symbole=["🎉","🐟","⭐","🎣","💙","🏆"];
+  for(let i=0;i<36;i++){
+    const s=document.createElement('div');
+    s.className='konfetti'; s.textContent=symbole[Math.floor(rnd()*symbole.length)];
+    s.style.left=(rnd()*100)+'vw';
+    s.style.animationDuration=(2.2+rnd()*2.2)+'s';
+    s.style.animationDelay=(rnd()*0.9)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),5200);
+  }
+}
+const LOGO_SVG = `<svg viewBox="0 0 64 64" fill="none"><path d="M8 32c8-12 22-18 34-14l12-8-3 14 3 14-12-8c-12 4-26-2-34-14z" transform="translate(0 6)" fill="#ffb43a"/><circle cx="20" cy="34" r="3" fill="#06304d"/><path d="M46 10l6 10-12 1z" fill="#ffb43a" opacity=".85"/></svg>`;
+const FISCH_DEKO = `<svg class="fisch-deko" viewBox="0 0 240 110" fill="none">
+ <path d="M20 55C50 20 110 8 150 30l40-22-8 40 8 40-40-22c-40 22-100 10-130-25z" fill="url(#g1)"/>
+ <circle cx="60" cy="52" r="6" fill="#06304d"/><circle cx="62" cy="50" r="2" fill="#fff"/>
+ <path d="M95 38c14-6 34-6 48 0M95 70c14 6 34 6 48 0" stroke="#06304d" stroke-opacity=".25" stroke-width="3" stroke-linecap="round"/>
+ <defs><linearGradient id="g1" x1="20" y1="20" x2="200" y2="90"><stop stop-color="#1179ae"/><stop offset="1" stop-color="#19b47a"/></linearGradient></defs></svg>`;
+
+/* =========================== RENDER =========================== */
+const $=s=>document.querySelector(s);
+function render(){
+  const app=$('#app');
+  if(state.view==='region'){ app.innerHTML=viewRegion(); return; }
+  if(state.view==='rolle'){ app.innerHTML=viewRolle(); return; }
+  app.innerHTML=kopf()+`<main>${aktuelleView()}</main>`;
+}
+function aktuelleView(){
+  switch(state.view){
+    case 'dashboard': return state.rolle==='ausbilder'?viewAusbilder():viewDashboard();
+    case 'lernsitzung': return viewLernSitzung();
+    case 'pruefung': return viewPruefung();
+    case 'ergebnis': return viewErgebnis();
+    case 'videos': return viewVideos();
+    case 'lehrplan': return viewLehrplan();
+    case 'schueler': return viewSchueler();
+    default: return viewDashboard();
+  }
+}
+function kopf(){
+  const reg=REGIONEN.find(r=>r.id===state.region);
+  const rolleTxt=state.rolle==='ausbilder'?'👨‍🏫 Ausbilder':'🎓 Prüfling';
+  return `<header class="top">
+    <div class="logo" onclick="go('dashboard')">${LOGO_SVG} Angel<span class="up">Up</span></div>
+    <div class="kopf-rechts">
+      <span class="chip">📍 ${reg?reg.name:''} <button onclick="regionWechseln()">ändern</button></span>
+      <span class="chip">${rolleTxt} <button onclick="rolleWechseln()">wechseln</button></span>
+      ${state.rolle==='pruefling'?`<span class="chip">⭐ <b>${state.xp}</b> XP</span>`:''}
+    </div>
+  </header>`;
+}
+
+/* =========================== REGION =========================== */
+function viewRegion(){
+  const karten=REGIONEN.map(r=>{
+    if(r.aktiv) return `<div class="karte klick region" onclick="setRegion('${r.id}')">
+      <span class="aktiv-tag">Verfügbar</span><h3>📍 ${r.name}</h3><p>${r.traeger}</p>
+      <p style="margin-top:8px;font-weight:700;color:var(--gruen-dkl)">Jetzt lernen →</p></div>`;
+    return `<div class="karte region gesperrt"><span class="bald">Bald</span><h3>📍 ${r.name}</h3><p>${r.traeger}</p></div>`;
+  }).join('');
+  return `<div class="held">
+    ${FISCH_DEKO}
+    <h1>Angel<span style="color:var(--akzent2)">Up</span> 🎣</h1>
+    <p class="unter">Deine moderne Vorbereitung auf die Fischerprüfung – lernen mit Spaß, üben wie in der echten Prüfung, bestehen mit Sicherheit.</p>
+    <main style="padding-top:0">
+      <h2 style="text-align:center">Wo machst du deine Prüfung?</h2>
+      <div class="region-karten">${karten}</div>
+      <div class="hinweis blau" style="max-width:640px;margin:22px auto">
+        <strong>Prototyp:</strong> Weitere Regionen (Niedersachsen Binnen, NRW, Bremen) werden nach dem Start ergänzt. Fragen sind aktuell Beispiel-Inhalte, bis der offizielle Katalog eingelesen ist.
+      </div>
+    </main>
+  </div>`;
+}
+function setRegion(id){ state.region=id; state.view='rolle'; render(); }
+function regionWechseln(){ stopSprich(); stopTimer(); state.region=null; state.view='region'; render(); }
+
+/* =========================== ROLLE =========================== */
+function viewRolle(){
+  return `<div class="held">
+    <h1>Wer bist du? 👋</h1>
+    <p class="unter">Wähle deinen Zugang – Prüflinge lernen, Ausbilder behalten den Überblick.</p>
+    <main style="padding-top:0;max-width:760px">
+      <div class="rollen">
+        <div class="karte klick" onclick="setRolle('pruefling')" style="text-align:left">
+          <div style="font-size:2.2rem">🎓</div><h3 style="margin:6px 0 4px">Ich bin Prüfling</h3>
+          <p style="font-size:.87rem;color:var(--grau);margin:0 0 12px">Lerne alle Sachgebiete, sammle XP, übe mit Eselsbrücken und simuliere die echte Prüfung.</p>
+          <span class="btn gross">Lernen starten</span>
+        </div>
+        <div class="karte klick" onclick="setRolle('ausbilder')" style="text-align:left">
+          <div style="font-size:2.2rem">👨‍🏫</div><h3 style="margin:6px 0 4px">Ich bin Ausbilder</h3>
+          <p style="font-size:.87rem;color:var(--grau);margin:0 0 12px">Sieh, wo deine Prüflinge stehen, wo es hakt – und welche Themen du im Kurs wiederholen solltest.</p>
+          <span class="btn gross blau">Zum Ausbilder-Bereich</span>
+        </div>
+      </div>
+    </main>
+  </div>`;
+}
+function setRolle(r){ state.rolle=r; state.view='dashboard'; render(); }
+function rolleWechseln(){ stopSprich(); stopTimer(); state.rolle=null; state.view='rolle'; render(); }
+
+/* =========================== PRÜFLING – DASHBOARD =========================== */
+function viewDashboard(){
+  const lvl=level();
+  const r=regeln();
+  const fehlerAnzahl=state.fehlerkiste.size;
+  const gebietsKarten=GEBIETE.map(g=>{
+    const fp=gebietFortschritt(g.id);
+    return `<div class="karte gebiet-karte">
+      <div class="gebiet-kopf"><span class="gebiet-icon" style="background:${g.farbe}">${g.icon}</span>
+        <div><h3>${g.name}</h3><span class="zahlen">${fp.beantwortet}/${fp.gesamt} geübt${fp.beantwortet?` · ${fp.richtig} richtig`:''}</span></div></div>
+      <div class="fortschritt"><span style="width:${fp.pct}%;background:${g.farbe}"></span></div>
+      <button class="btn ghost" style="width:100%" onclick="startLernen(${g.id})">Lernen</button>
+    </div>`;
+  }).join('');
+  const abzeichen=[
+    {sym:"🐟", name:"Erste Frage", holt:Object.keys(state.gelernt).length>0},
+    {sym:"🔥", name:"5er-Serie", holt:state.besteStreak>=5},
+    {sym:"⭐", name:"Level 2 erreicht", holt:lvl>=1},
+    {sym:"📝", name:"Erste Simulation", holt:state.simsGesamt>0},
+    {sym:"🏆", name:"Prüfung bestanden", holt:state.simsBestanden>0}
+  ].map(a=>`<span class="ab ${a.holt?'holt':'grau'}">${a.sym} ${a.name}</span>`).join('');
+  return `
+  <h1>Moin! 👋</h1>
+  <p class="lead">Weiter geht's – jede Frage bringt dich näher an deinen Angelschein.</p>
+
+  <div class="statusleiste">
+    <div class="stat"><span class="sym">🏅</span><div><div class="wert">${LEVELS[lvl]}</div><div class="label">Level ${lvl+1}</div>
+      <div class="xp-balken"><span style="width:${Math.round(xpImLevel()/XP_PRO_LEVEL*100)}%"></span></div></div></div>
+    <div class="stat"><span class="sym">⭐</span><div><div class="wert">${state.xp} XP</div><div class="label">gesammelt</div></div></div>
+    <div class="stat"><span class="sym">🔥</span><div><div class="wert">${state.streak}</div><div class="label">Serie (Rekord: ${state.besteStreak})</div></div></div>
+    <div class="stat"><span class="sym">📝</span><div><div class="wert">${state.simsBestanden}/${state.simsGesamt}</div><div class="label">Simulationen bestanden</div></div></div>
+    <div class="stat"><span class="sym">⏱️</span><div><div class="wert">${lernzeitFormat(state.lernzeitSek)}</div><div class="label">Lernzeit</div></div></div>
+  </div>
+
+  <div class="karte" style="border-left:6px solid var(--akzent);margin-bottom:14px">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:linear-gradient(120deg,var(--akzent),var(--akzent2))">📝</span>
+      <div><h3 style="margin:0">Prüfungssimulation</h3>
+      <span class="zahlen">${r.fragenGesamt} Fragen · ${r.zeitMinuten} Min · bestanden ab ${r.bestehenGesamt} richtigen + mind. ${r.bestehenProGebiet} je Sachgebiet</span></div></div>
+    <button class="btn gross" onclick="startPruefung()">Prüfung jetzt simulieren</button>
+  </div>
+
+  ${fehlerAnzahl?`
+  <div class="karte" style="border-left:6px solid var(--rot);margin-bottom:14px">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:var(--rot)">🧰</span>
+      <div><h3 style="margin:0">Deine Fehlerkiste</h3>
+      <span class="zahlen">${fehlerAnzahl} Frage${fehlerAnzahl===1?'':'n'} warten auf Revanche – mit Erklärungen & Eselsbrücken</span></div></div>
+    <button class="btn gruen gross" onclick="startFehlerkiste()">Fehler jetzt ausbügeln</button>
+  </div>`:''}
+
+  <h2>📚 Nach Sachgebiet lernen</h2>
+  <div class="karten">${gebietsKarten}</div>
+
+  <h2>🎬 Praxis-Videos</h2>
+  <p class="lead" style="margin-bottom:10px">Knoten, Montagen & Co. – perfekt für die Praxisprüfung.</p>
+  <button class="btn blau" onclick="go('videos')">Zu den Lernvideos</button>
+
+  <h2>🏅 Deine Abzeichen</h2>
+  <div class="abzeichen">${abzeichen}</div>`;
+}
+
+/* =========================== LERNMODUS =========================== */
+function machePerms(reihe){
+  const perms={}; reihe.forEach(idx=>perms[idx]=mische([0,1,2])); return perms;
+}
+function startLernen(gid){
+  stopSprich();
+  const idxs=FRAGEN.map((f,i)=>({f,i})).filter(o=>o.f.g===gid).map(o=>o.i);
+  const reihe=mische(idxs);
+  state.lernSitzung={titel:GEBIETE.find(g=>g.id===gid).name, farbe:GEBIETE.find(g=>g.id===gid).farbe,
+    icon:GEBIETE.find(g=>g.id===gid).icon, reihe, perms:machePerms(reihe), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0};
+  state.view='lernsitzung'; render(); autoVorlesen();
+}
+function startFehlerkiste(){
+  stopSprich();
+  const idxs=mische([...state.fehlerkiste]);
+  if(!idxs.length) return;
+  state.lernSitzung={titel:"Fehlerkiste", farbe:"var(--rot)", icon:"🧰",
+    reihe:idxs, perms:machePerms(idxs), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0};
+  state.view='lernsitzung'; render(); autoVorlesen();
+}
+function autoVorlesen(){
+  if(state.vorlesen && state.lernSitzung){
+    const idx=state.lernSitzung.reihe[state.lernSitzung.pos];
+    frageVorlesen(FRAGEN[idx], aktivePerm(idx));
+  }
+}
+function viewLernSitzung(){
+  const s=state.lernSitzung; const idx=s.reihe[s.pos]; const fr=FRAGEN[idx];
+  const pct=Math.round(s.pos/s.reihe.length*100);
+  const eintrag=state.gelernt[idx];
+  const oftFalsch=eintrag&&eintrag.fehlversuche>=2;
+  const bruecke=ESELSBRUECKEN[fr.f];
+  const perm=s.perms[idx];
+  const antwortenHtml=perm.map((orig,i)=>{
+    let cls='antwort';
+    if(s.aufgedeckt){ if(orig===fr.r) cls+=' richtig'; else if(orig===s.gewaehlt) cls+=' falsch'; }
+    else if(orig===s.gewaehlt) cls+=' gewaehlt';
+    return `<button class="${cls}" onclick="lernWaehle(${orig})" ${s.aufgedeckt?'disabled':''}>
+      <span class="buchstabe">${['A','B','C'][i]}</span><span>${fr.a[orig]}</span></button>`;
+  }).join('');
+  let unten='';
+  if(s.aufgedeckt){
+    const richtig=s.gewaehlt===fr.r;
+    unten=`<div class="erklaerung ${richtig?'gut':'schlecht'}">
+      <div class="titel">${richtig?'✅ Richtig! +10 XP':'❌ Leider falsch. Die richtige Antwort ist '+['A','B','C'][perm.indexOf(fr.r)]+':'}</div>
+      ${richtig?'':`<div style="font-weight:650;margin-bottom:5px">„${fr.a[fr.r]}“</div>`}
+      <div>${fr.e}</div>
+    </div>`;
+    if(!richtig && oftFalsch && bruecke){
+      unten+=`<div class="eselsbruecke"><div class="titel">🫏 Eselsbrücke – damit es sitzt:</div>${bruecke}</div>`;
+    }
+  }
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
+  <div class="quizbox">
+    <div class="quiz-kopf">
+      <span class="badge" style="background:${s.farbe};color:#fff">${s.icon} ${s.titel}</span>
+      <span class="badge">Frage ${s.pos+1} / ${s.reihe.length}</span>
+      <span class="badge">🔥 ${state.streak}</span>
+    </div>
+    <div class="progressbalken"><span style="width:${pct}%"></span></div>
+    <div class="frage-zeile">
+      <div class="frage">${fr.f}</div>
+      <button class="sprecher ${state.vorlesen?'an':''}" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
+    </div>
+    ${antwortenHtml}
+    ${unten}
+    <div class="quiz-fuss">
+      <label style="font-size:.8rem;color:var(--grau);display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" ${state.vorlesen?'checked':''} onchange="vorlesenToggle(this.checked)"> automatisch vorlesen
+      </label>
+      ${s.aufgedeckt
+        ? `<button class="btn" onclick="lernWeiter()">${s.pos+1<s.reihe.length?'Nächste Frage →':'Fertig ✓'}</button>`
+        : `<button class="btn" onclick="lernPruefen()" ${s.gewaehlt===null?'disabled':''}>Antwort prüfen</button>`}
+    </div>
+  </div>`;
+}
+function vorlesenKlick(idx){ frageVorlesen(FRAGEN[idx], aktivePerm(idx)); }
+function vorlesenToggle(an){ state.vorlesen=an; if(an) autoVorlesen(); else stopSprich(); }
+function lernWaehle(i){ if(state.lernSitzung.aufgedeckt) return; state.lernSitzung.gewaehlt=i; render(); }
+function lernPruefen(){
+  const s=state.lernSitzung; if(s.gewaehlt===null) return;
+  s.aufgedeckt=true;
+  const idx=s.reihe[s.pos]; const fr=FRAGEN[idx];
+  const richtig=s.gewaehlt===fr.r;
+  const alt=state.gelernt[idx]||{versuche:0,fehlversuche:0,richtig:false};
+  state.gelernt[idx]={richtig, versuche:alt.versuche+1, fehlversuche:alt.fehlversuche+(richtig?0:1)};
+  if(richtig){
+    s.richtige++; state.xp+=10; state.streak++;
+    state.besteStreak=Math.max(state.besteStreak,state.streak);
+    state.fehlerkiste.delete(idx);
+  } else {
+    state.xp+=2; state.streak=0; state.fehlerkiste.add(idx);
+  }
+  if(state.vorlesen){
+    const e=richtig?"Richtig! ":"Leider falsch. Die richtige Antwort ist: "+fr.a[fr.r]+". ";
+    sprich(e+fr.e);
+  }
+  render();
+}
+function lernWeiter(){
+  const s=state.lernSitzung;
+  stopSprich();
+  if(s.pos+1<s.reihe.length){ s.pos++; s.gewaehlt=null; s.aufgedeckt=false; render(); autoVorlesen(); }
+  else { state.view='dashboard'; state.lernSitzung=null; render(); }
+}
+
+/* =========================== PRÜFUNG =========================== */
+function startPruefung(){
+  stopSprich();
+  const r=regeln();
+  let auswahl=[];
+  GEBIETE.forEach(g=>{
+    const idxs=FRAGEN.map((f,i)=>({f,i})).filter(o=>o.f.g===g.id).map(o=>o.i);
+    auswahl=auswahl.concat(mische(idxs).slice(0,r.fragenProGebiet));
+  });
+  const reihe=mische(auswahl);
+  state.pruefung={reihe, perms:machePerms(reihe), antworten:{}, pos:0, restSek:r.zeitMinuten*60, abgegeben:false, zeitAus:false};
+  state.view='pruefung'; render(); startTimer();
+}
+function startTimer(){
+  stopTimer();
+  state.timerId=setInterval(()=>{
+    const p=state.pruefung; if(!p||p.abgegeben) return stopTimer();
+    p.restSek--;
+    const el=$('#timer');
+    if(el){ el.textContent=formatZeit(p.restSek); if(p.restSek<=300) el.parentElement.classList.add('knapp'); }
+    if(p.restSek<=0){ stopTimer(); pruefungAbgeben(true); }
+  },1000);
+}
+function stopTimer(){ if(state.timerId){ clearInterval(state.timerId); state.timerId=null; } }
+function formatZeit(s){ const m=Math.floor(s/60), r=s%60; return `${m}:${String(r).padStart(2,'0')}`; }
+function viewPruefung(){
+  const p=state.pruefung; const idx=p.reihe[p.pos]; const fr=FRAGEN[idx];
+  const g=GEBIETE.find(x=>x.id===fr.g);
+  const gewaehlt=p.antworten[idx];
+  const beantwortet=Object.keys(p.antworten).length;
+  const pct=Math.round(beantwortet/p.reihe.length*100);
+  const perm=p.perms[idx];
+  const antwortenHtml=perm.map((orig,i)=>`<button class="antwort${gewaehlt===orig?' gewaehlt':''}" onclick="pruefWaehle(${idx},${orig})">
+    <span class="buchstabe">${['A','B','C'][i]}</span><span>${fr.a[orig]}</span></button>`).join('');
+  return `
+  <div class="quizbox">
+    <div class="quiz-kopf">
+      <span class="badge">${g.icon} ${g.kurz}</span>
+      <span class="badge">Frage ${p.pos+1} / ${p.reihe.length}</span>
+      <span class="badge timer">⏱ <span id="timer">${formatZeit(p.restSek)}</span></span>
+    </div>
+    <div class="progressbalken"><span style="width:${pct}%"></span></div>
+    <div class="frage-zeile">
+      <div class="frage">${fr.f}</div>
+      <button class="sprecher" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
+    </div>
+    ${antwortenHtml}
+    <div class="quiz-fuss">
+      <button class="btn ghost" onclick="pruefBlaettern(-1)" ${p.pos===0?'disabled':''}>← Zurück</button>
+      ${p.pos+1<p.reihe.length
+        ? `<button class="btn" onclick="pruefBlaettern(1)">Weiter →</button>`
+        : `<button class="btn gruen" onclick="pruefungAbgeben(false)">Prüfung abgeben ✓</button>`}
+    </div>
+    <div style="text-align:center;margin-top:14px;font-size:.82rem;color:var(--grau)">
+      ${beantwortet} von ${p.reihe.length} beantwortet
+      ${beantwortet===p.reihe.length&&p.pos+1<p.reihe.length?` · <button class="zurueck" style="display:inline;margin:0" onclick="pruefungAbgeben(false)">jetzt abgeben</button>`:''}
+    </div>
+  </div>`;
+}
+function pruefWaehle(idx,i){ state.pruefung.antworten[idx]=i; render(); }
+function pruefBlaettern(d){ const p=state.pruefung; p.pos=Math.max(0,Math.min(p.reihe.length-1,p.pos+d)); render(); }
+function pruefungAbgeben(zeitAus){
+  const p=state.pruefung; p.abgegeben=true; p.zeitAus=zeitAus; stopTimer(); stopSprich();
+  let richtigGesamt=0; const proGebiet={};
+  GEBIETE.forEach(g=>proGebiet[g.id]={richtig:0,gesamt:0});
+  p.reihe.forEach(idx=>{
+    const fr=FRAGEN[idx]; proGebiet[fr.g].gesamt++;
+    const ok=p.antworten[idx]===fr.r;
+    if(ok){ richtigGesamt++; proGebiet[fr.g].richtig++; }
+    else state.fehlerkiste.add(idx);
+    const alt=state.gelernt[idx]||{versuche:0,fehlversuche:0,richtig:false};
+    state.gelernt[idx]={richtig:ok, versuche:alt.versuche+1, fehlversuche:alt.fehlversuche+(ok?0:1)};
+  });
+  p.ergebnis={richtigGesamt, proGebiet};
+  state.simsGesamt++;
+  const r=regeln();
+  const gesamtFragen=p.reihe.length;
+  const schwelleGesamt=Math.round(r.bestehenGesamt/r.fragenGesamt*gesamtFragen);
+  let alleOk=true;
+  GEBIETE.forEach(g=>{
+    const pg=p.ergebnis.proGebiet[g.id];
+    if(pg.gesamt>0){
+      const sw=Math.round(r.bestehenProGebiet/r.fragenProGebiet*pg.gesamt);
+      if(pg.richtig<sw) alleOk=false;
+    }
+  });
+  p.bestanden = richtigGesamt>=schwelleGesamt && alleOk;
+  if(p.bestanden){ state.simsBestanden++; state.xp+=50; }
+  else state.xp+=15;
+  state.view='ergebnis'; render();
+  if(p.bestanden) konfetti();
+}
+function viewErgebnis(){
+  const p=state.pruefung; const e=p.ergebnis; const r=regeln();
+  const gesamtFragen=p.reihe.length;
+  const pct=Math.round(e.richtigGesamt/gesamtFragen*100);
+  const schwelleGesamt=Math.round(r.bestehenGesamt/r.fragenGesamt*gesamtFragen);
+  const gebietZeilen=GEBIETE.map(g=>{
+    const pg=e.proGebiet[g.id];
+    const sw=pg.gesamt?Math.round(r.bestehenProGebiet/r.fragenProGebiet*pg.gesamt):0;
+    const ok=!pg.gesamt||pg.richtig>=sw;
+    return `<tr><td>${g.icon} ${g.kurz}</td><td class="zahl">${pg.richtig} / ${pg.gesamt}</td>
+      <td style="text-align:right"><span class="pill ${ok?'ok':'no'}">${ok?'bestanden':'zu wenig'}</span></td></tr>`;
+  }).join('');
+  const falsche=p.reihe.filter(idx=>p.antworten[idx]!==FRAGEN[idx].r);
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zum Dashboard</button>
+  <div class="quizbox" style="text-align:center">
+    <h1 style="margin-bottom:0">Dein Ergebnis</h1>
+    <div class="ergebnis-kreis" style="--pct:${pct}%">
+      <div class="zahl"><b>${e.richtigGesamt}/${gesamtFragen}</b>${pct}%</div>
+    </div>
+    <div class="status-gross ${p.bestanden?'bestanden':'durchgefallen'}">
+      ${p.bestanden?'🎉 Bestanden!':'Noch nicht bestanden'}
+    </div>
+    <p class="lead">${p.zeitAus?'⏱ Die Zeit war abgelaufen. ':''}Nötig: mind. ${schwelleGesamt} richtige gesamt <em>und</em> genug richtige in jedem Sachgebiet.
+    ${p.bestanden?' Stark – weiter so! +50 XP':' Kopf hoch: Deine Fehler warten in der Fehlerkiste mit Erklärungen auf dich. +15 XP'}</p>
+    <table class="gebiete">
+      <thead><tr><th>Sachgebiet</th><th class="zahl">Richtig</th><th style="text-align:right">Status</th></tr></thead>
+      <tbody>${gebietZeilen}</tbody>
+    </table>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+      ${falsche.length?`<button class="btn gruen" onclick="startFehlerkiste()">🧰 Fehler üben (${falsche.length})</button>`:''}
+      <button class="btn" onclick="startPruefung()">Neue Simulation</button>
+      <button class="btn ghost" onclick="go('dashboard')">Dashboard</button>
+    </div>
+  </div>
+  ${falsche.length?`
+  <h2>Deine falschen Antworten – mit Erklärung</h2>
+  ${falsche.map(idx=>{ const fr=FRAGEN[idx]; const g=GEBIETE.find(x=>x.id===fr.g);
+    const deine=p.antworten[idx];
+    return `<div class="karte" style="margin-bottom:10px">
+      <div style="font-size:.76rem;color:var(--grau);margin-bottom:3px">${g.icon} ${g.kurz}</div>
+      <div style="font-weight:700;margin-bottom:7px">${fr.f}</div>
+      ${deine!==undefined?`<div style="font-size:.85rem;color:var(--rot-dkl);margin-bottom:4px">✗ Deine Antwort: „${fr.a[deine]}“</div>`:`<div style="font-size:.85rem;color:var(--grau);margin-bottom:4px">– nicht beantwortet –</div>`}
+      <div style="font-size:.85rem;color:var(--gruen-dkl);font-weight:650;margin-bottom:6px">✓ Richtig: „${fr.a[fr.r]}“</div>
+      <div class="erklaerung schlecht" style="margin-top:4px">${fr.e}</div>
+      ${ESELSBRUECKEN[fr.f]?`<div class="eselsbruecke"><div class="titel">🫏 Eselsbrücke:</div>${ESELSBRUECKEN[fr.f]}</div>`:''}
+    </div>`; }).join('')}
+  `:''}`;
+}
+
+/* =========================== VIDEOS =========================== */
+function viewVideos(){
+  const karten=VIDEOS.map(v=>`
+    <div class="karte video-karte">
+      <span class="thumb">${v.icon}</span>
+      <div style="flex:1"><h3>${v.titel}</h3><p>${v.text}</p></div>
+      <a class="extern" href="${v.url}" target="_blank" rel="noopener">Ansehen ↗</a>
+    </div>`).join('');
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
+  <h1>🎬 Praxis-Videos</h1>
+  <p class="lead">Handverlesene Themen für die Praxisprüfung und den Start am Wasser. Die Links öffnen aktuelle Lernvideos auf YouTube.</p>
+  <div style="display:grid;gap:12px">${karten}</div>
+  <div class="hinweis blau">Tipp: Übe Knoten mit einer dickeren Schnur (z.B. Paketschnur) – da sieht man jeden Schritt besser.</div>`;
+}
+
+/* =========================== AUSBILDER =========================== */
+function kursSchnitt(gid){
+  const werte=DEMO_PRUEFLINGE.map(p=>p.gebiete[gid]);
+  return Math.round(werte.reduce((a,b)=>a+b,0)/werte.length);
+}
+function heatFarbe(v){ return v>=75?'var(--gruen)':v>=50?'#e8a317':'var(--rot)'; }
+function viewAusbilder(){
+  const zeilen=DEMO_PRUEFLINGE.map((p,i)=>{
+    const schnitt=Math.round(Object.values(p.gebiete).reduce((a,b)=>a+b,0)/6);
+    const zeitPct=Math.min(100,Math.round(p.lernzeitMin/p.sollMin*100));
+    return `<tr class="klick" onclick="zeigeSchueler(${i})">
+      <td><strong>${p.name}</strong></td>
+      <td><span class="mini-balken"><span style="width:${schnitt}%;background:${heatFarbe(schnitt)}"></span></span>${schnitt}%</td>
+      <td><span class="mini-balken"><span style="width:${zeitPct}%;background:${heatFarbe(zeitPct)}"></span></span>${lernzeitFormat(p.lernzeitMin*60)} / ${lernzeitFormat(p.sollMin*60)}</td>
+      <td>${p.sim}× (${p.bestanden} bestanden)</td>
+      <td style="color:var(--grau)">${p.letzte}</td></tr>`;
+  }).join('');
+  const heat=GEBIETE.map(g=>{
+    const v=kursSchnitt(g.id);
+    return `<div class="zelle" style="background:${heatFarbe(v)}">${v}%<small>${g.kurz}</small></div>`;
+  }).join('');
+  const schwaechstes=GEBIETE.reduce((min,g)=>kursSchnitt(g.id)<kursSchnitt(min.id)?g:min,GEBIETE[0]);
+  const topFehler=DEMO_TOP_FEHLER.map(t=>{
+    const g=GEBIETE.find(x=>x.id===t.gebiet);
+    return `<div class="fehlerfrage"><span>${g.icon} ${t.frage}</span><b>${t.quote}% falsch</b></div>`;
+  }).join('');
+  return `
+  <h1>Ausbilder-Cockpit 👨‍🏫</h1>
+  <p class="lead">Auf einen Blick: Wo steht dein Kurs, wo hakt es – und was solltest du in der nächsten Stunde wiederholen? (Beispieldaten)</p>
+
+  <div class="karte" style="border-left:6px solid var(--rot);margin-bottom:18px">
+    <h3 style="margin:0 0 4px">💡 Empfehlung für die nächste Kursstunde</h3>
+    <p style="margin:0;font-size:.9rem;color:var(--grau)">Dein Kurs ist am schwächsten in
+    <strong style="color:var(--rot-dkl)">${schwaechstes.icon} ${schwaechstes.name} (${kursSchnitt(schwaechstes.id)}%)</strong>.
+    Unten siehst du die 5 meist-verfehlten Fragen – ideal, um sie gemeinsam durchzugehen.</p>
+  </div>
+
+  <h2>Kurs-Schnitt nach Sachgebiet</h2>
+  <div class="heat">${heat}</div>
+
+  <h2>Meist-verfehlte Fragen im Kurs</h2>
+  <div class="karte">${topFehler}</div>
+
+  <h2>Meine Prüflinge <span style="font-size:.75rem;color:var(--grau);font-weight:400">(antippen für Details)</span></h2>
+  <table class="prueflinge">
+    <thead><tr><th>Name</th><th>Lernstand</th><th>Lernzeit (Ist/Soll)</th><th>Simulationen</th><th>Zuletzt aktiv</th></tr></thead>
+    <tbody>${zeilen}</tbody>
+  </table>
+
+  <div class="karte" style="margin-top:18px;border-left:6px solid var(--welle)">
+    <h3 style="margin:0 0 4px">🔑 Prüflinge einladen</h3>
+    <p style="margin:0 0 10px;font-size:.87rem;color:var(--grau)">Neue Prüflinge treten deinem Kurs mit diesem Code bei (kommt mit dem Login-System):</p>
+    <span class="code-box">WE-2026-AX7</span>
+  </div>
+
+  <h2>📋 Lehrplan & Prüfungsvorgaben</h2>
+  <button class="btn blau" onclick="go('lehrplan')">Lehrplan öffnen</button>`;
+}
+let schuelerIdx=0;
+function zeigeSchueler(i){ schuelerIdx=i; state.view='schueler'; render(); }
+function sollAendern(i,wert){
+  DEMO_PRUEFLINGE[i].sollMin=+wert;
+  const el=document.getElementById('sollAnzeige');
+  if(el) el.textContent=lernzeitFormat(wert*60);
+}
+function viewSchueler(){
+  const p=DEMO_PRUEFLINGE[schuelerIdx];
+  const zeilen=GEBIETE.map(g=>{
+    const v=p.gebiete[g.id];
+    return `<tr><td>${g.icon} ${g.name}</td>
+      <td class="zahl"><span class="mini-balken"><span style="width:${v}%;background:${heatFarbe(v)}"></span></span>${v}%</td>
+      <td style="text-align:right"><span class="pill ${v>=60?'ok':'no'}">${v>=75?'sicher':v>=50?'wackelig':'kritisch'}</span></td></tr>`;
+  }).join('');
+  const schwach=GEBIETE.filter(g=>p.gebiete[g.id]<60).map(g=>g.name);
+  const zeitPct=Math.min(100,Math.round(p.lernzeitMin/p.sollMin*100));
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück zum Cockpit</button>
+  <h1>${p.name}</h1>
+  <p class="lead">${p.sim} Simulation${p.sim===1?'':'en'} · ${p.bestanden} bestanden · zuletzt aktiv: ${p.letzte}</p>
+
+  <div class="karte" style="margin-bottom:14px;border-left:6px solid var(--akzent)">
+    <h3 style="margin:0 0 4px">⏱️ Lernzeit</h3>
+    <p style="margin:0 0 8px;font-size:.9rem;color:var(--grau)">
+      <strong>${lernzeitFormat(p.lernzeitMin*60)}</strong> von <strong>${lernzeitFormat(p.sollMin*60)}</strong> Ziel-Lernzeit (${zeitPct}%)</p>
+    <div class="fortschritt" style="height:10px"><span style="width:${zeitPct}%;background:${heatFarbe(zeitPct)}"></span></div>
+    <label style="font-size:.85rem;color:var(--grau);display:block;margin-top:10px">
+      Individuelles Lernzeit-Ziel für ${p.name.split(' ')[0]} anpassen:
+      <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+        <input type="range" min="120" max="1800" step="30" value="${p.sollMin}" style="flex:1"
+          oninput="sollAendern(${schuelerIdx}, this.value)">
+        <span id="sollAnzeige" style="font-weight:800;color:var(--wasser);min-width:80px">${lernzeitFormat(p.sollMin*60)}</span>
+      </div>
+    </label>
+  </div>
+  ${schwach.length?`<div class="hinweis"><strong>Wiederholen mit ${p.name.split(' ')[0]}:</strong> ${schwach.join(', ')}</div>`
+    :`<div class="hinweis blau"><strong>Stark:</strong> Keine kritischen Bereiche – prüfungsbereit!</div>`}
+  <table class="gebiete" style="background:#fff;border-radius:var(--radius);box-shadow:var(--schatten);padding:8px">
+    <thead><tr><th>Sachgebiet</th><th class="zahl">Lernstand</th><th style="text-align:right">Einschätzung</th></tr></thead>
+    <tbody>${zeilen}</tbody>
+  </table>`;
+}
+function viewLehrplan(){
+  const r=regeln();
+  const fakten=[["Sachgebiete","6"],["Empf. Umfang","ca. 2 Doppelstunden je Sachgebiet"],
+    ["Praxis","mind. 1 Doppelstunde Gerätekunde"],["Mindestalter","Lehrgang ab 13 Jahren"],
+    ["Theorieprüfung",`${r.fragenGesamt} Fragen, ${r.zeitMinuten} Minuten`],
+    ["Bestehen",`≥ ${r.bestehenGesamt} gesamt UND ≥ ${r.bestehenProGebiet} je Sachgebiet`],
+    ["Praxisprüfung","Angelgeräte zusammenstellen & handhaben"]]
+    .map(([k,v])=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--linie);font-size:.9rem">
+      <b style="min-width:140px;color:var(--wasser)">${k}</b><span>${v}</span></div>`).join('');
+  const gebiete=GEBIETE.map((g,i)=>`<div class="karte" style="margin-bottom:10px">
+    <h3 style="margin:0 0 3px;color:${g.farbe}">${i+1}. ${g.icon} ${g.name}</h3>
+    <p style="margin:0;font-size:.85rem;color:var(--grau)">Sachgebiet der theoretischen Prüfung · empfohlen ca. 2 Doppelstunden.</p></div>`).join('');
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
+  <h1>Lehrplan & Prüfungsvorgaben</h1>
+  <div class="karte" style="margin-bottom:18px">${fakten}</div>
+  <h2>Die 6 Sachgebiete</h2>
+  ${gebiete}
+  <div class="hinweis">Quelle: Ausbildungs- und Prüfungsordnung des Angelfischerverbands im Landesfischereiverband Weser-Ems e.V., Stand März 2026.</div>`;
+}
+
+/* =========================== NAV & START =========================== */
+function go(v){ stopSprich(); stopTimer(); state.view=v; render(); }
+lernzeitStart();
+render();
+/* PWA: Service Worker registrieren (nur über https bzw. localhost aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
