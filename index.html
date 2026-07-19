@@ -132,6 +132,11 @@
   .eselsbruecke{background:linear-gradient(120deg,#fff7e0,#ffefc2);border:1.5px dashed var(--akzent);
     border-radius:var(--radius-s);padding:13px 15px;font-size:.9rem;margin-top:10px;animation:auf .3s ease}
   .eselsbruecke .titel{font-weight:800;color:#8a6512;display:flex;gap:7px;align-items:center}
+  .hilfebox{background:#eef5fc;border-left:5px solid var(--wasser);border-radius:var(--radius-s);
+    padding:13px 15px;font-size:.9rem;margin-top:8px;animation:auf .25s ease}
+  .hilfebox .titel{font-weight:800;color:#1c5a8a;margin-bottom:3px}
+  .hilfe-link{background:none;border:none;color:var(--wasser);font-size:.82rem;font-weight:650;
+    cursor:pointer;text-decoration:underline;padding:0;margin-top:4px}
   @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .quiz-fuss{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
   /* ---------- Ergebnis ---------- */
@@ -936,7 +941,7 @@ function startLernen(gid){
   const idxs=FRAGEN.map((f,i)=>({f,i})).filter(o=>o.f.g===gid).map(o=>o.i);
   const reihe=mische(idxs);
   state.lernSitzung={titel:GEBIETE.find(g=>g.id===gid).name, farbe:GEBIETE.find(g=>g.id===gid).farbe,
-    icon:GEBIETE.find(g=>g.id===gid).icon, reihe, perms:machePerms(reihe), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0};
+    icon:GEBIETE.find(g=>g.id===gid).icon, reihe, perms:machePerms(reihe), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0, hilfeAn:false};
   state.view='lernsitzung'; render(); autoVorlesen();
 }
 function startFehlerkiste(){
@@ -944,7 +949,7 @@ function startFehlerkiste(){
   const idxs=mische([...state.fehlerkiste]);
   if(!idxs.length) return;
   state.lernSitzung={titel:"Fehlerkiste", farbe:"var(--rot)", icon:"🧰",
-    reihe:idxs, perms:machePerms(idxs), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0};
+    reihe:idxs, perms:machePerms(idxs), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0, hilfeAn:false};
   state.view='lernsitzung'; render(); autoVorlesen();
 }
 function autoVorlesen(){
@@ -978,7 +983,13 @@ function viewLernSitzung(){
     if(!richtig && oftFalsch && bruecke){
       unten+=`<div class="eselsbruecke"><div class="titel">🫏 Eselsbrücke – damit es sitzt:</div>${bruecke}</div>`;
     }
+  } else if(s.hilfeAn){
+    // Erklärung auf Wunsch VOR der Beantwortung – falls die Frage selbst unklar ist
+    unten=`<div class="hilfebox"><div class="titel">💡 Erklärung zur Frage:</div><div>${fr.e}</div></div>`;
   }
+  const hilfeLink = !s.aufgedeckt
+    ? `<button class="hilfe-link" onclick="lernHilfeToggle()">${s.hilfeAn?'Erklärung ausblenden':'❓ Frage nicht klar? Erklärung anzeigen'}</button>`
+    : '';
   return `
   <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
   <div class="quizbox">
@@ -992,6 +1003,7 @@ function viewLernSitzung(){
       <div class="frage">${fr.f}</div>
       <button class="sprecher ${state.vorlesen?'an':''}" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
     </div>
+    ${hilfeLink}
     ${antwortenHtml}
     ${unten}
     <div class="quiz-fuss">
@@ -1007,6 +1019,7 @@ function viewLernSitzung(){
 function vorlesenKlick(idx){ frageVorlesen(FRAGEN[idx], aktivePerm(idx)); }
 function vorlesenToggle(an){ state.vorlesen=an; if(an) autoVorlesen(); else stopSprich(); }
 function lernWaehle(i){ if(state.lernSitzung.aufgedeckt) return; state.lernSitzung.gewaehlt=i; render(); }
+function lernHilfeToggle(){ const s=state.lernSitzung; s.hilfeAn=!s.hilfeAn; render(); }
 function lernPruefen(){
   const s=state.lernSitzung; if(s.gewaehlt===null) return;
   s.aufgedeckt=true;
@@ -1031,7 +1044,7 @@ function lernPruefen(){
 function lernWeiter(){
   const s=state.lernSitzung;
   stopSprich();
-  if(s.pos+1<s.reihe.length){ s.pos++; s.gewaehlt=null; s.aufgedeckt=false; render(); autoVorlesen(); }
+  if(s.pos+1<s.reihe.length){ s.pos++; s.gewaehlt=null; s.aufgedeckt=false; s.hilfeAn=false; render(); autoVorlesen(); }
   else { state.view='dashboard'; state.lernSitzung=null; render(); }
 }
 
