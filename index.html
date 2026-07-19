@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AngelUp">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root{
     --tiefsee:#06304d; --wasser:#0b4f79; --welle:#1179ae; --hell:#e8f4fb;
@@ -341,25 +342,18 @@ const VIDEOS = [
 const LEVELS = ["Köderfisch","Jungangler","Posenprofi","Gewässerkenner","Rutenmeister","Prüfungsjäger","Fischerkönig"];
 const XP_PRO_LEVEL = 120;
 
-/* ---- Demo-Prüflinge (Ausbilder-Ansicht) ---- */
-const DEMO_PRUEFLINGE = [
-  {name:"Lena Bruns",  gebiete:{1:85,2:78,3:90,4:72,5:88,6:60}, sim:2, bestanden:1, letzte:"vor 2 Tagen", lernzeitMin:540, sollMin:600},
-  {name:"Tom Aden",    gebiete:{1:65,2:50,3:70,4:80,5:75,6:45}, sim:1, bestanden:0, letzte:"heute", lernzeitMin:310, sollMin:600},
-  {name:"Kevin Meyer", gebiete:{1:40,2:35,3:55,4:60,5:50,6:30}, sim:1, bestanden:0, letzte:"vor 5 Tagen", lernzeitMin:150, sollMin:720},
-  {name:"Sarah Ottjes",gebiete:{1:92,2:88,3:95,4:85,5:90,6:82}, sim:3, bestanden:2, letzte:"gestern", lernzeitMin:720, sollMin:600},
-  {name:"Jonas Frerichs",gebiete:{1:20,2:10,3:15,4:25,5:30,6:5}, sim:0, bestanden:0, letzte:"neu dabei", lernzeitMin:35, sollMin:600}
-];
-/* Meist-verfehlte Fragen im Kurs (Demo für Ausbilder-Auswertung) */
-const DEMO_TOP_FEHLER = [
-  {frage:"Wie viele Fragen muss man mindestens richtig beantworten, um zu bestehen?", gebiet:6, quote:62},
-  {frage:"Wann ist der Sauerstoffgehalt in einem stehenden Gewässer oft am niedrigsten?", gebiet:3, quote:55},
-  {frage:"Welches Merkmal ist typisch für Salmoniden (z.B. Forelle)?", gebiet:2, quote:48},
-  {frage:"Was bezeichnet der Begriff „Eutrophierung“?", gebiet:3, quote:45},
-  {frage:"Welche Hakenform sollte aus Tierschutzgründen bevorzugt werden?", gebiet:4, quote:38}
-];
+/* Ausbilder-Daten kommen live aus der Datenbank (siehe ladeKursDaten) */
+
+/* =========================== SUPABASE (Login & Cloud-Speicherung) =========================== */
+const SB_URL = "https://vqjpwhqpcybpblgtjuxw.supabase.co";
+const SB_KEY = "sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9";
+const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+const AUSBILDER_FREISCHALTCODE = "AUSBILDER2026"; // Code für Ausbilder-Registrierung (änderbar)
 
 /* =========================== ZUSTAND =========================== */
 let state = {
+  user: null, profil: null, authTab: 'login', authMeldung: null, authBusy: false,
+  kursDaten: null,
   region: null, rolle: null, view: 'region',
   xp: 0, streak: 0, besteStreak: 0,
   gelernt: {},            // frageIndex -> {richtig, versuche, fehlversuche}
@@ -439,7 +433,9 @@ function render(){
   const app=$('#app');
   if(state.view==='region'){ app.innerHTML=viewRegion(); return; }
   if(state.view==='rolle'){ app.innerHTML=viewRolle(); return; }
-  app.innerHTML=kopf()+`<main>${aktuelleView()}</main>`;
+  if(!state.user && state.view!=='impressum' && state.view!=='datenschutz'){ app.innerHTML=viewAuth(); return; }
+  if(!state.user){ app.innerHTML=`<main>${aktuelleView()}</main>`; return; }
+  app.innerHTML=kopf()+`<main>${aktuelleView()}${state.view==='dashboard'?fusszeile():''}</main>`;
 }
 function aktuelleView(){
   switch(state.view){
@@ -450,17 +446,20 @@ function aktuelleView(){
     case 'videos': return viewVideos();
     case 'lehrplan': return viewLehrplan();
     case 'schueler': return viewSchueler();
+    case 'impressum': return viewImpressum();
+    case 'datenschutz': return viewDatenschutz();
     default: return viewDashboard();
   }
 }
 function kopf(){
   const reg=REGIONEN.find(r=>r.id===state.region);
-  const rolleTxt=state.rolle==='ausbilder'?'👨‍🏫 Ausbilder':'🎓 Prüfling';
+  const rolleTxt=state.rolle==='ausbilder'?'👨‍🏫':'🎓';
+  const name=state.profil&&state.profil.name?state.profil.name.split(' ')[0]:'';
   return `<header class="top">
     <div class="logo" onclick="go('dashboard')">${LOGO_SVG} Angel<span class="up">Up</span></div>
     <div class="kopf-rechts">
-      <span class="chip">📍 ${reg?reg.name:''} <button onclick="regionWechseln()">ändern</button></span>
-      <span class="chip">${rolleTxt} <button onclick="rolleWechseln()">wechseln</button></span>
+      <span class="chip">📍 ${reg?reg.name:''}</span>
+      <span class="chip">${rolleTxt} ${name} <button onclick="logout()">abmelden</button></span>
       ${state.rolle==='pruefling'?`<span class="chip">⭐ <b>${state.xp}</b> XP</span>`:''}
     </div>
   </header>`;
@@ -490,29 +489,180 @@ function viewRegion(){
 function setRegion(id){ state.region=id; state.view='rolle'; render(); }
 function regionWechseln(){ stopSprich(); stopTimer(); state.region=null; state.view='region'; render(); }
 
-/* =========================== ROLLE =========================== */
-function viewRolle(){
+/* =========================== LOGIN / REGISTRIERUNG =========================== */
+function viewRolle(){ return viewAuth(); }
+function viewAuth(){
+  const t=state.authTab;
+  const meld=state.authMeldung?`<div class="hinweis ${state.authMeldung.ok?'blau':''}" style="text-align:left">${state.authMeldung.text}</div>`:'';
+  const tabs=`<div style="display:flex;gap:8px;justify-content:center;margin-bottom:18px">
+    <button class="btn ${t==='login'?'':'ghost'}" onclick="authTab('login')">Anmelden</button>
+    <button class="btn ${t==='register'?'':'ghost'}" onclick="authTab('register')">Registrieren</button>
+  </div>`;
+  const feld=(id,label,typ,ph)=>`<label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">${label}</label>
+    <input id="${id}" type="${typ}" placeholder="${ph}" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">`;
+  let form='';
+  if(t==='login'){
+    form=`${feld('a_email','E-Mail','email','du@beispiel.de')}
+    ${feld('a_pw','Passwort','password','••••••••')}
+    <button class="btn gross" style="margin-top:16px" onclick="loginKlick()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Anmelden'}</button>
+    <button class="zurueck" style="margin-top:10px" onclick="pwVergessen()">Passwort vergessen?</button>`;
+  } else {
+    form=`${feld('a_name','Dein Name','text','Vorname Nachname')}
+    ${feld('a_email','E-Mail','email','du@beispiel.de')}
+    ${feld('a_pw','Passwort (mind. 6 Zeichen)','password','••••••••')}
+    <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Ich bin …</label>
+    <select id="a_rolle" onchange="document.getElementById('a_extra_wrap').style.display=this.value==='ausbilder'?'block':'block';document.getElementById('a_extra_label').textContent=this.value==='ausbilder'?'Ausbilder-Freischaltcode':'Kurs-Code vom Ausbilder (optional)'"
+      style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit;background:#fff">
+      <option value="pruefling">🎓 Prüfling</option>
+      <option value="ausbilder">👨‍🏫 Ausbilder</option>
+    </select>
+    <div id="a_extra_wrap">
+      <label id="a_extra_label" style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Kurs-Code vom Ausbilder (optional)</label>
+      <input id="a_extra" type="text" placeholder="z.B. WE-A1B2C3" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">
+    </div>
+    <button class="btn gross gruen" style="margin-top:16px" onclick="registerKlick()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Kostenlos registrieren'}</button>
+    <p style="font-size:.72rem;color:var(--grau);margin-top:10px">Mit der Registrierung akzeptierst du die <a href="#" onclick="go('datenschutz');return false" style="color:var(--wasser)">Datenschutzerklärung</a>. Du bekommst eine Bestätigungs-E-Mail.</p>`;
+  }
   return `<div class="held">
-    <h1>Wer bist du? 👋</h1>
-    <p class="unter">Wähle deinen Zugang – Prüflinge lernen, Ausbilder behalten den Überblick.</p>
-    <main style="padding-top:0;max-width:760px">
-      <div class="rollen">
-        <div class="karte klick" onclick="setRolle('pruefling')" style="text-align:left">
-          <div style="font-size:2.2rem">🎓</div><h3 style="margin:6px 0 4px">Ich bin Prüfling</h3>
-          <p style="font-size:.87rem;color:var(--grau);margin:0 0 12px">Lerne alle Sachgebiete, sammle XP, übe mit Eselsbrücken und simuliere die echte Prüfung.</p>
-          <span class="btn gross">Lernen starten</span>
-        </div>
-        <div class="karte klick" onclick="setRolle('ausbilder')" style="text-align:left">
-          <div style="font-size:2.2rem">👨‍🏫</div><h3 style="margin:6px 0 4px">Ich bin Ausbilder</h3>
-          <p style="font-size:.87rem;color:var(--grau);margin:0 0 12px">Sieh, wo deine Prüflinge stehen, wo es hakt – und welche Themen du im Kurs wiederholen solltest.</p>
-          <span class="btn gross blau">Zum Ausbilder-Bereich</span>
-        </div>
-      </div>
+    ${FISCH_DEKO}
+    <h1>Angel<span style="color:var(--akzent2)">Up</span> 🎣</h1>
+    <p class="unter">Melde dich an, um deinen Lernfortschritt zu speichern – auf jedem Gerät.</p>
+    <main style="padding-top:0;max-width:430px">
+      <div class="karte" style="text-align:center">${tabs}${meld}${form}</div>
+      ${fusszeile()}
     </main>
   </div>`;
 }
-function setRolle(r){ state.rolle=r; state.view='dashboard'; render(); }
-function rolleWechseln(){ stopSprich(); stopTimer(); state.rolle=null; state.view='rolle'; render(); }
+function authTab(t){ state.authTab=t; state.authMeldung=null; render(); }
+async function loginKlick(){
+  if(!sb){ state.authMeldung={text:'Verbindung zum Login-Server fehlgeschlagen. Bitte Seite neu laden.'}; return render(); }
+  const email=document.getElementById('a_email').value.trim(), pw=document.getElementById('a_pw').value;
+  if(!email||!pw){ state.authMeldung={text:'Bitte E-Mail und Passwort eingeben.'}; return render(); }
+  state.authBusy=true; render();
+  const {error}=await sb.auth.signInWithPassword({email, password:pw});
+  state.authBusy=false;
+  if(error){
+    state.authMeldung={text: error.message.includes('Invalid login')?'E-Mail oder Passwort falsch.':error.message.includes('not confirmed')?'Bitte bestätige zuerst deine E-Mail (Posteingang prüfen).':'Anmeldung fehlgeschlagen: '+error.message};
+    return render();
+  }
+  await nachLogin();
+}
+async function registerKlick(){
+  if(!sb){ state.authMeldung={text:'Verbindung zum Login-Server fehlgeschlagen. Bitte Seite neu laden.'}; return render(); }
+  const name=document.getElementById('a_name').value.trim();
+  const email=document.getElementById('a_email').value.trim();
+  const pw=document.getElementById('a_pw').value;
+  const rolle=document.getElementById('a_rolle').value;
+  const extra=document.getElementById('a_extra').value.trim();
+  if(!name||!email||pw.length<6){ state.authMeldung={text:'Bitte Name, E-Mail und ein Passwort mit mind. 6 Zeichen eingeben.'}; return render(); }
+  if(rolle==='ausbilder' && extra!==AUSBILDER_FREISCHALTCODE){
+    state.authMeldung={text:'Der Ausbilder-Freischaltcode stimmt nicht. Du bekommst ihn vom AngelUp-Team.'}; return render();
+  }
+  state.authBusy=true; render();
+  const {error}=await sb.auth.signUp({email, password:pw,
+    options:{ data:{ name, rolle, kurs_code: rolle==='pruefling'?extra.toUpperCase():'' },
+      emailRedirectTo: location.origin + location.pathname }});
+  state.authBusy=false;
+  if(error){ state.authMeldung={text:'Registrierung fehlgeschlagen: '+error.message}; return render(); }
+  state.authMeldung={ok:true, text:'📧 Fast geschafft! Wir haben dir eine Bestätigungs-E-Mail geschickt. Klicke auf den Link darin, dann kannst du dich anmelden.'};
+  state.authTab='login'; render();
+}
+async function pwVergessen(){
+  const email=document.getElementById('a_email')?document.getElementById('a_email').value.trim():'';
+  if(!email){ state.authMeldung={text:'Gib oben deine E-Mail ein und klicke dann auf „Passwort vergessen".'}; return render(); }
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo: location.origin+location.pathname});
+  state.authMeldung=error?{text:'Fehler: '+error.message}:{ok:true,text:'📧 E-Mail zum Zurücksetzen ist unterwegs.'};
+  render();
+}
+async function nachLogin(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user) return;
+  state.user=user;
+  const {data:profil}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  state.profil=profil||{name:'',rolle:'pruefling',soll_min:600};
+  state.rolle=state.profil.rolle;
+  state.xp=state.profil.xp||0; state.besteStreak=state.profil.beste_streak||0;
+  state.lernzeitSek=state.profil.lernzeit_sek||0;
+  // Fortschritt laden
+  const {data:fs}=await sb.from('fortschritt').select('*').eq('user_id',user.id);
+  state.gelernt={}; state.fehlerkiste=new Set();
+  (fs||[]).forEach(r=>{ state.gelernt[r.frage_idx]={richtig:r.richtig,versuche:r.versuche,fehlversuche:r.fehlversuche}; if(!r.richtig) state.fehlerkiste.add(r.frage_idx); });
+  const {count:simsG}=await sb.from('simulationen').select('*',{count:'exact',head:true}).eq('user_id',user.id);
+  const {count:simsB}=await sb.from('simulationen').select('*',{count:'exact',head:true}).eq('user_id',user.id).eq('bestanden',true);
+  state.simsGesamt=simsG||0; state.simsBestanden=simsB||0;
+  if(!state.region) state.region='weser-ems';
+  state.view='dashboard'; render();
+}
+async function logout(){ stopSprich(); stopTimer(); await sb.auth.signOut();
+  state.user=null; state.profil=null; state.rolle=null; state.view='rolle'; state.gelernt={}; state.fehlerkiste=new Set(); state.xp=0; render(); }
+function rolleWechseln(){ logout(); }
+
+/* ---- Cloud-Speicherung ---- */
+async function speichereFortschritt(idx){
+  if(!state.user) return;
+  const e=state.gelernt[idx]; const fr=FRAGEN[idx];
+  await sb.from('fortschritt').upsert({user_id:state.user.id, frage_idx:idx, gebiet:fr.g,
+    richtig:e.richtig, versuche:e.versuche, fehlversuche:e.fehlversuche, updated_at:new Date().toISOString()});
+  speichereStats();
+}
+let _statsTimer=null;
+function speichereStats(){
+  if(!state.user) return;
+  clearTimeout(_statsTimer);
+  _statsTimer=setTimeout(async ()=>{
+    await sb.from('profiles').update({xp:state.xp, beste_streak:state.besteStreak, lernzeit_sek:state.lernzeitSek}).eq('id',state.user.id);
+  }, 1500);
+}
+async function speichereSimulation(p){
+  if(!state.user) return;
+  await sb.from('simulationen').insert({user_id:state.user.id, richtig:p.ergebnis.richtigGesamt,
+    gesamt:p.reihe.length, bestanden:p.bestanden, pro_gebiet:p.ergebnis.proGebiet});
+  speichereStats();
+}
+setInterval(()=>{ if(state.user && (state.view==='lernsitzung'||state.view==='pruefung')) speichereStats(); }, 60000);
+
+/* ---- Fußzeile mit Pflichtseiten ---- */
+function fusszeile(){
+  return `<div style="text-align:center;margin-top:30px;font-size:.78rem;color:var(--grau)">
+    <a href="#" onclick="go('impressum');return false" style="color:var(--grau)">Impressum</a> ·
+    <a href="#" onclick="go('datenschutz');return false" style="color:var(--grau)">Datenschutz</a>
+    ${state.user?` · <a href="#" onclick="logout();return false" style="color:var(--grau)">Abmelden</a>`:''}
+  </div>`;
+}
+function viewImpressum(){
+  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
+  <h1>Impressum</h1>
+  <div class="karte" style="font-size:.92rem;line-height:1.8">
+    <p><strong>Angaben gemäß § 5 DDG</strong></p>
+    <p>Mark Schwarze<br>Schwarze Handel &amp; Vertrieb<br>Alter Postweg 80<br>26607 Aurich<br>Deutschland</p>
+    <p><strong>Kontakt:</strong><br>E-Mail: bwt.schwarze@gmail.com</p>
+    <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong><br>Mark Schwarze, Anschrift wie oben</p>
+    <p style="font-size:.8rem;color:var(--grau)">Plattform der EU-Kommission zur Online-Streitbeilegung: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.
+    Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </div>
+  ${fusszeile()}`;
+}
+function viewDatenschutz(){
+  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
+  <h1>Datenschutzerklärung</h1>
+  <div class="karte" style="font-size:.9rem;line-height:1.7">
+    <p><strong>1. Verantwortlicher</strong><br>Mark Schwarze, Schwarze Handel &amp; Vertrieb, Alter Postweg 80, 26607 Aurich, E-Mail: bwt.schwarze@gmail.com</p>
+    <p><strong>2. Welche Daten wir verarbeiten</strong><br>
+    Bei der Registrierung: Name, E-Mail-Adresse und Passwort (verschlüsselt gespeichert). Während der Nutzung: dein Lernfortschritt (beantwortete Fragen, Ergebnisse von Prüfungssimulationen, Lernzeit) sowie – falls du einem Kurs beigetreten bist – die Zuordnung zu deinem Ausbilder. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Lernplattform).</p>
+    <p><strong>3. Wer deine Daten sieht</strong><br>
+    Dein Ausbilder sieht deinen Lernstand, deine Lernzeit und deine Simulationsergebnisse, wenn du seinem Kurs per Kurs-Code beigetreten bist. Andere Nutzer sehen deine Daten nicht.</p>
+    <p><strong>4. Hosting &amp; Auftragsverarbeiter</strong><br>
+    Die Website wird über GitHub Pages (GitHub B.V./GitHub Inc.) ausgeliefert; dabei fallen technisch notwendige Server-Logs (z.B. IP-Adresse) an. Konten und Lerndaten werden bei Supabase gespeichert – Serverstandort Frankfurt am Main (EU). E-Mails (Registrierungs-Bestätigung, Passwort zurücksetzen) werden über Supabase versendet.</p>
+    <p><strong>5. Cookies &amp; lokale Speicherung</strong><br>
+    AngelUp verwendet keine Werbe- oder Tracking-Cookies. Für die Anmeldung wird eine Sitzung lokal in deinem Browser gespeichert (technisch notwendig).</p>
+    <p><strong>6. Externe Links</strong><br>
+    Die Praxis-Videos verlinken auf YouTube. Erst wenn du einen Link anklickst, gelten die Datenschutzbestimmungen von YouTube/Google.</p>
+    <p><strong>7. Deine Rechte</strong><br>
+    Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO) sowie ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Zur Löschung deines Kontos genügt eine E-Mail an bwt.schwarze@gmail.com.</p>
+    <p style="font-size:.78rem;color:var(--grau)">Stand: Juli 2026</p>
+  </div>
+  ${fusszeile()}`;
+}
 
 /* =========================== PRÜFLING – DASHBOARD =========================== */
 function viewDashboard(){
@@ -668,6 +818,7 @@ function lernPruefen(){
   } else {
     state.xp+=2; state.streak=0; state.fehlerkiste.add(idx);
   }
+  speichereFortschritt(idx);
   if(state.vorlesen){
     const e=richtig?"Richtig! ":"Leider falsch. Die richtige Antwort ist: "+fr.a[fr.r]+". ";
     sprich(e+fr.e);
@@ -770,6 +921,13 @@ function pruefungAbgeben(zeitAus){
   p.bestanden = richtigGesamt>=schwelleGesamt && alleOk;
   if(p.bestanden){ state.simsBestanden++; state.xp+=50; }
   else state.xp+=15;
+  // Cloud: Simulation + kompletten Fragen-Fortschritt speichern
+  speichereSimulation(p);
+  if(state.user){
+    const rows=p.reihe.map(idx=>{ const e=state.gelernt[idx]; const fr=FRAGEN[idx];
+      return {user_id:state.user.id, frage_idx:idx, gebiet:fr.g, richtig:e.richtig, versuche:e.versuche, fehlversuche:e.fehlversuche, updated_at:new Date().toISOString()}; });
+    sb.from('fortschritt').upsert(rows).then(()=>{});
+  }
   state.view='ergebnis'; render();
   if(p.bestanden) konfetti();
 }
@@ -839,73 +997,115 @@ function viewVideos(){
   <div class="hinweis blau">Tipp: Übe Knoten mit einer dickeren Schnur (z.B. Paketschnur) – da sieht man jeden Schritt besser.</div>`;
 }
 
-/* =========================== AUSBILDER =========================== */
+/* =========================== AUSBILDER (echte Kursdaten) =========================== */
+async function ladeKursDaten(){
+  if(!state.user) return;
+  const {data:kurse}=await sb.from('kurse').select('*').eq('ausbilder_id',state.user.id);
+  const kurs=(kurse&&kurse[0])||null;
+  const code=kurs?kurs.code:null;
+  let mitglieder=[];
+  if(code){
+    const {data:profs}=await sb.from('profiles').select('*').eq('kurs_code',code).neq('id',state.user.id);
+    const ids=(profs||[]).map(p=>p.id);
+    let fs=[], sims=[];
+    if(ids.length){
+      const r1=await sb.from('fortschritt').select('*').in('user_id',ids); fs=r1.data||[];
+      const r2=await sb.from('simulationen').select('user_id,bestanden').in('user_id',ids); sims=r2.data||[];
+    }
+    mitglieder=(profs||[]).map(p=>{
+      const meine=fs.filter(f=>f.user_id===p.id);
+      const gebiete={};
+      GEBIETE.forEach(g=>{
+        const gf=meine.filter(f=>f.gebiet===g.id);
+        const fragenImGebiet=FRAGEN.filter(fr=>fr.g===g.id).length||1;
+        gebiete[g.id]=Math.round(gf.filter(f=>f.richtig).length/fragenImGebiet*100);
+      });
+      return {id:p.id, name:p.name||'(ohne Namen)', gebiete,
+        lernzeitMin:Math.round((p.lernzeit_sek||0)/60), sollMin:p.soll_min||600,
+        sim:sims.filter(s=>s.user_id===p.id).length,
+        bestanden:sims.filter(s=>s.user_id===p.id&&s.bestanden).length,
+        fortschritt:meine};
+    });
+  }
+  // Meist-verfehlte Fragen im Kurs
+  const fehlerMap={};
+  mitglieder.forEach(m=>m.fortschritt.forEach(f=>{ if(f.fehlversuche>0) fehlerMap[f.frage_idx]=(fehlerMap[f.frage_idx]||0)+f.fehlversuche; }));
+  const topFehler=Object.entries(fehlerMap).sort((a,b)=>b[1]-a[1]).slice(0,5)
+    .map(([idx,anz])=>({idx:+idx, anz}));
+  state.kursDaten={code, kursName:kurs?kurs.name:'', mitglieder, topFehler};
+  render();
+}
 function kursSchnitt(gid){
-  const werte=DEMO_PRUEFLINGE.map(p=>p.gebiete[gid]);
-  return Math.round(werte.reduce((a,b)=>a+b,0)/werte.length);
+  const m=state.kursDaten.mitglieder;
+  if(!m.length) return 0;
+  return Math.round(m.reduce((a,p)=>a+p.gebiete[gid],0)/m.length);
 }
 function heatFarbe(v){ return v>=75?'var(--gruen)':v>=50?'#e8a317':'var(--rot)'; }
 function viewAusbilder(){
-  const zeilen=DEMO_PRUEFLINGE.map((p,i)=>{
+  if(!state.kursDaten){ ladeKursDaten();
+    return `<h1>Ausbilder-Cockpit 👨‍🏫</h1><p class="lead">Lade Kursdaten…</p>`; }
+  const kd=state.kursDaten;
+  const zeilen=kd.mitglieder.map((p,i)=>{
     const schnitt=Math.round(Object.values(p.gebiete).reduce((a,b)=>a+b,0)/6);
-    const zeitPct=Math.min(100,Math.round(p.lernzeitMin/p.sollMin*100));
+    const zeitPct=Math.min(100,Math.round(p.lernzeitMin/(p.sollMin||1)*100));
     return `<tr class="klick" onclick="zeigeSchueler(${i})">
       <td><strong>${p.name}</strong></td>
       <td><span class="mini-balken"><span style="width:${schnitt}%;background:${heatFarbe(schnitt)}"></span></span>${schnitt}%</td>
       <td><span class="mini-balken"><span style="width:${zeitPct}%;background:${heatFarbe(zeitPct)}"></span></span>${lernzeitFormat(p.lernzeitMin*60)} / ${lernzeitFormat(p.sollMin*60)}</td>
-      <td>${p.sim}× (${p.bestanden} bestanden)</td>
-      <td style="color:var(--grau)">${p.letzte}</td></tr>`;
+      <td>${p.sim}× (${p.bestanden} bestanden)</td></tr>`;
   }).join('');
-  const heat=GEBIETE.map(g=>{
-    const v=kursSchnitt(g.id);
-    return `<div class="zelle" style="background:${heatFarbe(v)}">${v}%<small>${g.kurz}</small></div>`;
-  }).join('');
+  const heat=GEBIETE.map(g=>{ const v=kursSchnitt(g.id);
+    return `<div class="zelle" style="background:${heatFarbe(v)}">${v}%<small>${g.kurz}</small></div>`; }).join('');
   const schwaechstes=GEBIETE.reduce((min,g)=>kursSchnitt(g.id)<kursSchnitt(min.id)?g:min,GEBIETE[0]);
-  const topFehler=DEMO_TOP_FEHLER.map(t=>{
-    const g=GEBIETE.find(x=>x.id===t.gebiet);
-    return `<div class="fehlerfrage"><span>${g.icon} ${t.frage}</span><b>${t.quote}% falsch</b></div>`;
-  }).join('');
+  const topFehler=kd.topFehler.length? kd.topFehler.map(t=>{
+    const fr=FRAGEN[t.idx]; const g=GEBIETE.find(x=>x.id===fr.g);
+    return `<div class="fehlerfrage"><span>${g.icon} ${fr.f}</span><b>${t.anz}× falsch</b></div>`; }).join('')
+    : `<p style="font-size:.88rem;color:var(--grau);margin:0">Noch keine Fehler-Daten – sobald deine Prüflinge üben, siehst du hier, wo es hakt.</p>`;
   return `
   <h1>Ausbilder-Cockpit 👨‍🏫</h1>
-  <p class="lead">Auf einen Blick: Wo steht dein Kurs, wo hakt es – und was solltest du in der nächsten Stunde wiederholen? (Beispieldaten)</p>
+  <p class="lead">${kd.mitglieder.length?`${kd.mitglieder.length} Prüfling${kd.mitglieder.length===1?'':'e'} in deinem Kurs.`:'Noch keine Prüflinge – teile deinen Kurs-Code!'}</p>
 
+  <div class="karte" style="margin-bottom:18px;border-left:6px solid var(--welle)">
+    <h3 style="margin:0 0 4px">🔑 Dein Kurs-Code</h3>
+    <p style="margin:0 0 10px;font-size:.87rem;color:var(--grau)">Prüflinge geben diesen Code bei der Registrierung ein und erscheinen dann automatisch hier:</p>
+    <span class="code-box">${kd.code||'–'}</span>
+  </div>
+
+  ${kd.mitglieder.length?`
   <div class="karte" style="border-left:6px solid var(--rot);margin-bottom:18px">
     <h3 style="margin:0 0 4px">💡 Empfehlung für die nächste Kursstunde</h3>
     <p style="margin:0;font-size:.9rem;color:var(--grau)">Dein Kurs ist am schwächsten in
     <strong style="color:var(--rot-dkl)">${schwaechstes.icon} ${schwaechstes.name} (${kursSchnitt(schwaechstes.id)}%)</strong>.
-    Unten siehst du die 5 meist-verfehlten Fragen – ideal, um sie gemeinsam durchzugehen.</p>
+    Unten die meist-verfehlten Fragen – ideal zum gemeinsamen Wiederholen.</p>
   </div>
-
   <h2>Kurs-Schnitt nach Sachgebiet</h2>
   <div class="heat">${heat}</div>
-
   <h2>Meist-verfehlte Fragen im Kurs</h2>
   <div class="karte">${topFehler}</div>
-
   <h2>Meine Prüflinge <span style="font-size:.75rem;color:var(--grau);font-weight:400">(antippen für Details)</span></h2>
   <table class="prueflinge">
-    <thead><tr><th>Name</th><th>Lernstand</th><th>Lernzeit (Ist/Soll)</th><th>Simulationen</th><th>Zuletzt aktiv</th></tr></thead>
+    <thead><tr><th>Name</th><th>Lernstand</th><th>Lernzeit (Ist/Soll)</th><th>Simulationen</th></tr></thead>
     <tbody>${zeilen}</tbody>
-  </table>
-
-  <div class="karte" style="margin-top:18px;border-left:6px solid var(--welle)">
-    <h3 style="margin:0 0 4px">🔑 Prüflinge einladen</h3>
-    <p style="margin:0 0 10px;font-size:.87rem;color:var(--grau)">Neue Prüflinge treten deinem Kurs mit diesem Code bei (kommt mit dem Login-System):</p>
-    <span class="code-box">WE-2026-AX7</span>
-  </div>
+  </table>`:''}
 
   <h2>📋 Lehrplan & Prüfungsvorgaben</h2>
-  <button class="btn blau" onclick="go('lehrplan')">Lehrplan öffnen</button>`;
+  <button class="btn blau" onclick="go('lehrplan')">Lehrplan öffnen</button>
+  <div style="margin-top:10px"><button class="btn ghost" onclick="state.kursDaten=null;render()">🔄 Daten aktualisieren</button></div>`;
 }
 let schuelerIdx=0;
 function zeigeSchueler(i){ schuelerIdx=i; state.view='schueler'; render(); }
+let _sollTimer=null;
 function sollAendern(i,wert){
-  DEMO_PRUEFLINGE[i].sollMin=+wert;
+  const p=state.kursDaten.mitglieder[i];
+  p.sollMin=+wert;
   const el=document.getElementById('sollAnzeige');
   if(el) el.textContent=lernzeitFormat(wert*60);
+  clearTimeout(_sollTimer);
+  _sollTimer=setTimeout(async ()=>{ await sb.from('profiles').update({soll_min:p.sollMin}).eq('id',p.id); }, 800);
 }
 function viewSchueler(){
-  const p=DEMO_PRUEFLINGE[schuelerIdx];
+  const p=state.kursDaten.mitglieder[schuelerIdx];
+  if(!p) return viewAusbilder();
   const zeilen=GEBIETE.map(g=>{
     const v=p.gebiete[g.id];
     return `<tr><td>${g.icon} ${g.name}</td>
@@ -917,7 +1117,7 @@ function viewSchueler(){
   return `
   <button class="zurueck" onclick="go('dashboard')">← Zurück zum Cockpit</button>
   <h1>${p.name}</h1>
-  <p class="lead">${p.sim} Simulation${p.sim===1?'':'en'} · ${p.bestanden} bestanden · zuletzt aktiv: ${p.letzte}</p>
+  <p class="lead">${p.sim} Simulation${p.sim===1?'':'en'} · ${p.bestanden} bestanden</p>
 
   <div class="karte" style="margin-bottom:14px;border-left:6px solid var(--akzent)">
     <h3 style="margin:0 0 4px">⏱️ Lernzeit</h3>
@@ -964,7 +1164,14 @@ function viewLehrplan(){
 /* =========================== NAV & START =========================== */
 function go(v){ stopSprich(); stopTimer(); state.view=v; render(); }
 lernzeitStart();
-render();
+/* Start: bestehende Sitzung prüfen, sonst Regionsauswahl */
+(async function init(){
+  render(); // sofort etwas zeigen (Region)
+  if(!sb) return;
+  const {data:{session}}=await sb.auth.getSession();
+  if(session){ await nachLogin(); }
+  sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_IN'&&!state.user){ nachLogin(); } });
+})();
 /* PWA: Service Worker registrieren (nur über https bzw. localhost aktiv) */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
