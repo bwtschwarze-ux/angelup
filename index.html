@@ -107,6 +107,8 @@
   @keyframes blink{50%{opacity:.5}}
   .progressbalken{height:7px;background:var(--linie);border-radius:8px;overflow:hidden;margin-bottom:18px}
   .progressbalken>span{display:block;height:100%;background:linear-gradient(90deg,var(--welle),var(--gruen));transition:.3s}
+  .bestehen-leiste{margin:-10px 0 16px;padding:8px 12px;border-radius:10px;background:rgba(26,158,99,.09);
+    border:1px solid rgba(26,158,99,.22);font-size:.82rem;color:var(--gruen-dkl);text-align:center;line-height:1.5}
   .frage-zeile{display:flex;gap:10px;align-items:flex-start;margin-bottom:16px}
   .frage{font-size:1.14rem;font-weight:700;flex:1}
   .sprecher{background:var(--hell);border:none;border-radius:10px;width:40px;height:40px;font-size:1.15rem;
@@ -718,7 +720,7 @@ function render(){
   const app=$('#app');
   if(state.view==='region'){ app.innerHTML=viewRegion(); return; }
   if(state.view==='rolle'){ app.innerHTML=viewRolle(); return; }
-  if(!state.user && state.view!=='impressum' && state.view!=='datenschutz'){ app.innerHTML=viewAuth(); return; }
+  if(!state.user && state.view!=='impressum' && state.view!=='datenschutz' && state.view!=='pruefungsinfo'){ app.innerHTML=viewAuth(); return; }
   if(!state.user){ app.innerHTML=`<main>${aktuelleView()}</main>`; return; }
   app.innerHTML=kopf()+`<main>${aktuelleView()}${state.view==='dashboard'?fusszeile():''}</main>`;
 }
@@ -731,6 +733,7 @@ function aktuelleView(){
     case 'videos': return viewVideos();
     case 'lehrplan': return viewLehrplan();
     case 'schueler': return viewSchueler();
+    case 'pruefungsinfo': return viewPruefungsinfo();
     case 'impressum': return viewImpressum();
     case 'datenschutz': return viewDatenschutz();
     default: return viewDashboard();
@@ -909,11 +912,65 @@ setInterval(()=>{ if(state.user && (state.view==='lernsitzung'||state.view==='pr
 /* ---- Fußzeile mit Pflichtseiten ---- */
 function fusszeile(){
   return `<div style="text-align:center;margin-top:30px;font-size:.78rem;color:var(--grau)">
+    <a href="#" onclick="go('pruefungsinfo');return false" style="color:var(--grau)">So läuft die Prüfung</a> ·
     <a href="#" onclick="go('impressum');return false" style="color:var(--grau)">Impressum</a> ·
     <a href="#" onclick="go('datenschutz');return false" style="color:var(--grau)">Datenschutz</a>
     ${state.user?` · <a href="#" onclick="logout();return false" style="color:var(--grau)">Abmelden</a>`:''}
   </div>`;
 }
+/* ===================== SO LÄUFT DIE PRÜFUNG ===================== */
+function viewPruefungsinfo(){
+  const r=regeln();
+  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
+  <h1>So läuft die Prüfung</h1>
+  <p class="lead">Ablauf und Bestehensgrenze für den Bezirk Weser-Ems – zusammengefasst aus der offiziellen Prüfungsordnung.</p>
+
+  <div class="karte" style="border-left:6px solid var(--akzent);margin-bottom:14px">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:linear-gradient(120deg,var(--akzent),var(--akzent2))">🎯</span>
+      <div><h3 style="margin:0">Bestehensgrenze</h3>
+      <span class="zahlen">Beide Bedingungen müssen erfüllt sein</span></div></div>
+    <table class="gebiete" style="margin-top:6px">
+      <tbody>
+        <tr><td>Richtige Antworten insgesamt</td><td class="zahl"><b>mind. ${r.bestehenGesamt}</b> von ${r.fragenGesamt}</td></tr>
+        <tr><td>Richtige Antworten je Sachgebiet</td><td class="zahl"><b>mind. ${r.bestehenProGebiet}</b> von ${r.fragenProGebiet}</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.86rem;color:var(--grau);margin-top:8px">Wird eine der beiden Bedingungen nicht erfüllt, gilt der theoretische Teil als nicht bestanden – dann folgt auch keine praktische Prüfung mehr.</p>
+  </div>
+
+  <h2>📝 Theoretischer Teil</h2>
+  <div class="karte" style="font-size:.93rem;line-height:1.75;margin-bottom:14px">
+    <p>Es gibt mehrere Prüfungsbögen mit jeweils <strong>${r.fragenGesamt} Fragen</strong> aus den sechs Sachgebieten. Vor Beginn vergewissert sich der Prüfungsausschuss, dass alle Teilnehmer den Fragebogen lesen und verstehen können.</p>
+    <p>Nach dem Austeilen trägst du deine Personaldaten auf dem Deckblatt ein. Prüfungsort und -datum stehen bereits auf dem Bogen.</p>
+    <p>Für die Beantwortung hast du <strong>bis zu ${r.zeitMinuten} Minuten</strong>. Ausgewertet wird anschließend mit Schablonen; die Punktzahl wird protokolliert, aber nicht öffentlich bekannt gegeben.</p>
+    <p style="font-size:.86rem;color:var(--grau)">In Ausnahmefällen kann die Prüfungskommission einen Nachteilsausgleich gewähren.</p>
+  </div>
+
+  <h2>🎣 Praktischer Teil</h2>
+  <div class="karte" style="font-size:.93rem;line-height:1.75;margin-bottom:14px">
+    <p>Du stellst gebrauchsfertige Angelgeräte nach Vorgabe des Prüfungsausschusses zusammen und zeigst, dass du sie sicher handhabst – auch im tier- und naturschutzrechtlichen Sinne.</p>
+    <p>Das <strong>tierschutzgerechte Behandeln, Töten und Schlachten</strong> von Fischen wird mündlich abgefragt. Über das Bestehen dieses Teils entscheidet der Vorsitzende.</p>
+    <p>Die Geräte stellt der ausrichtende Fischereiverein bzw. dein Ausbilder bereit.</p>
+  </div>
+
+  <h2>🔁 Wiederholung</h2>
+  <div class="karte" style="font-size:.93rem;line-height:1.75;margin-bottom:14px">
+    <p>Wer im theoretischen oder praktischen Teil durchfällt, zahlt beim Verein, bei dem wiederholt wird, eine reduzierte Prüfungsgebühr. Liegt die Wiederholung mehr als 12 Monate zurück, ist ein kompletter Lehrgang erneut zu besuchen.</p>
+  </div>
+
+  <div class="karte" style="border-left:6px solid var(--gruen)">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:var(--gruen)">📝</span>
+      <div><h3 style="margin:0">Übe unter echten Bedingungen</h3>
+      <span class="zahlen">${r.fragenGesamt} Fragen · ${r.zeitMinuten} Min · gleiche Bestehensgrenze</span></div></div>
+    ${state.user
+      ? `<button class="btn gross" onclick="startPruefung()">Prüfung jetzt simulieren</button>`
+      : `<button class="btn gross" onclick="go('rolle')">Kostenlos starten</button>`}
+  </div>
+
+  <p style="font-size:.78rem;color:var(--grau);margin-top:14px">Quelle: Durchführungsbestimmungen zur Fischerprüfung (Stand 3/2026), Angelfischerverband im Landesfischereiverband Weser-Ems e.V. – sinngemäß zusammengefasst. Verbindlich ist immer die Originalfassung des Verbands.</p>
+  ${fusszeile()}`;
+}
+
 function viewImpressum(){
   return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
   <h1>Impressum</h1>
@@ -988,6 +1045,7 @@ function viewDashboard(){
       <div><h3 style="margin:0">Prüfungssimulation</h3>
       <span class="zahlen">${r.fragenGesamt} Fragen · ${r.zeitMinuten} Min · bestanden ab ${r.bestehenGesamt} richtigen + mind. ${r.bestehenProGebiet} je Sachgebiet</span></div></div>
     <button class="btn gross" onclick="startPruefung()">Prüfung jetzt simulieren</button>
+    <button class="btn ghost" style="width:100%;margin-top:8px" onclick="go('pruefungsinfo')">ℹ️ So läuft die Prüfung ab</button>
   </div>
 
   ${fehlerAnzahl?`
@@ -1184,12 +1242,31 @@ function startTimer(){
 }
 function stopTimer(){ if(state.timerId){ clearInterval(state.timerId); state.timerId=null; } }
 function formatZeit(s){ const m=Math.floor(s/60), r=s%60; return `${m}:${String(r).padStart(2,'0')}`; }
+/* Bestehensgrenze eines laufenden/abgegebenen Prüfungssatzes – skaliert auf die tatsächliche Fragenzahl */
+function schwellen(reihe){
+  const r=regeln();
+  const proGebiet={};
+  reihe.forEach(i=>proGebiet[FRAGEN[i].g]=(proGebiet[FRAGEN[i].g]||0)+1);
+  const gebietSchwelle={};
+  Object.keys(proGebiet).forEach(gid=>{
+    gebietSchwelle[gid]=Math.round(r.bestehenProGebiet/r.fragenProGebiet*proGebiet[gid]);
+  });
+  const werte=Object.values(gebietSchwelle);
+  return {
+    gesamt: Math.round(r.bestehenGesamt/r.fragenGesamt*reihe.length),
+    proGebiet: gebietSchwelle,
+    // nur sinnvoll anzuzeigen, wenn der Satz mehrere Sachgebiete umfasst und die Grenze überall gleich ist
+    jeGebietEinheitlich: werte.length>1 && werte.every(v=>v===werte[0]) ? werte[0] : null
+  };
+}
+
 function viewPruefung(){
   const p=state.pruefung; const idx=p.reihe[p.pos]; const fr=FRAGEN[idx];
   const g=GEBIETE.find(x=>x.id===fr.g);
   const gewaehlt=p.antworten[idx];
   const beantwortet=Object.keys(p.antworten).length;
   const pct=Math.round(beantwortet/p.reihe.length*100);
+  const sw=schwellen(p.reihe);
   const perm=p.perms[idx];
   const antwortenHtml=perm.map((orig,i)=>`<button class="antwort${gewaehlt===orig?' gewaehlt':''}" onclick="pruefWaehle(${idx},${orig})">
     <span class="buchstabe">${['A','B','C'][i]}</span><span>${fr.a[orig]}</span></button>`).join('');
@@ -1201,6 +1278,7 @@ function viewPruefung(){
       <span class="badge timer">⏱ <span id="timer">${formatZeit(p.restSek)}</span></span>
     </div>
     <div class="progressbalken"><span style="width:${pct}%"></span></div>
+    <div class="bestehen-leiste">🎯 Bestehensgrenze: <b>${sw.gesamt} von ${p.reihe.length}</b> richtig${sw.jeGebietEinheitlich?` · und mind. <b>${sw.jeGebietEinheitlich}</b> je Sachgebiet`:''}</div>
     <div class="frage-zeile">
       <div class="frage">${fr.f}</div>
       <button class="sprecher" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
@@ -1235,18 +1313,13 @@ function pruefungAbgeben(zeitAus){
   });
   p.ergebnis={richtigGesamt, proGebiet};
   state.simsGesamt++;
-  const r=regeln();
-  const gesamtFragen=p.reihe.length;
-  const schwelleGesamt=Math.round(r.bestehenGesamt/r.fragenGesamt*gesamtFragen);
+  const sw=schwellen(p.reihe);
   let alleOk=true;
   GEBIETE.forEach(g=>{
     const pg=p.ergebnis.proGebiet[g.id];
-    if(pg.gesamt>0){
-      const sw=Math.round(r.bestehenProGebiet/r.fragenProGebiet*pg.gesamt);
-      if(pg.richtig<sw) alleOk=false;
-    }
+    if(pg.gesamt>0 && pg.richtig<(sw.proGebiet[g.id]||0)) alleOk=false;
   });
-  p.bestanden = richtigGesamt>=schwelleGesamt && alleOk;
+  p.bestanden = richtigGesamt>=sw.gesamt && alleOk;
   if(p.bestanden){ state.simsBestanden++; state.xp+=50; }
   else state.xp+=15;
   // Cloud: Simulation + kompletten Fragen-Fortschritt speichern
@@ -1260,15 +1333,17 @@ function pruefungAbgeben(zeitAus){
   if(p.bestanden) konfetti();
 }
 function viewErgebnis(){
-  const p=state.pruefung; const e=p.ergebnis; const r=regeln();
+  const p=state.pruefung; const e=p.ergebnis;
   const gesamtFragen=p.reihe.length;
   const pct=Math.round(e.richtigGesamt/gesamtFragen*100);
-  const schwelleGesamt=Math.round(r.bestehenGesamt/r.fragenGesamt*gesamtFragen);
+  const sw=schwellen(p.reihe);
+  const schwelleGesamt=sw.gesamt;
   const gebietZeilen=GEBIETE.map(g=>{
     const pg=e.proGebiet[g.id];
-    const sw=pg.gesamt?Math.round(r.bestehenProGebiet/r.fragenProGebiet*pg.gesamt):0;
-    const ok=!pg.gesamt||pg.richtig>=sw;
+    const noetig=sw.proGebiet[g.id]||0;
+    const ok=!pg.gesamt||pg.richtig>=noetig;
     return `<tr><td>${g.icon} ${g.kurz}</td><td class="zahl">${pg.richtig} / ${pg.gesamt}</td>
+      <td class="zahl" style="color:var(--grau);font-weight:600">nötig: ${noetig}</td>
       <td style="text-align:right"><span class="pill ${ok?'ok':'no'}">${ok?'bestanden':'zu wenig'}</span></td></tr>`;
   }).join('');
   const falsche=p.reihe.filter(idx=>p.antworten[idx]!==FRAGEN[idx].r);
@@ -1282,15 +1357,16 @@ function viewErgebnis(){
     <div class="status-gross ${p.bestanden?'bestanden':'durchgefallen'}">
       ${p.bestanden?'🎉 Bestanden!':'Noch nicht bestanden'}
     </div>
-    <p class="lead">${p.zeitAus?'⏱ Die Zeit war abgelaufen. ':''}Nötig: mind. ${schwelleGesamt} richtige gesamt <em>und</em> genug richtige in jedem Sachgebiet.
+    <p class="lead">${p.zeitAus?'⏱ Die Zeit war abgelaufen. ':''}Bestehensgrenze: mind. <b>${schwelleGesamt} von ${gesamtFragen}</b> richtig <em>und</em>${sw.jeGebietEinheitlich?` mind. <b>${sw.jeGebietEinheitlich}</b> richtig in jedem Sachgebiet.`:' genug richtige in jedem Sachgebiet.'}
     ${p.bestanden?' Stark – weiter so! +50 XP':' Kopf hoch: Deine Fehler warten in der Fehlerkiste mit Erklärungen auf dich. +15 XP'}</p>
     <table class="gebiete">
-      <thead><tr><th>Sachgebiet</th><th class="zahl">Richtig</th><th style="text-align:right">Status</th></tr></thead>
+      <thead><tr><th>Sachgebiet</th><th class="zahl">Richtig</th><th class="zahl">Grenze</th><th style="text-align:right">Status</th></tr></thead>
       <tbody>${gebietZeilen}</tbody>
     </table>
     <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center">
       ${falsche.length?`<button class="btn gruen" onclick="startFehlerkiste()">🧰 Fehler üben (${falsche.length})</button>`:''}
       <button class="btn" onclick="startPruefung()">Neue Simulation</button>
+      <button class="btn ghost" onclick="go('pruefungsinfo')">ℹ️ Prüfungsablauf</button>
       <button class="btn ghost" onclick="go('dashboard')">Dashboard</button>
     </div>
   </div>
