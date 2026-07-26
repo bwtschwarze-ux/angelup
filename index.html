@@ -137,9 +137,13 @@
   .hilfebox .titel{font-weight:800;color:#1c5a8a;margin-bottom:3px}
   .hilfe-link{background:none;border:none;color:var(--wasser);font-size:.82rem;font-weight:650;
     cursor:pointer;text-decoration:underline;padding:0;margin-top:4px}
-  .fischbild{display:block;width:100%;max-width:420px;height:auto;aspect-ratio:2/1;margin:6px auto 12px;
-    background:linear-gradient(180deg,#eaf3fa 0%,#d5e9f5 100%);border:1px solid var(--linie);
-    border-radius:var(--radius-s);object-fit:contain;padding:8px 12px}
+  .fischfig{margin:6px auto 12px;padding:0;max-width:460px;text-align:center}
+  .fischbild{display:block;width:100%;max-width:460px;height:auto;max-height:280px;margin:0 auto;
+    background:#f4f8fb;border:1px solid var(--linie);border-radius:var(--radius-s);
+    object-fit:contain;padding:6px}
+  .fischfig figcaption{font-size:.7rem;color:var(--grau);margin-top:4px;line-height:1.3}
+  .fischfig figcaption a{color:var(--wasser);text-decoration:none}
+  .fischfig figcaption a:hover{text-decoration:underline}
   @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .quiz-fuss{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
   /* ---------- Ergebnis ---------- */
@@ -1031,9 +1035,38 @@ function autoVorlesen(){
     frageVorlesen(FRAGEN[idx], aktivePerm(idx));
   }
 }
+// Wikimedia-Commons-Fischbilder (Special:FilePath liefert stabile Redirect-URL auf upload.wikimedia.org)
+// Attribution und Lizenz siehe Objekt pro Fisch – Lizenz-Text wird unter jedem Bild angezeigt.
+const FISCHBILDER = {
+  karpfen:            { file:"Common_carp.jpg",                                autor:"USFWS",                       lizenz:"Public Domain" },
+  hecht:              { file:"Esox_lucius1.jpg",                                autor:"Timothy Knepp (USFWS)",       lizenz:"Public Domain" },
+  zander:             { file:"Sander_lucioperca_1.jpg",                         autor:"eLNuko",                      lizenz:"Public Domain" },
+  bachforelle:        { file:"Salmo_trutta.jpg",                                autor:"Eric Engbretson / USFWS",     lizenz:"Public Domain" },
+  bachsaibling:       { file:"Salvelinus fontinalis.jpg",                       autor:"Eric Engbretson",             lizenz:"Public Domain" },
+  regenbogenforelle:  { file:"Oncorhynchus_mykiss.jpg",                         autor:"Eric Engbretson / USFWS",     lizenz:"Public Domain" },
+  aal:                { file:"Anguilla_anguilla.jpg",                           autor:"GerardM",                     lizenz:"CC BY-SA 3.0" },
+  barsch:             { file:"Perca_fluviatilis_1.jpg",                         autor:"Fishjagercz",                 lizenz:"CC BY-SA 4.0" },
+  wels:               { file:"Silurus_glanis1.jpg",                             autor:"Wikimedia Commons",           lizenz:"Public Domain" },
+  schleie:            { file:"Tinca_tinca_Prague_Vltava_3.jpg",                 autor:"Karelj",                      lizenz:"Public Domain" },
+  rotauge:            { file:"Rutilus_rutilus_Prague_Vltava_2.jpg",             autor:"Karelj",                      lizenz:"Public Domain" },
+  rotfeder:           { file:"Scardinius erythropthalmus 2009 G1.jpg",          autor:"George Chernilevsky",         lizenz:"Public Domain" },
+  brassen:            { file:"Abramis_brama_Prague_Vltava_1.jpg",               autor:"Karelj",                      lizenz:"Public Domain" },
+  karausche:          { file:"Carassius_carassius_Prague_Vltava_1.jpg",         autor:"Karelj",                      lizenz:"Public Domain" },
+  barbe:              { file:"Barbus barbus in Losse - DE.jpg",                 autor:"Bernd Sauerwein",             lizenz:"CC BY-SA 3.0" },
+  dorsch:             { file:"Gadus_morhua_Cod-2b-Atlanterhavsparken-Norway.JPG", autor:"Hans-Petter Fjeld",         lizenz:"CC BY-SA 2.5" },
+  hornhecht:          { file:"Belone_belone.jpg",                               autor:"Wikimedia Commons",           lizenz:"Public Domain" }
+};
 function bildHTML(fr){
   if(!fr.bild) return '';
-  return `<img class="fischbild" src="fische/${fr.bild}.svg" alt="Fisch-Illustration">`;
+  const b = FISCHBILDER[fr.bild];
+  if(!b) return '';
+  const fileEnc = encodeURIComponent(b.file);
+  const src = `https://commons.wikimedia.org/wiki/Special:FilePath/${fileEnc}?width=700`;
+  const quelle = `https://commons.wikimedia.org/wiki/File:${fileEnc}`;
+  return `<figure class="fischfig">
+    <img class="fischbild" src="${src}" alt="Foto: ${fr.bild}" onerror="this.style.display='none';this.nextElementSibling.textContent='Bild konnte nicht geladen werden'">
+    <figcaption>Bild: <a href="${quelle}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${b.autor} · ${b.lizenz}</figcaption>
+  </figure>`;
 }
 function viewLernSitzung(){
   const s=state.lernSitzung; const idx=s.reihe[s.pos]; const fr=FRAGEN[idx];
