@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+<defs>
+<style>
+.k{stroke:#1a2733;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;fill:none}
+.f{stroke:#1a2733;stroke-width:1.2;fill:#fff}
+.eye{fill:#1a2733}
+.pup{fill:#fff}
+.gil{stroke:#1a2733;stroke-width:1;fill:none;opacity:.5}
+.dot{fill:#1a2733;opacity:.75}
+.sc{stroke:#1a2733;stroke-width:.6;fill:none;opacity:.35}
+.txt{font-family:sans-serif;font-size:11px;fill:#455}
+</style>
+
+</defs>
+
+<!-- Aal: extrem langgestreckt, keine getrennten Flossen -->
+<path class="f" d="M20,105 Q60,88 130,92 Q210,96 290,100 Q345,102 375,105 Q345,110 290,112 Q210,116 130,120 Q60,124 20,115 Z"/>
+<!-- durchgehender Flossensaum am Ruecken -->
+<path class="k" d="M110,92 Q160,80 220,82 Q280,84 320,90"/>
+<!-- Fluessige Zeichnung -->
+<path class="sc" d="M60,102 Q80,98 100,102"/>
+<path class="sc" d="M130,105 Q160,100 190,104"/>
+<path class="sc" d="M220,108 Q250,104 280,107"/>
+<!-- Kopf -->
+<path class="k" d="M20,105 L38,108"/>
+<circle class="eye" cx="30" cy="105" r="2.5"/><circle class="pup" cx="30.6" cy="104.6" r="1"/>
+</svg>

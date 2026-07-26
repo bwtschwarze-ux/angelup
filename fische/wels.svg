@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+<defs>
+<style>
+.k{stroke:#1a2733;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;fill:none}
+.f{stroke:#1a2733;stroke-width:1.2;fill:#fff}
+.eye{fill:#1a2733}
+.pup{fill:#fff}
+.gil{stroke:#1a2733;stroke-width:1;fill:none;opacity:.5}
+.dot{fill:#1a2733;opacity:.75}
+.sc{stroke:#1a2733;stroke-width:.6;fill:none;opacity:.35}
+.txt{font-family:sans-serif;font-size:11px;fill:#455}
+</style>
+
+</defs>
+
+<!-- Wels: massiver Kopf, langer flacher Körper -->
+<path class="f" d="M25,100 Q35,55 110,50 Q140,52 155,60 Q210,55 285,65 Q340,75 375,105 Q340,135 285,148 Q210,155 155,152 Q140,158 110,160 Q35,155 25,110 Z"/>
+<!-- lange Afterflosse bis zum Schwanz -->
+<path class="f" d="M120,155 Q220,180 340,140 L340,130 Q220,150 120,145 Z" opacity=".8"/>
+<!-- kleine Rueckenflosse vorne -->
+<path class="f" d="M130,55 Q160,30 190,45 Q195,55 190,60 Q160,55 130,60 Z"/>
+<!-- 2 lange Barteln oben -->
+<path class="k" d="M28,85 Q10,60 40,35"/>
+<path class="k" d="M32,88 Q0,70 20,40"/>
+<!-- 4 kürzere unter dem Kiefer -->
+<path class="k" d="M40,115 Q30,135 45,150"/>
+<path class="k" d="M50,118 Q42,140 60,155"/>
+<path class="k" d="M62,120 Q58,143 78,158"/>
+<path class="k" d="M75,122 Q75,145 92,158"/>
+<!-- Brustflosse -->
+<path class="f" d="M85,130 Q95,165 135,155 L115,132 Z"/>
+<circle class="eye" cx="50" cy="90" r="3.5"/><circle class="pup" cx="50.6" cy="89.6" r="1.4"/>
+</svg>

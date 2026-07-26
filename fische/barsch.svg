@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+<defs>
+<style>
+.k{stroke:#1a2733;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;fill:none}
+.f{stroke:#1a2733;stroke-width:1.2;fill:#fff}
+.eye{fill:#1a2733}
+.pup{fill:#fff}
+.gil{stroke:#1a2733;stroke-width:1;fill:none;opacity:.5}
+.dot{fill:#1a2733;opacity:.75}
+.sc{stroke:#1a2733;stroke-width:.6;fill:none;opacity:.35}
+.txt{font-family:sans-serif;font-size:11px;fill:#455}
+</style>
+
+</defs>
+
+<path class="f" d="M45,110 Q60,60 130,50 Q220,45 300,80 L355,58 L344,110 L355,162 L300,140 Q220,175 130,170 Q60,160 45,110 Z"/>
+<!-- typische dunkle Querbänder (5-9 vertikale Streifen) -->
+<path class="dot" d="M105,60 L102,155 L112,155 L115,60 Z" opacity=".4"/>
+<path class="dot" d="M140,55 L137,162 L147,162 L150,55 Z" opacity=".4"/>
+<path class="dot" d="M175,52 L172,168 L182,168 L185,52 Z" opacity=".4"/>
+<path class="dot" d="M210,52 L207,166 L217,166 L220,52 Z" opacity=".4"/>
+<path class="dot" d="M245,55 L242,158 L252,158 L255,55 Z" opacity=".4"/>
+<path class="dot" d="M280,62 L278,148 L286,148 L288,62 Z" opacity=".4"/>
+<!-- vordere stachelige Rueckenflosse (mit schwarzem Fleck am hinteren Ende) -->
+<path class="f" d="M105,55 Q145,15 215,20 Q235,22 235,50 Q170,45 105,55 Z"/>
+<path class="dot" d="M215,25 Q230,30 232,45 Q225,47 218,42 Q210,32 215,25 Z" opacity=".7"/>
+<path class="k" d="M115,55 L123,25 M135,52 L142,20 M155,50 L160,17 M175,49 L179,15 M195,49 L198,17 M215,50 L217,22"/>
+<!-- hintere weiche Rueckenflosse -->
+<path class="f" d="M245,55 Q270,32 305,50 Q305,72 300,80 Q275,68 245,55 Z"/>
+<!-- Brustflosse (orange getönt) -->
+<path fill="#e77" opacity=".7" stroke="#1a2733" stroke-width="1.2" d="M85,120 Q88,158 130,148 L108,122 Z"/>
+<!-- Bauchflossen orange -->
+<path fill="#e77" opacity=".7" stroke="#1a2733" stroke-width="1.2" d="M130,155 Q140,175 165,168 L150,152 Z"/>
+<circle class="eye" cx="65" cy="100" r="3.5"/><circle class="pup" cx="65.6" cy="99.6" r="1.4"/>
+
+</svg>
