@@ -137,6 +137,9 @@
   .hilfebox .titel{font-weight:800;color:#1c5a8a;margin-bottom:3px}
   .hilfe-link{background:none;border:none;color:var(--wasser);font-size:.82rem;font-weight:650;
     cursor:pointer;text-decoration:underline;padding:0;margin-top:4px}
+  .fischbild{display:block;width:100%;max-width:420px;height:auto;aspect-ratio:2/1;margin:6px auto 12px;
+    background:linear-gradient(180deg,#eaf3fa 0%,#d5e9f5 100%);border:1px solid var(--linie);
+    border-radius:var(--radius-s);object-fit:contain;padding:8px 12px}
   @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .quiz-fuss{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
   /* ---------- Ergebnis ---------- */
@@ -313,8 +316,23 @@ const FRAGEN = [
   {g:2,f:"Welche Fische sind Dorschartige?",a:["Makrele, Hornhecht, Aalmutter","Steinbutt, Scholle, Flunder","Köhler, Wittling, Schellfisch"],r:2,e:"Köhler, Wittling und Schellfisch gehören zu den Dorschartigen (Gadidae)."},
   {g:2,f:"Welche Arten sind Plattfische?",a:["Rotauge und Brassen","Hering und Maifisch","Scholle und Flunder"],r:2,e:"Scholle und Flunder sind Plattfische."},
   {g:2,f:"Woran ist der Hornhecht zu erkennen?",a:["schnabelartiges Maul, grüne Gräten und langgestreckter Körper","die zweite Rückenflosse ist größer als die erste","er hat eine besonders große Afterflosse und zwei Rückenflossen"],r:0,e:"Der Hornhecht hat ein schnabelartiges Maul, einen langgestreckten Körper und auffällig grün gefärbte Gräten."},
-  {g:2,f:"Welcher Fisch ist das? (Bild eines silbrigen Fisches mit roten Flossen)",a:["Rotfeder","Rotauge","Güster"],r:1,e:"Das Rotauge (Plötze) hat die Rückenflosse senkrecht über dem Bauchflossenansatz – Unterscheidung zur Rotfeder."},
-  {g:2,f:"Welcher Fisch ist das? (Bild eines hochrückigen bronzefarbenen Fisches)",a:["Brassen","Karausche","Karpfen"],r:0,e:"Der Brassen (Blei) ist hochrückig, seitlich stark abgeflacht und bronzefarben."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"rotauge",a:["Rotfeder","Rotauge","Güster"],r:1,e:"Das Rotauge (Plötze) hat die Rückenflosse SENKRECHT über dem Bauchflossenansatz und ein rotes Auge – so unterscheidet man es von der Rotfeder."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"brassen",a:["Brassen","Karausche","Karpfen"],r:0,e:"Der Brassen (Blei) ist extrem hochrückig, seitlich abgeflacht, bronzefarben und hat eine sehr lange Afterflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"karpfen",a:["Karausche","Schleie","Karpfen"],r:2,e:"Der Karpfen erkennt man an den 4 Barteln (2 kurze oben, 2 lange unten) und der langen Rückenflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"hecht",a:["Zander","Hecht","Wels"],r:1,e:"Der Hecht hat ein entenschnabelartig verlängertes Maul, hellen Fleckenmuster und die Rückenflosse steht WEIT hinten gegenüber der Afterflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"zander",a:["Barsch","Hecht","Zander"],r:2,e:"Der Zander hat 2 getrennte Rückenflossen (vordere stachelig), schwache Querbänder und ist deutlich schlanker als der Barsch."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"barsch",a:["Zander","Flussbarsch","Kaulbarsch"],r:1,e:"Der Flussbarsch hat 5–9 dunkle Querbänder, einen schwarzen Fleck am Ende der vorderen Rückenflosse und leuchtend orange-rote Brustflossen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"forelle",a:["Regenbogenforelle","Bachforelle","Bachsaibling"],r:1,e:"Die Bachforelle hat rote und schwarze Tupfen (oft mit hellem Hof), keinen weißen Flossensaum und kein rosa Längsband."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"regenbogenforelle",a:["Bachforelle","Bachsaibling","Regenbogenforelle"],r:2,e:"Die Regenbogenforelle trägt ein rosa/violett schillerndes Längsband über die ganze Flanke und viele kleine schwarze Punkte auch auf den Flossen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"bachsaibling",a:["Bachforelle","Bachsaibling","Regenbogenforelle"],r:1,e:"Der Bachsaibling hat helle Flecken auf dunklem Rücken, rote Punkte mit blauem Hof und typische weiß-schwarze Ränder an den unteren Flossen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"aal",a:["Neunauge","Wels","Aal"],r:2,e:"Der Aal hat einen extrem langgestreckten, schlangenförmigen Körper und einen durchgehenden Flossensaum vom Rücken um den Schwanz bis zum Bauch."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"wels",a:["Aal","Wels","Quappe"],r:1,e:"Der Wels hat einen massiven, breiten Kopf, 2 lange und 4 kürzere Barteln, eine winzige Rückenflosse und eine extrem lange Afterflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"schleie",a:["Karpfen","Schleie","Karausche"],r:1,e:"Die Schleie hat sehr kleine dichte Schuppen, abgerundete Flossen und 2 winzige Barteln – kein Vergleich zum Karpfen mit 4 Barteln."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"rotfeder",a:["Rotauge","Rotfeder","Güster"],r:1,e:"Die Rotfeder hat die Rückenflosse deutlich HINTER dem Bauchflossenansatz (Unterschied zum Rotauge), leuchtend rote Flossen und ein gelbes Auge."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"karausche",a:["Karpfen","Karausche","Schleie"],r:1,e:"Die Karausche ist hochrückig, hat KEINE Barteln (Unterschied zum Karpfen) und eine lange Rückenflosse mit vielen Strahlen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"barbe",a:["Nase","Barbe","Döbel"],r:1,e:"Die Barbe hat einen langgestreckten Körper, ein unterständiges Maul und 4 Barteln – ein typischer Grundfisch der Barbenregion."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"dorsch",a:["Wittling","Köhler","Dorsch"],r:2,e:"Der Dorsch (Kabeljau) hat 3 Rückenflossen, 2 Afterflossen und eine typische Kinnbartel am Unterkiefer."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"hornhecht",a:["Hornhecht","Makrele","Meerforelle"],r:0,e:"Der Hornhecht hat ein schnabelartig verlängertes Maul, einen extrem langgestreckten Körper – und typischerweise grüne Gräten."},
 
   /* ============ 3 · GEWÄSSERKUNDE (Fragen 1–53) ============ */
   {g:3,f:"Welches Wasser ist in der Regel sauerstoffarm?",a:["Wasser in Teichen","das Wasser kalter, klarer Gebirgsbäche","Grundwasser"],r:2,e:"Grundwasser hat wegen fehlendem Kontakt zur Luft und zu Pflanzen kaum gelösten Sauerstoff."},
@@ -744,7 +762,7 @@ function viewRegion(){
       <h2 style="text-align:center">Wo machst du deine Prüfung?</h2>
       <div class="region-karten">${karten}</div>
       <div class="hinweis blau" style="max-width:640px;margin:22px auto">
-        <strong>Hinweis:</strong> Weitere Regionen (Niedersachsen Binnen, NRW, Bremen) werden nach dem Start ergänzt. Die Fragen stammen aus dem offiziellen Weser-Ems-Katalog (312 von 360 bereits eingepflegt).
+        <strong>Hinweis:</strong> Weitere Regionen (Niedersachsen Binnen, NRW, Bremen) werden nach dem Start ergänzt. Die Fragen stammen aus dem offiziellen Weser-Ems-Katalog (325+ eingepflegt, inkl. 17 Bild-Fragen zur Fischerkennung heimischer Arten).
       </div>
     </main>
   </div>`;
@@ -1013,6 +1031,10 @@ function autoVorlesen(){
     frageVorlesen(FRAGEN[idx], aktivePerm(idx));
   }
 }
+function bildHTML(fr){
+  if(!fr.bild) return '';
+  return `<img class="fischbild" src="fische/${fr.bild}.svg" alt="Fisch-Illustration">`;
+}
 function viewLernSitzung(){
   const s=state.lernSitzung; const idx=s.reihe[s.pos]; const fr=FRAGEN[idx];
   const pct=Math.round(s.pos/s.reihe.length*100);
@@ -1058,6 +1080,7 @@ function viewLernSitzung(){
       <div class="frage">${fr.f}</div>
       <button class="sprecher ${state.vorlesen?'an':''}" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
     </div>
+    ${bildHTML(fr)}
     ${hilfeLink}
     ${antwortenHtml}
     ${unten}
@@ -1149,6 +1172,7 @@ function viewPruefung(){
       <div class="frage">${fr.f}</div>
       <button class="sprecher" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
     </div>
+    ${bildHTML(fr)}
     ${antwortenHtml}
     <div class="quiz-fuss">
       <button class="btn ghost" onclick="pruefBlaettern(-1)" ${p.pos===0?'disabled':''}>← Zurück</button>
@@ -1244,6 +1268,7 @@ function viewErgebnis(){
     return `<div class="karte" style="margin-bottom:10px">
       <div style="font-size:.76rem;color:var(--grau);margin-bottom:3px">${g.icon} ${g.kurz}</div>
       <div style="font-weight:700;margin-bottom:7px">${fr.f}</div>
+      ${bildHTML(fr)}
       ${deine!==undefined?`<div style="font-size:.85rem;color:var(--rot-dkl);margin-bottom:4px">✗ Deine Antwort: „${fr.a[deine]}“</div>`:`<div style="font-size:.85rem;color:var(--grau);margin-bottom:4px">– nicht beantwortet –</div>`}
       <div style="font-size:.85rem;color:var(--gruen-dkl);font-weight:650;margin-bottom:6px">✓ Richtig: „${fr.a[fr.r]}“</div>
       <div class="erklaerung schlecht" style="margin-top:4px">${fr.e}</div>

@@ -1,5 +1,10 @@
-const CACHE = 'angelup-v7';
-const DATEIEN = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const CACHE = 'angelup-v8';
+const DATEIEN = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png',
+  './fische/karpfen.svg','./fische/hecht.svg','./fische/zander.svg','./fische/forelle.svg',
+  './fische/bachsaibling.svg','./fische/regenbogenforelle.svg','./fische/aal.svg','./fische/barsch.svg',
+  './fische/wels.svg','./fische/schleie.svg','./fische/rotauge.svg','./fische/rotfeder.svg',
+  './fische/brassen.svg','./fische/karausche.svg','./fische/barbe.svg','./fische/dorsch.svg',
+  './fische/hornhecht.svg'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(DATEIEN)).then(() => self.skipWaiting()));
 });
