@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06304d">
+<meta name="description" content="Vorbereitungslehrgang zur Fischerprüfung – Kurs und Prüfung vor Ort, nur Prüfung oder online lernen. Jetzt Platz sichern.">
+<title>Angelschein-Kurs – AngelUp</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --tiefsee:#06304d; --wasser:#0b4f79; --welle:#1179ae; --hell:#e8f4fb;
+    --akzent:#ffb43a; --akzent2:#ff8c42;
+    --gruen:#19b47a; --gruen-dkl:#0e8a5c; --rot:#e85454;
+    --karte:#ffffff; --text:#12293a; --grau:#5d7286; --linie:#dbe7ef;
+    --radius:18px; --radius-s:12px;
+    --schatten:0 4px 20px rgba(6,48,77,.10);
+    --schatten-hover:0 8px 28px rgba(6,48,77,.18);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(175deg,var(--hell) 0%,#f4fafd 40%,#eef6fb 100%);
+    color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+  header.top{background:linear-gradient(120deg,var(--tiefsee) 0%,var(--wasser) 60%,var(--welle) 100%);
+    color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    position:sticky;top:0;z-index:40;box-shadow:0 2px 14px rgba(6,48,77,.35)}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.12rem;text-decoration:none;color:#fff}
+  .logo .up{color:var(--akzent)}
+  header.top a.zurapp{color:#fff;font-size:.8rem;text-decoration:none;background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);padding:6px 13px;border-radius:20px;white-space:nowrap}
+  main{max-width:920px;margin:0 auto;padding:22px 16px 90px}
+  h1{font-size:1.85rem;margin:.2em 0 .3em;font-weight:800;line-height:1.25}
+  h2{font-size:1.25rem;margin:1.6em 0 .6em;font-weight:750}
+  h3{font-size:1.02rem;margin:0 0 4px;font-weight:750}
+  p.lead{color:var(--grau);margin-top:0;font-size:1rem}
+  .karte{background:var(--karte);border-radius:var(--radius);padding:20px;box-shadow:var(--schatten);
+    border:1px solid rgba(219,231,239,.7)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(120deg,var(--akzent),var(--akzent2));
+    color:#3a2200;border:none;border-radius:13px;padding:13px 22px;font-size:.98rem;font-weight:750;
+    cursor:pointer;transition:.15s;box-shadow:0 3px 12px rgba(255,140,66,.35);text-decoration:none}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,140,66,.45)}
+  .btn.gross{width:100%;padding:16px;font-size:1.05rem}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+  .hinweis{background:#fff7e8;border:1px solid #f2ddab;border-radius:var(--radius-s);padding:12px 16px;
+    font-size:.86rem;color:#7d5c12;margin:16px 0}
+  .hinweis.blau{background:#e9f4fb;border-color:#bcdcf0;color:#155a86}
+  .hinweis.rot{background:#fdeceb;border-color:#f3c2bf;color:#a3322c}
+
+  /* Held */
+  .held{text-align:center;padding:30px 8px 6px}
+  .held .tag{display:inline-block;background:var(--gruen);color:#fff;font-size:.72rem;font-weight:800;
+    letter-spacing:.6px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:12px}
+  .held .unter{color:var(--grau);max-width:600px;margin:0 auto}
+
+  /* Eckdaten */
+  .eck{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0}
+  .eck .feld{background:#fff;border:1px solid var(--linie);border-radius:var(--radius-s);padding:13px 15px}
+  .eck .feld .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.7px;color:var(--grau);
+    font-weight:700;margin-bottom:3px}
+  .eck .feld .w{font-weight:700;font-size:.97rem;overflow-wrap:anywhere;hyphens:auto}
+  .eck .feld .w.frei{color:var(--gruen-dkl)}
+  .eck .feld .w.voll{color:var(--rot)}
+
+  /* Varianten */
+  .varianten{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:6px}
+  .vk{background:#fff;border:2px solid var(--linie);border-radius:var(--radius);padding:18px;
+    cursor:pointer;transition:.16s;position:relative;display:flex;flex-direction:column}
+  .vk:hover{transform:translateY(-3px);box-shadow:var(--schatten-hover)}
+  .vk.gewaehlt{border-color:var(--welle);box-shadow:0 0 0 4px rgba(17,121,174,.13)}
+  .vk .empf{position:absolute;top:-11px;left:16px;background:var(--akzent);color:#3a2200;
+    font-size:.68rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+    padding:3px 10px;border-radius:20px}
+  .vk .kurz{color:var(--grau);font-size:.87rem;margin:6px 0 10px}
+  .vk .lang{font-size:.83rem;color:var(--grau);line-height:1.5;margin:0 0 14px;flex:1}
+  .vk .preis{font-size:1.5rem;font-weight:800;color:var(--tiefsee)}
+  .vk .preis small{font-size:.78rem;font-weight:600;color:var(--grau);display:block;margin-top:2px}
+  .vk .waehlen{margin-top:12px;text-align:center;font-weight:750;font-size:.9rem;
+    border:2px solid var(--welle);color:var(--wasser);border-radius:11px;padding:9px}
+  .vk.gewaehlt .waehlen{background:var(--welle);color:#fff}
+  .vk.bald{opacity:.6}
+  .vk.bald .waehlen{border-color:var(--linie);color:var(--grau)}
+
+  /* Formular */
+  form{margin-top:8px}
+  fieldset{border:none;padding:0;margin:0 0 22px}
+  legend{font-size:.74rem;text-transform:uppercase;letter-spacing:.9px;color:var(--grau);
+    font-weight:800;padding:0;margin-bottom:12px}
+  .zeile{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .zeile.drei{grid-template-columns:.7fr 1.3fr 1fr}
+  @media(max-width:620px){.zeile,.zeile.drei{grid-template-columns:1fr}}
+  label.f{display:block;margin-bottom:12px}
+  label.f span{display:block;font-size:.8rem;font-weight:650;color:var(--grau);margin-bottom:4px}
+  label.f span .pf{color:var(--rot)}
+  input[type=text],input[type=email],input[type=tel],input[type=date],textarea,select{
+    width:100%;border:1.5px solid var(--linie);border-radius:11px;padding:11px 13px;font-size:.97rem;
+    font-family:inherit;background:#fff;color:var(--text);transition:.14s}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--welle);
+    box-shadow:0 0 0 3px rgba(17,121,174,.13)}
+  input.fehlerhaft{border-color:var(--rot);background:#fdf6f5}
+  textarea{min-height:80px;resize:vertical}
+  .check{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px;font-size:.88rem;line-height:1.5}
+  .check input{margin:2px 0 0;width:19px;height:19px;flex:0 0 19px;accent-color:var(--welle)}
+  .check.pflicht{background:#f7fbfe;border:1px solid var(--linie);border-radius:11px;padding:12px 14px}
+  .honig{position:absolute;left:-9999px}
+  .klapp{display:none}
+  .klapp.an{display:block}
+
+  /* Zusammenfassung */
+  .summe{background:var(--tiefsee);color:#fff;border-radius:var(--radius);padding:18px 20px;margin:20px 0}
+  .summe .z{display:flex;justify-content:space-between;gap:14px;font-size:.9rem;padding:4px 0}
+  .summe .z b{font-weight:700}
+  .summe .gesamt{border-top:1px solid rgba(255,255,255,.22);margin-top:9px;padding-top:11px;
+    font-size:1.15rem;font-weight:800}
+
+  /* Erfolg */
+  #erfolg{display:none}
+  .erfolg-kopf{text-align:center;padding:8px 0 18px}
+  .erfolg-kopf .haken{width:64px;height:64px;border-radius:50%;background:var(--gruen);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 14px}
+  .zahltab{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:6px}
+  .zahltab td{padding:7px 0;border-bottom:1px solid var(--linie);vertical-align:top}
+  .zahltab td:first-child{color:var(--grau);width:42%;padding-right:12px}
+  .zahltab td:last-child{font-weight:700;word-break:break-word}
+  .kopieren{background:none;border:none;color:var(--wasser);font-size:.78rem;font-weight:700;
+    cursor:pointer;text-decoration:underline;padding:0;margin-left:8px}
+
+  footer{text-align:center;font-size:.78rem;color:var(--grau);padding:24px 16px 40px;line-height:1.8}
+  footer a{color:var(--wasser)}
+  .lade{text-align:center;color:var(--grau);padding:40px 0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="/">Angel<span class="up">Up</span></a>
+  <a class="zurapp" href="/">Zur Lern-App</a>
+</header>
+
+<main>
+
+<!-- ============ Kursvorstellung ============ -->
+<section id="oben">
+  <div class="held">
+    <span class="tag" id="tagPlaetze">Anmeldung offen</span>
+    <h1 id="titel">Vorbereitungslehrgang Fischerprüfung</h1>
+    <p class="unter" id="untertitel">Kompaktlehrgang mit anschließender staatlich anerkannter Fischerprüfung.</p>
+  </div>
+
+  <div class="eck" id="eckdaten"></div>
+
+  <div class="karte">
+    <h3>Was dich erwartet</h3>
+    <p style="margin:8px 0 0;color:var(--grau);font-size:.93rem">
+      Wir gehen alle sechs Sachgebiete der Fischerprüfung durch: Fischkunde und Fischhege, Gewässerkunde
+      und Fischhege, Natur-, Tier- und Umweltschutz, Gerätekunde, das Fischereirecht und die Praxis am Gerät.
+      Dazu kommt der praktische Teil mit dem Zusammenstellen und Handhaben eines gebrauchsfertigen
+      Angelgeräts sowie dem tierschutzgerechten Behandeln, Betäuben und Töten des Fangs.
+      Die Prüfung selbst besteht aus 60 Fragen in 60 Minuten. Bestanden hat, wer mindestens 45 Fragen
+      richtig beantwortet und dabei in jedem Sachgebiet mindestens 6 Richtige hat.
+    </p>
+  </div>
+
+  <div class="hinweis blau" id="altersHinweis">
+    Zum Lehrgang zugelassen bist du ab 13 Jahren. Der Fischereischein wird ab 14 ausgestellt –
+    bestehst du vorher, bekommst du den Ausweis zum 14. Geburtstag zugeschickt.
+    Unter 18 brauchen wir die Unterschrift deiner Erziehungsberechtigten.
+  </div>
+</section>
+
+<!-- ============ Varianten ============ -->
+<section id="varianten-block">
+  <h2>Wie willst du deinen Schein machen?</h2>
+  <p class="lead">Vier Wege, ein Ziel. Wähle aus, was zu dir passt – der Preis passt sich unten automatisch an.</p>
+  <div class="varianten" id="varianten"><div class="lade">Kursdaten werden geladen …</div></div>
+</section>
+
+<!-- ============ Anmeldung ============ -->
+<section id="anmeldung">
+  <h2>Anmeldung</h2>
+  <p class="lead">Alle Angaben brauchen wir für die Anmeldung deiner Prüfung beim Verband.
+     Wir geben sie ausschließlich dafür weiter.</p>
+
+  <div class="karte">
+  <form id="formular" novalidate autocomplete="on">
+
+    <input type="text" name="website" id="website" class="honig" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+    <fieldset>
+      <legend>Gewählte Variante</legend>
+      <label class="f">
+        <span>Variante <span class="pf">*</span></span>
+        <select id="variante" name="variante"></select>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Zur Person</legend>
+      <div class="zeile">
+        <label class="f"><span>Vorname <span class="pf">*</span></span>
+          <input type="text" id="vorname" name="vorname" autocomplete="given-name" required></label>
+        <label class="f"><span>Nachname <span class="pf">*</span></span>
+          <input type="text" id="nachname" name="nachname" autocomplete="family-name" required></label>
+      </div>
+      <div class="zeile">
+        <label class="f"><span>Geburtsdatum <span class="pf">*</span></span>
+          <input type="date" id="geboren_am" name="geboren_am" required></label>
+        <label class="f"><span>Geburtsort <span class="pf">*</span></span>
+          <input type="text" id="geburtsort" name="geburtsort" required></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Anschrift</legend>
+      <label class="f"><span>Straße und Hausnummer <span class="pf">*</span></span>
+        <input type="text" id="strasse" name="strasse" autocomplete="street-address" required></label>
+      <div class="zeile drei">
+        <label class="f"><span>PLZ <span class="pf">*</span></span>
+          <input type="text" id="plz" name="plz" inputmode="numeric" maxlength="5" autocomplete="postal-code" required></label>
+        <label class="f"><span>Wohnort <span class="pf">*</span></span>
+          <input type="text" id="wohnort" name="wohnort" autocomplete="address-level2" required></label>
+        <label class="f"><span>Telefon</span>
+          <input type="tel" id="telefon" name="telefon" autocomplete="tel"></label>
+      </div>
+      <label class="f"><span>E-Mail <span class="pf">*</span></span>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+      </label>
+      <p style="margin:-6px 0 0;font-size:.8rem;color:var(--grau)">
+        An diese Adresse geht die Bestätigung mit den Zahlungsdaten.</p>
+    </fieldset>
+
+    <fieldset id="ebBlock" class="klapp">
+      <legend>Erziehungsberechtigte</legend>
+      <div class="hinweis">Du bist zum Kursbeginn noch nicht 18 Jahre alt. Deshalb brauchen wir die
+        Angaben eines Erziehungsberechtigten. Die Unterschrift auf Papier bringst du zum ersten Kurstag mit.</div>
+      <div class="zeile">
+        <label class="f"><span>Name des Erziehungsberechtigten <span class="pf">*</span></span>
+          <input type="text" id="eb_name" name="eb_name"></label>
+        <label class="f"><span>Telefon</span>
+          <input type="tel" id="eb_telefon" name="eb_telefon"></label>
+      </div>
+      <label class="f"><span>E-Mail</span>
+        <input type="email" id="eb_email" name="eb_email"></label>
+      <label class="check pflicht">
+        <input type="checkbox" id="eb_einwilligung">
+        <span>Ich bin einverstanden, dass mein Kind am Vorbereitungslehrgang und an der
+          Fischerprüfung teilnimmt.</span>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Wiederholung</legend>
+      <label class="check">
+        <input type="checkbox" id="wiederholer">
+        <span>Ich habe die Fischerprüfung schon einmal abgelegt und wiederhole sie.</span>
+      </label>
+      <div id="wdhBlock" class="klapp">
+        <div class="zeile">
+          <label class="f"><span>Datum der letzten Prüfung</span>
+            <input type="date" id="wiederholer_letzte_pruefung"></label>
+          <label class="f"><span>Wo abgelegt</span>
+            <input type="text" id="wiederholer_ort" placeholder="z. B. Dunum"></label>
+        </div>
+        <p style="margin:-4px 0 0;font-size:.8rem;color:var(--grau)">
+          Liegt die letzte Prüfung weniger als 12 Monate zurück, zahlst du nur die
+          ermäßigte Prüfungsgebühr. Danach ist der komplette Lehrgang erneut nötig.</p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Erklärungen</legend>
+      <label class="check pflicht">
+        <input type="checkbox" id="erkl_versagung">
+        <span>Ich erkläre, dass bei mir keine Gründe vorliegen, die zur Versagung eines
+          Fischereischeins führen.</span>
+      </label>
+      <label class="check pflicht">
+        <input type="checkbox" id="erkl_gesundheit">
+        <span>Ich erkläre, dass ich körperlich und geistig in der Lage bin, am Lehrgang und
+          an der Prüfung teilzunehmen.</span>
+      </label>
+      <label class="check pflicht">
+        <input type="checkbox" id="datenschutz_ok">
+        <span>Ich bin einverstanden, dass meine Angaben zur Durchführung des Lehrgangs und zur
+          Anmeldung meiner Prüfung beim Fischereiverband verarbeitet werden.
+          <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutz</a></span>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Noch etwas?</legend>
+      <label class="f"><span>Anmerkung (freiwillig)</span>
+        <textarea id="bemerkung" placeholder="z. B. Unverträglichkeiten, Anreise, Fragen"></textarea></label>
+    </fieldset>
+
+    <div class="summe" id="summe"></div>
+
+    <div id="fehler" class="hinweis rot" style="display:none"></div>
+
+    <button type="submit" class="btn gross" id="absenden">Platz verbindlich anmelden</button>
+    <p style="margin:12px 0 0;font-size:.79rem;color:var(--grau);text-align:center">
+      Nach dem Absenden bekommst du sofort eine Bestätigung per E-Mail mit den Zahlungsdaten.
+      Dein Platz ist ab dann für dich reserviert.</p>
+  </form>
+  </div>
+</section>
+
+<!-- ============ Erfolg ============ -->
+<section id="erfolg">
+  <div class="karte">
+    <div class="erfolg-kopf">
+      <div class="haken">✓</div>
+      <h2 style="margin:0 0 6px">Dein Platz ist reserviert</h2>
+      <p class="lead" id="erfolgText" style="margin:0"></p>
+    </div>
+
+    <h3>Zahlungsdaten</h3>
+    <table class="zahltab" id="zahltab"></table>
+
+    <div class="hinweis" id="mailHinweis" style="display:none"></div>
+
+    <p style="font-size:.88rem;color:var(--grau);margin-top:18px">
+      Bewahre die Referenz gut auf – sie ist gleichzeitig dein Verwendungszweck.
+      Wenn du magst, kannst du sofort mit dem Lernen anfangen.</p>
+    <a class="btn gross" href="/" style="margin-top:6px">Jetzt schon lernen mit AngelUp</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a><br>
+  Mark Schwarze, Alter Postweg 80, 26607 Aurich
+</footer>
+
+<script>
+/* ================================================================
+   Konfiguration
+   ================================================================ */
+const API = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/anmeldung';
+/* Öffentlicher (client-safer) Supabase-Publishable-Key – identisch mit dem der Lern-App */
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+const API_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+const SLUG = new URLSearchParams(location.search).get('kurs') || 'august-2026';
+
+let daten = null, gewaehlt = null;
+
+const $ = (id) => document.getElementById(id);
+const euro = (c) => (c/100).toLocaleString('de-DE',{minimumFractionDigits:2}) + ' €';
+const dat = (s) => s ? new Date(s+'T12:00:00').toLocaleDateString('de-DE',
+  {weekday:'short', day:'2-digit', month:'long', year:'numeric'}) : '';
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ================================================================
+   Kursdaten laden
+   ================================================================ */
+async function laden(){
+  try{
+    const r = await fetch(API + '?lehrgang=' + encodeURIComponent(SLUG), { headers: API_HEADERS });
+    if(!r.ok) throw new Error('nicht erreichbar');
+    daten = await r.json();
+    zeichnen();
+  }catch(e){
+    $('varianten').innerHTML =
+      '<div class="hinweis rot" style="grid-column:1/-1">Die Kursdaten lassen sich gerade nicht laden. ' +
+      'Bitte später noch einmal versuchen oder direkt anrufen.</div>';
+    $('anmeldung').style.display = 'none';
+  }
+}
+
+function zeichnen(){
+  const l = daten.lehrgang;
+
+  $('titel').textContent = l.titel || 'Vorbereitungslehrgang Fischerprüfung';
+  if(l.untertitel) $('untertitel').textContent = l.untertitel;
+  document.title = (l.titel || 'Angelschein-Kurs') + ' – AngelUp';
+
+  /* Eckdaten */
+  const ort = [l.ort_name, l.ort_strasse, [l.ort_plz, l.ort_stadt].filter(Boolean).join(' ')]
+              .filter(Boolean).join('<br>');
+  const felder = [
+    ['Kurstermin', l.beginn ? dat(l.beginn) + (l.ende && l.ende !== l.beginn ? '<br>bis ' + dat(l.ende) : '') : ''],
+    ['Zeiten', l.zeiten_text],
+    ['Prüfung', l.pruefung_am ? dat(l.pruefung_am) + (l.pruefung_zeit ? '<br>' + l.pruefung_zeit : '') : ''],
+    ['Ort', ort],
+    ['Veranstalter', l.veranstalter],
+    ['Anmeldeschluss', l.anmeldeschluss ? dat(l.anmeldeschluss) : ''],
+  ].filter(f => f[1]);
+
+  const frei = l.plaetze_frei;
+  felder.push(['Freie Plätze',
+    `<span class="${frei>0?'frei':'voll'}">${frei>0 ? frei + ' von ' + l.plaetze : 'ausgebucht'}</span>`]);
+
+  $('eckdaten').innerHTML = felder.map(f =>
+    `<div class="feld"><div class="k">${esc(f[0])}</div><div class="w">${f[1]}</div></div>`).join('');
+
+  $('tagPlaetze').textContent = !l.anmeldung_offen ? 'Anmeldung geschlossen'
+    : frei > 0 ? (frei <= 5 ? 'Nur noch ' + frei + ' Plätze' : 'Anmeldung offen') : 'Warteliste';
+  if(frei === 0) $('tagPlaetze').style.background = 'var(--akzent2)';
+
+  if(l.hinweis_html){
+    const h = document.createElement('div');
+    h.className = 'hinweis'; h.innerHTML = l.hinweis_html;
+    $('altersHinweis').after(h);
+  }
+
+  /* Varianten */
+  const empfohlen = 'komplett_vor_ort';
+  $('varianten').innerHTML = daten.varianten.map(v => `
+    <div class="vk" data-v="${esc(v.variante)}">
+      ${v.variante===empfohlen ? '<div class="empf">Beliebteste Wahl</div>' : ''}
+      <h3>${esc(v.titel)}</h3>
+      <div class="kurz">${esc(v.kurztext||'')}</div>
+      <p class="lang">${esc(v.beschreibung||'')}</p>
+      <div class="preis">${v.preis_cent>0 ? euro(v.preis_cent) : 'auf Anfrage'}
+        ${v.preis_wiederholer_cent!=null ? `<small>Wiederholer ${euro(v.preis_wiederholer_cent)} – nach Nachweis</small>` : ''}
+      </div>
+      <div class="waehlen">Diese Variante wählen</div>
+    </div>`).join('');
+
+  document.querySelectorAll('.vk').forEach(k =>
+    k.addEventListener('click', () => waehlen(k.dataset.v)));
+
+  $('variante').innerHTML = daten.varianten.map(v =>
+    `<option value="${esc(v.variante)}">${esc(v.titel)}${v.preis_cent>0?' – '+euro(v.preis_cent):''}</option>`).join('');
+  $('variante').addEventListener('change', e => waehlen(e.target.value, true));
+
+  if(daten.varianten.length) waehlen(daten.varianten[0].variante, true);
+
+  if(!l.anmeldung_offen){
+    $('absenden').disabled = true;
+    $('absenden').textContent = 'Anmeldung geschlossen';
+  } else if(frei === 0){
+    $('absenden').textContent = 'Auf die Warteliste setzen';
+  }
+}
+
+function waehlen(v, still){
+  gewaehlt = daten.varianten.find(x => x.variante === v) || null;
+  document.querySelectorAll('.vk').forEach(k =>
+    k.classList.toggle('gewaehlt', k.dataset.v === v));
+  $('variante').value = v;
+  summeZeichnen();
+  if(!still) $('anmeldung').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ================================================================
+   Summe
+   ================================================================ */
+function summeZeichnen(){
+  if(!gewaehlt){ $('summe').innerHTML = ''; return; }
+  // Der Wiederholer-Preis wird bewusst NICHT automatisch gezogen: Das Häkchen ist
+  // eine Selbstauskunft. Geprueft wird der Nachweis, danach kommt der endgueltige
+  // Betrag per Mail. Die Bestaetigungsmail rechnet aus demselben Grund voll.
+  const wdh = $('wiederholer').checked && gewaehlt.preis_wiederholer_cent != null;
+  const betrag = gewaehlt.preis_cent;
+  $('summe').innerHTML = `
+    <div class="z"><span>Variante</span><b>${esc(gewaehlt.titel)}</b></div>
+    <div class="z gesamt"><span>Zu zahlen</span><b>${betrag>0?euro(betrag):'auf Anfrage'}</b></div>
+    ${wdh ? `<div class="z"><span>Wiederholer</span><b>ggf. ${euro(gewaehlt.preis_wiederholer_cent)}</b></div><p style="margin:8px 0 0;font-size:12.5px;color:#5b6b7a;line-height:1.5">Den ermäßigten Wiederholer-Preis bestätigen wir erst nach Prüfung deines letzten Prüfungsnachweises. Bitte erst nach unserer Mail überweisen.</p>` : ''}`;
+}
+
+/* ================================================================
+   Reagierende Felder
+   ================================================================ */
+$('wiederholer').addEventListener('change', e => {
+  $('wdhBlock').classList.toggle('an', e.target.checked);
+  summeZeichnen();
+});
+
+$('geboren_am').addEventListener('change', () => {
+  const g = $('geboren_am').value;
+  if(!g) return;
+  const stichtag = daten?.lehrgang?.beginn || null;
+  const s = stichtag ? new Date(stichtag+'T12:00:00') : new Date();
+  const d = new Date(g+'T12:00:00');
+  let a = s.getFullYear()-d.getFullYear();
+  const m = s.getMonth()-d.getMonth();
+  if(m<0 || (m===0 && s.getDate()<d.getDate())) a--;
+  $('ebBlock').classList.toggle('an', a < 18 && a > 0);
+});
+
+/* ================================================================
+   Absenden
+   ================================================================ */
+$('formular').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const f = $('fehler');
+  f.style.display = 'none';
+  document.querySelectorAll('.fehlerhaft').forEach(i => i.classList.remove('fehlerhaft'));
+
+  const pflicht = ['vorname','nachname','geboren_am','geburtsort','strasse','plz','wohnort','email'];
+  const leer = pflicht.filter(id => !$(id).value.trim());
+  if($('ebBlock').classList.contains('an')){
+    if(!$('eb_name').value.trim()) leer.push('eb_name');
+  }
+  if(leer.length){
+    leer.forEach(id => $(id).classList.add('fehlerhaft'));
+    f.textContent = 'Bitte fülle die markierten Felder aus.';
+    f.style.display = 'block';
+    $(leer[0]).focus();
+    return;
+  }
+  if(!$('erkl_versagung').checked || !$('erkl_gesundheit').checked || !$('datenschutz_ok').checked){
+    f.textContent = 'Bitte bestätige die drei Erklärungen ganz unten.';
+    f.style.display = 'block';
+    return;
+  }
+  if($('ebBlock').classList.contains('an') && !$('eb_einwilligung').checked){
+    f.textContent = 'Bitte die Einwilligung der Erziehungsberechtigten bestätigen.';
+    f.style.display = 'block';
+    return;
+  }
+
+  const b = $('absenden');
+  const alt = b.textContent;
+  b.disabled = true;
+  b.textContent = 'Wird gesendet …';
+
+  const nutz = {
+    lehrgang: SLUG,
+    variante: $('variante').value,
+    vorname: $('vorname').value.trim(),
+    nachname: $('nachname').value.trim(),
+    geboren_am: $('geboren_am').value,
+    geburtsort: $('geburtsort').value.trim(),
+    strasse: $('strasse').value.trim(),
+    plz: $('plz').value.trim(),
+    wohnort: $('wohnort').value.trim(),
+    telefon: $('telefon').value.trim(),
+    email: $('email').value.trim(),
+    eb_name: $('eb_name').value.trim(),
+    eb_telefon: $('eb_telefon').value.trim(),
+    eb_email: $('eb_email').value.trim(),
+    eb_einwilligung: $('eb_einwilligung').checked,
+    wiederholer: $('wiederholer').checked,
+    wiederholer_letzte_pruefung: $('wiederholer_letzte_pruefung').value,
+    wiederholer_ort: $('wiederholer_ort').value.trim(),
+    erkl_versagung: $('erkl_versagung').checked,
+    erkl_gesundheit: $('erkl_gesundheit').checked,
+    datenschutz_ok: $('datenschutz_ok').checked,
+    bemerkung: $('bemerkung').value.trim(),
+    website: $('website').value,
+  };
+
+  try{
+    const r = await fetch(API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json', ...API_HEADERS},
+      body: JSON.stringify(nutz),
+    });
+    const a = await r.json();
+    if(!r.ok || !a.ok){
+      f.textContent = a.fehler || 'Das hat leider nicht geklappt. Bitte noch einmal versuchen.';
+      f.style.display = 'block';
+      b.disabled = false; b.textContent = alt;
+      f.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    fertig(a);
+  }catch(e){
+    f.textContent = 'Keine Verbindung. Bitte prüfe dein Netz und versuche es noch einmal.';
+    f.style.display = 'block';
+    b.disabled = false; b.textContent = alt;
+  }
+});
+
+/* ================================================================
+   Erfolgsansicht
+   ================================================================ */
+function fertig(a){
+  const l = daten.lehrgang;
+  $('oben').style.display = 'none';
+  $('varianten-block').style.display = 'none';
+  $('anmeldung').style.display = 'none';
+  $('erfolg').style.display = 'block';
+
+  if(a.status === 'warteliste'){
+    document.querySelector('#erfolg h2').textContent = 'Du stehst auf der Warteliste';
+    $('erfolgText').textContent =
+      'Der Kurs ist ausgebucht. Sobald ein Platz frei wird, melden wir uns bei dir. ' +
+      'Bitte überweise erst, wenn du von uns die feste Zusage bekommen hast.';
+  }else{
+    $('erfolgText').textContent =
+      'Wir haben dir eine Bestätigung an ' + $('email').value.trim() +
+      ' geschickt. Mit der Überweisung ist dein Platz endgültig gesichert.';
+  }
+
+  const z = a.zahlung || {};
+  const zeilen = [
+    ['Betrag', a.betrag_cent > 0 ? euro(a.betrag_cent) : 'wird dir mitgeteilt'],
+    ['Empfänger', z.inhaber],
+    ['IBAN', z.iban],
+    ['BIC', z.bic],
+    ['Bank', z.bank],
+    ['Verwendungszweck', z.verwendungszweck],
+    ['Zahlungsziel', z.frist_tage ? 'innerhalb von ' + z.frist_tage + ' Tagen' : ''],
+    ['Deine Referenz', a.referenz],
+  ].filter(r => r[1]);
+
+  const kopierbar = ['IBAN','Verwendungszweck','Deine Referenz'];
+  $('zahltab').innerHTML = zeilen.map(r =>
+    `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}` +
+    (kopierbar.includes(r[0])
+      ? `<button type="button" class="kopieren" data-kopie="${esc(r[1])}">kopieren</button>` : '') +
+    `</td></tr>`).join('');
+
+  $('zahltab').addEventListener('click', async (e) => {
+    const b = e.target.closest('.kopieren');
+    if(!b) return;
+    try{
+      await navigator.clipboard.writeText(b.dataset.kopie);
+      const t = b.textContent; b.textContent = 'kopiert ✓';
+      setTimeout(() => b.textContent = t, 1600);
+    }catch(_){ b.textContent = 'bitte manuell markieren'; }
+  });
+
+  if(a.mail === false){
+    const h = $('mailHinweis');
+    h.style.display = 'block';
+    h.textContent = 'Die Bestätigungsmail konnte gerade nicht zugestellt werden. ' +
+      'Deine Anmeldung ist trotzdem gespeichert – notiere dir bitte die Referenz ' + a.referenz + '. ' +
+      'Wir melden uns.';
+  }
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+laden();
+</script>
+</body>
+</html>

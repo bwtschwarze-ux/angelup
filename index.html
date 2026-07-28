@@ -817,6 +817,11 @@ function viewAuth(){
     <p class="unter">Melde dich an, um deinen Lernfortschritt zu speichern – auf jedem Gerät.</p>
     <main style="padding-top:0;max-width:430px">
       <div class="karte" style="text-align:center">${tabs}${meld}${form}</div>
+      <div class="karte" style="text-align:center;margin-top:14px">
+        <h3 style="margin:0 0 6px">Lieber mit Ausbilder vor Ort lernen?</h3>
+        <p style="font-size:.85rem;color:var(--grau);margin:0 0 12px">Vorbereitungslehrgang mit anschließender Fischerprüfung – die Plätze sind begrenzt.</p>
+        <a class="btn gross blau" href="kurs.html" style="text-decoration:none">Anmeldung zum Präsenzkurs</a>
+      </div>
       ${fusszeile()}
     </main>
   </div>`;
@@ -913,6 +918,7 @@ setInterval(()=>{ if(state.user && (state.view==='lernsitzung'||state.view==='pr
 function fusszeile(){
   return `<div style="text-align:center;margin-top:30px;font-size:.78rem;color:var(--grau)">
     <a href="#" onclick="go('pruefungsinfo');return false" style="color:var(--grau)">So läuft die Prüfung</a> ·
+    <a href="kurs.html" style="color:var(--grau)">Präsenzkurs</a> ·
     <a href="#" onclick="go('impressum');return false" style="color:var(--grau)">Impressum</a> ·
     <a href="#" onclick="go('datenschutz');return false" style="color:var(--grau)">Datenschutz</a>
     ${state.user?` · <a href="#" onclick="logout();return false" style="color:var(--grau)">Abmelden</a>`:''}
