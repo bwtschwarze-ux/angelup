@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#06304d">
+<meta name="theme-color" content="#050c13">
 <meta name="description" content="AngelUp – Deine moderne Vorbereitung auf die Fischerprüfung. Lernen, üben, bestehen.">
 <title>AngelUp – Fischerprüfung einfach bestehen</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -15,55 +15,86 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root{
-    --tiefsee:#06304d; --wasser:#0b4f79; --welle:#1179ae; --hell:#e8f4fb;
-    --akzent:#ffb43a; --akzent2:#ff8c42;
-    --gruen:#19b47a; --gruen-dkl:#0e8a5c; --rot:#e85454; --rot-dkl:#c73e3e;
-    --karte:#ffffff; --text:#12293a; --grau:#5d7286; --linie:#dbe7ef;
-    --radius:18px; --radius-s:12px;
-    --schatten:0 4px 20px rgba(6,48,77,.10);
-    --schatten-hover:0 8px 28px rgba(6,48,77,.18);
+    /* Dark Premium – identisch zur Website (stil.css) */
+    --tiefsee:#050c13; --wasser:#2ee6c5; --welle:#12b8a0; --hell:#122c3e;
+    --nacht:#050c13; --tief:#081722; --flaeche:#0d2130; --flaeche-2:#122c3e; --flaeche-3:#183a4a;
+    --akzent:#ffc247; --akzent2:#ff9430;
+    --gruen:#35d07f; --gruen-dkl:#2fb87c; --rot:#ff6b6b; --rot-dkl:#ff9c9c;
+    --karte:#0d2130; --text:#eaf3f9; --grau:#9db4c5; --grau-2:#6b8598;
+    --linie:rgba(255,255,255,.10); --linie-2:rgba(255,255,255,.18);
+    --glas:rgba(255,255,255,.045); --glas-2:rgba(255,255,255,.07);
+    --radius:20px; --radius-s:13px;
+    --schatten:0 0 0 1px rgba(255,255,255,.06), 0 18px 50px -22px rgba(0,0,0,.9);
+    --schatten-hover:0 0 0 1px rgba(255,255,255,.16), 0 28px 64px -22px rgba(0,0,0,1);
+    --glow-t:0 8px 30px -8px rgba(46,230,197,.45);
+    --glow-g:0 8px 30px -8px rgba(255,148,48,.5);
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;color-scheme:dark}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:linear-gradient(175deg,var(--hell) 0%,#f4fafd 40%,#eef6fb 100%);
-    color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+    background:var(--nacht);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:
+      radial-gradient(900px 620px at 12% -8%, rgba(46,230,197,.16), transparent 62%),
+      radial-gradient(780px 520px at 92% 4%, rgba(255,148,48,.11), transparent 60%),
+      radial-gradient(1000px 700px at 50% 108%, rgba(18,184,160,.12), transparent 65%),
+      linear-gradient(180deg,#050c13 0%,#081722 45%,#050c13 100%)}
+  /* Formularfelder dunkel */
+  input,select,textarea{background:#0a1c28;color:var(--text);border:1.5px solid var(--linie);
+    border-radius:11px;font-family:inherit}
+  input::placeholder,textarea::placeholder{color:var(--grau-2)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--wasser);
+    box-shadow:0 0 0 3px rgba(46,230,197,.16)}
+  input[type=range]{accent-color:var(--wasser);background:transparent;border:none;box-shadow:none}
+  input[type=checkbox],input[type=radio]{accent-color:var(--wasser)}
+  ::selection{background:rgba(46,230,197,.3)}
   /* ---------- Kopf ---------- */
-  header.top{background:linear-gradient(120deg,var(--tiefsee) 0%,var(--wasser) 60%,var(--welle) 100%);
-    color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
-    position:sticky;top:0;z-index:40;box-shadow:0 2px 14px rgba(6,48,77,.35)}
+  header.top{background:rgba(8,23,34,.82);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    color:var(--text);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    position:sticky;top:0;z-index:40;border-bottom:1px solid var(--linie);box-shadow:0 12px 34px -22px rgba(0,0,0,1)}
+  header.top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(46,230,197,.55),transparent)}
   .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.12rem;letter-spacing:.2px;cursor:pointer}
   .logo svg{width:30px;height:30px}
   .logo .up{color:var(--akzent)}
   .kopf-rechts{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-  .chip{font-size:.74rem;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+  .chip{font-size:.74rem;background:var(--glas);border:1px solid var(--linie);color:var(--grau);
     padding:4px 11px;border-radius:20px;display:flex;gap:6px;align-items:center;white-space:nowrap}
   .chip b{color:var(--akzent)}
-  .chip button{background:transparent;border:none;color:#fff;cursor:pointer;font-size:.74rem;
+  .chip button{background:transparent;border:none;color:var(--grau);cursor:pointer;font-size:.74rem;
     text-decoration:underline;padding:0}
+  .chip button:hover{color:var(--wasser)}
+  .zur-website{font-size:.74rem;color:var(--grau);text-decoration:none;border:1px solid var(--linie);
+    background:var(--glas);padding:4px 11px;border-radius:20px;white-space:nowrap;transition:.15s}
+  .zur-website:hover{color:var(--wasser);border-color:var(--linie-2);background:var(--glas-2)}
   main{max-width:960px;margin:0 auto;padding:22px 16px 80px}
   h1{font-size:1.6rem;margin:.2em 0 .35em;font-weight:800}
   h2{font-size:1.22rem;margin:1.4em 0 .55em;font-weight:750}
   p.lead{color:var(--grau);margin-top:0;font-size:.97rem}
   /* ---------- Karten & Buttons ---------- */
-  .karte{background:var(--karte);border-radius:var(--radius);padding:20px;box-shadow:var(--schatten);
-    border:1px solid rgba(219,231,239,.7);transition:.18s}
+  .karte{background:linear-gradient(160deg,var(--glas-2),var(--glas));border-radius:var(--radius);padding:20px;
+    box-shadow:var(--schatten);border:1px solid var(--linie);transition:.18s;
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .karte.klick:hover{border-color:var(--linie-2)}
   .karte.klick{cursor:pointer}
   .karte.klick:hover{transform:translateY(-3px);box-shadow:var(--schatten-hover)}
   .karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(120deg,var(--akzent),var(--akzent2));
-    color:#3a2200;border:none;border-radius:13px;padding:12px 20px;font-size:.95rem;font-weight:750;
-    cursor:pointer;transition:.15s;text-decoration:none;box-shadow:0 3px 12px rgba(255,140,66,.35)}
-  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,140,66,.45)}
-  .btn.blau{background:linear-gradient(120deg,var(--wasser),var(--welle));color:#fff;box-shadow:0 3px 12px rgba(17,121,174,.35)}
-  .btn.gruen{background:linear-gradient(120deg,var(--gruen-dkl),var(--gruen));color:#fff;box-shadow:0 3px 12px rgba(25,180,122,.35)}
-  .btn.ghost{background:#fff;color:var(--wasser);border:2px solid var(--welle);box-shadow:none}
+    color:#2a1600;border:none;border-radius:13px;padding:12px 20px;font-size:.95rem;font-weight:750;
+    cursor:pointer;transition:.15s;text-decoration:none;box-shadow:var(--glow-g)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 14px 34px -10px rgba(255,148,48,.65)}
+  .btn.blau{background:linear-gradient(120deg,var(--wasser),var(--welle));color:#04231e;box-shadow:var(--glow-t)}
+  .btn.blau:hover{box-shadow:0 14px 34px -10px rgba(46,230,197,.6)}
+  .btn.gruen{background:linear-gradient(120deg,var(--gruen),#1fae67);color:#03210f;box-shadow:0 8px 30px -8px rgba(53,208,127,.5)}
+  .btn.ghost{background:var(--glas);color:var(--text);border:1.5px solid var(--linie-2);box-shadow:none;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .btn.ghost:hover{border-color:var(--wasser);color:var(--wasser);box-shadow:none}
   .btn.gross{width:100%;padding:15px;font-size:1.03rem}
   .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
   .zurueck{background:none;border:none;color:var(--wasser);cursor:pointer;font-size:.92rem;font-weight:650;padding:6px 0;margin-bottom:8px}
-  .hinweis{background:#fff7e8;border:1px solid #f2ddab;border-radius:var(--radius-s);padding:11px 15px;
-    font-size:.83rem;color:#7d5c12;margin:14px 0}
-  .hinweis.blau{background:#e9f4fb;border-color:#bcdcf0;color:#155a86}
+  .hinweis{background:rgba(255,194,71,.09);border:1px solid rgba(255,194,71,.28);border-radius:var(--radius-s);padding:11px 15px;
+    font-size:.83rem;color:#f3cd7f;margin:14px 0}
+  .hinweis.blau{background:rgba(46,230,197,.08);border-color:rgba(46,230,197,.26);color:#8fe8d8}
   /* ---------- Region & Rollenwahl ---------- */
   .held{position:relative;text-align:center;padding:34px 16px 10px;overflow:hidden}
   .held h1{font-size:2rem}
@@ -74,74 +105,75 @@
   .region h3{margin:0 0 3px;font-size:1.03rem}
   .region p{margin:0;font-size:.82rem;color:var(--grau)}
   .region .bald{position:absolute;top:12px;right:12px;font-size:.68rem;font-weight:800;letter-spacing:.5px;
-    background:var(--linie);color:var(--grau);padding:3px 9px;border-radius:20px;text-transform:uppercase}
+    background:var(--glas-2);border:1px solid var(--linie);color:var(--grau);padding:3px 9px;border-radius:20px;text-transform:uppercase}
   .region .aktiv-tag{position:absolute;top:12px;right:12px;font-size:.68rem;font-weight:800;letter-spacing:.5px;
-    background:var(--gruen);color:#fff;padding:3px 9px;border-radius:20px;text-transform:uppercase}
+    background:var(--gruen);color:#03210f;padding:3px 9px;border-radius:20px;text-transform:uppercase}
   .region.gesperrt{opacity:.55;cursor:default}
   .region.gesperrt:hover{transform:none;box-shadow:var(--schatten)}
   .rollen{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
   @media(max-width:600px){.rollen{grid-template-columns:1fr}.held h1{font-size:1.55rem}}
   /* ---------- Statuszeile / Gamification ---------- */
   .statusleiste{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0 20px}
-  .stat{background:#fff;border-radius:var(--radius-s);padding:12px 14px;box-shadow:var(--schatten);
-    display:flex;align-items:center;gap:11px;border:1px solid rgba(219,231,239,.7)}
+  .stat{background:linear-gradient(160deg,var(--glas-2),var(--glas));border-radius:var(--radius-s);padding:12px 14px;
+    box-shadow:var(--schatten);display:flex;align-items:center;gap:11px;border:1px solid var(--linie)}
   .stat .sym{font-size:1.5rem}
   .stat .wert{font-weight:800;font-size:1.08rem;line-height:1.1}
   .stat .label{font-size:.72rem;color:var(--grau)}
-  .xp-balken{height:7px;background:var(--linie);border-radius:8px;overflow:hidden;margin-top:5px}
+  .xp-balken{height:7px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin-top:5px}
   .xp-balken>span{display:block;height:100%;background:linear-gradient(90deg,var(--akzent),var(--akzent2));transition:.4s}
   /* ---------- Sachgebiets-Karten ---------- */
   .gebiet-kopf{display:flex;align-items:center;gap:11px;margin-bottom:6px}
   .gebiet-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.25rem;color:#fff;flex:none}
   .gebiet-karte h3{margin:0;font-size:.99rem}
   .gebiet-karte .zahlen{font-size:.78rem;color:var(--grau)}
-  .fortschritt{height:8px;background:var(--linie);border-radius:8px;overflow:hidden;margin:9px 0 11px}
+  .fortschritt{height:8px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin:9px 0 11px}
   .fortschritt>span{display:block;height:100%;border-radius:8px;transition:.4s}
   /* ---------- Quiz ---------- */
-  .quizbox{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--schatten);border:1px solid rgba(219,231,239,.7)}
+  .quizbox{background:linear-gradient(160deg,var(--glas-2),var(--glas));border-radius:var(--radius);padding:22px;
+    box-shadow:var(--schatten);border:1px solid var(--linie);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
   .quiz-kopf{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--grau);
     margin-bottom:13px;flex-wrap:wrap;gap:8px}
-  .badge{background:var(--hell);border-radius:20px;padding:5px 12px;font-weight:700;color:var(--wasser)}
-  .badge.timer{background:#fdecec;color:var(--rot-dkl);font-variant-numeric:tabular-nums}
+  .badge{background:var(--glas-2);border:1px solid var(--linie);border-radius:20px;padding:5px 12px;font-weight:700;color:var(--wasser)}
+  .badge.timer{background:rgba(255,107,107,.12);border-color:rgba(255,107,107,.3);color:var(--rot-dkl);font-variant-numeric:tabular-nums}
   .badge.timer.knapp{animation:blink 1s infinite}
   @keyframes blink{50%{opacity:.5}}
-  .progressbalken{height:7px;background:var(--linie);border-radius:8px;overflow:hidden;margin-bottom:18px}
-  .progressbalken>span{display:block;height:100%;background:linear-gradient(90deg,var(--welle),var(--gruen));transition:.3s}
-  .bestehen-leiste{margin:-10px 0 16px;padding:8px 12px;border-radius:10px;background:rgba(26,158,99,.09);
-    border:1px solid rgba(26,158,99,.22);font-size:.82rem;color:var(--gruen-dkl);text-align:center;line-height:1.5}
+  .progressbalken{height:7px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin-bottom:18px}
+  .progressbalken>span{display:block;height:100%;background:linear-gradient(90deg,var(--wasser),var(--gruen));transition:.3s}
+  .bestehen-leiste{margin:-10px 0 16px;padding:8px 12px;border-radius:10px;background:rgba(53,208,127,.1);
+    border:1px solid rgba(53,208,127,.26);font-size:.82rem;color:#8fe6b6;text-align:center;line-height:1.5}
   .frage-zeile{display:flex;gap:10px;align-items:flex-start;margin-bottom:16px}
   .frage{font-size:1.14rem;font-weight:700;flex:1}
-  .sprecher{background:var(--hell);border:none;border-radius:10px;width:40px;height:40px;font-size:1.15rem;
-    cursor:pointer;flex:none;transition:.15s}
-  .sprecher:hover{background:#d8ecf7}
-  .sprecher.an{background:var(--welle);color:#fff}
-  .antwort{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;background:#fff;
+  .sprecher{background:var(--glas-2);border:1px solid var(--linie);border-radius:10px;width:40px;height:40px;font-size:1.15rem;
+    cursor:pointer;flex:none;transition:.15s;color:var(--text)}
+  .sprecher:hover{background:var(--flaeche-3);border-color:var(--linie-2)}
+  .sprecher.an{background:var(--wasser);color:#04231e;border-color:transparent}
+  .antwort{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;background:var(--glas);
     border:2px solid var(--linie);border-radius:13px;padding:13px 15px;margin-bottom:10px;font-size:.95rem;
     cursor:pointer;transition:.13s;font-family:inherit;color:var(--text)}
-  .antwort:hover{border-color:var(--welle);background:var(--hell)}
-  .antwort.gewaehlt{border-color:var(--wasser);background:var(--hell);font-weight:650}
-  .antwort.richtig{border-color:var(--gruen);background:#e9f9f2;font-weight:650}
-  .antwort.falsch{border-color:var(--rot);background:#fdeeee}
+  .antwort:hover{border-color:var(--wasser);background:var(--glas-2)}
+  .antwort.gewaehlt{border-color:var(--wasser);background:rgba(46,230,197,.1);font-weight:650}
+  .antwort.richtig{border-color:var(--gruen);background:rgba(53,208,127,.14);font-weight:650}
+  .antwort.falsch{border-color:var(--rot);background:rgba(255,107,107,.13)}
   .antwort:disabled{cursor:default}
   .antwort .buchstabe{display:grid;place-items:center;min-width:27px;height:27px;border-radius:8px;
-    background:var(--linie);font-weight:800;font-size:.8rem;flex:none;margin-top:1px}
-  .antwort.richtig .buchstabe{background:var(--gruen);color:#fff}
-  .antwort.falsch .buchstabe{background:var(--rot);color:#fff}
+    background:var(--glas-2);border:1px solid var(--linie);font-weight:800;font-size:.8rem;flex:none;margin-top:1px}
+  .antwort.richtig .buchstabe{background:var(--gruen);color:#03210f;border-color:transparent}
+  .antwort.falsch .buchstabe{background:var(--rot);color:#2a0808;border-color:transparent}
   .erklaerung{border-radius:var(--radius-s);padding:14px 16px;font-size:.9rem;margin-top:8px;animation:auf .25s ease}
-  .erklaerung.gut{background:#e9f9f2;border-left:5px solid var(--gruen)}
-  .erklaerung.schlecht{background:#fdf0ec;border-left:5px solid var(--akzent2)}
+  .erklaerung.gut{background:rgba(53,208,127,.11);border-left:5px solid var(--gruen)}
+  .erklaerung.schlecht{background:rgba(255,148,48,.11);border-left:5px solid var(--akzent2)}
   .erklaerung .titel{font-weight:800;margin-bottom:3px}
-  .eselsbruecke{background:linear-gradient(120deg,#fff7e0,#ffefc2);border:1.5px dashed var(--akzent);
+  .eselsbruecke{background:linear-gradient(120deg,rgba(255,194,71,.14),rgba(255,148,48,.08));border:1.5px dashed rgba(255,194,71,.55);
     border-radius:var(--radius-s);padding:13px 15px;font-size:.9rem;margin-top:10px;animation:auf .3s ease}
-  .eselsbruecke .titel{font-weight:800;color:#8a6512;display:flex;gap:7px;align-items:center}
-  .hilfebox{background:#eef5fc;border-left:5px solid var(--wasser);border-radius:var(--radius-s);
+  .eselsbruecke .titel{font-weight:800;color:var(--akzent);display:flex;gap:7px;align-items:center}
+  .hilfebox{background:rgba(46,230,197,.09);border-left:5px solid var(--wasser);border-radius:var(--radius-s);
     padding:13px 15px;font-size:.9rem;margin-top:8px;animation:auf .25s ease}
-  .hilfebox .titel{font-weight:800;color:#1c5a8a;margin-bottom:3px}
+  .hilfebox .titel{font-weight:800;color:var(--wasser);margin-bottom:3px}
   .hilfe-link{background:none;border:none;color:var(--wasser);font-size:.82rem;font-weight:650;
     cursor:pointer;text-decoration:underline;padding:0;margin-top:4px}
   .fischfig{margin:6px auto 12px;padding:0;max-width:460px;text-align:center}
   .fischbild{display:block;width:100%;max-width:460px;height:auto;max-height:280px;margin:0 auto;
-    background:#f4f8fb;border:1px solid var(--linie);border-radius:var(--radius-s);
+    background:#f2f7fb;border:1px solid var(--linie);border-radius:var(--radius-s);
     object-fit:contain;padding:6px}
   .fischfig figcaption{font-size:.7rem;color:var(--grau);margin-top:4px;line-height:1.3}
   .fischfig figcaption a{color:var(--wasser);text-decoration:none}
@@ -150,8 +182,8 @@
   .quiz-fuss{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
   /* ---------- Ergebnis ---------- */
   .ergebnis-kreis{width:160px;height:160px;border-radius:50%;display:grid;place-items:center;margin:12px auto;
-    background:conic-gradient(var(--gruen) var(--pct,0%),var(--linie) 0);position:relative}
-  .ergebnis-kreis::after{content:"";position:absolute;inset:13px;background:#fff;border-radius:50%}
+    background:conic-gradient(var(--gruen) var(--pct,0%),rgba(255,255,255,.09) 0);position:relative}
+  .ergebnis-kreis::after{content:"";position:absolute;inset:13px;background:#0a1c28;border-radius:50%}
   .ergebnis-kreis .zahl{position:relative;z-index:1;text-align:center}
   .ergebnis-kreis .zahl b{font-size:2rem;display:block}
   .status-gross{text-align:center;font-size:1.45rem;font-weight:800;margin:8px 0}
@@ -161,41 +193,42 @@
   table.gebiete th,table.gebiete td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--linie)}
   table.gebiete td.zahl{text-align:right;font-variant-numeric:tabular-nums}
   .pill{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:20px}
-  .pill.ok{background:#e9f9f2;color:var(--gruen-dkl)}
-  .pill.no{background:#fdeeee;color:var(--rot-dkl)}
+  .pill.ok{background:rgba(53,208,127,.15);color:#8fe6b6}
+  .pill.no{background:rgba(255,107,107,.15);color:var(--rot-dkl)}
   .konfetti{position:fixed;top:-12px;font-size:1.2rem;z-index:99;pointer-events:none;animation:fall linear forwards}
   @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
   /* ---------- Videos ---------- */
   .video-karte{display:flex;gap:13px;align-items:center}
-  .video-karte .thumb{width:56px;height:56px;border-radius:14px;background:linear-gradient(120deg,var(--tiefsee),var(--welle));
-    display:grid;place-items:center;font-size:1.5rem;flex:none;color:#fff}
+  .video-karte .thumb{width:56px;height:56px;border-radius:14px;background:linear-gradient(140deg,var(--wasser),var(--welle));
+    display:grid;place-items:center;font-size:1.5rem;flex:none;color:#04231e;box-shadow:var(--glow-t)}
   .video-karte h3{margin:0 0 2px;font-size:.95rem}
   .video-karte p{margin:0;font-size:.78rem;color:var(--grau)}
   a.extern{color:var(--wasser);font-weight:700;text-decoration:none;font-size:.85rem}
   a.extern:hover{text-decoration:underline}
   /* ---------- Ausbilder ---------- */
-  table.prueflinge{width:100%;border-collapse:collapse;font-size:.87rem;background:#fff;border-radius:var(--radius);
-    overflow:hidden;box-shadow:var(--schatten)}
-  table.prueflinge th{background:var(--wasser);color:#fff;text-align:left;padding:12px;font-size:.8rem}
+  table.prueflinge{width:100%;border-collapse:collapse;font-size:.87rem;background:var(--glas);border-radius:var(--radius);
+    overflow:hidden;box-shadow:var(--schatten);border:1px solid var(--linie)}
+  table.prueflinge th{background:rgba(46,230,197,.14);color:var(--wasser);text-align:left;padding:12px;font-size:.8rem;
+    text-transform:uppercase;letter-spacing:.6px}
   table.prueflinge td{padding:12px;border-bottom:1px solid var(--linie)}
   table.prueflinge tr:last-child td{border-bottom:none}
   table.prueflinge tr.klick{cursor:pointer}
-  table.prueflinge tr.klick:hover td{background:var(--hell)}
-  .mini-balken{height:8px;width:90px;background:var(--linie);border-radius:8px;overflow:hidden;display:inline-block;
+  table.prueflinge tr.klick:hover td{background:var(--glas-2)}
+  .mini-balken{height:8px;width:90px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;display:inline-block;
     vertical-align:middle;margin-right:8px}
   .mini-balken>span{display:block;height:100%}
   .heat{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}
-  .heat .zelle{border-radius:var(--radius-s);padding:11px 8px;text-align:center;color:#fff;font-weight:800;font-size:1.02rem}
+  .heat .zelle{border-radius:var(--radius-s);padding:11px 8px;text-align:center;color:#04231e;font-weight:800;font-size:1.02rem}
   .heat .zelle small{display:block;font-weight:650;font-size:.62rem;opacity:.9;margin-top:2px;line-height:1.25}
   @media(max-width:700px){.heat{grid-template-columns:repeat(3,1fr)}}
-  .code-box{background:linear-gradient(120deg,var(--tiefsee),var(--wasser));color:#fff;font-family:ui-monospace,monospace;
+  .code-box{background:rgba(46,230,197,.1);border:1px solid rgba(46,230,197,.3);color:var(--wasser);font-family:ui-monospace,monospace;
     font-size:1.25rem;letter-spacing:3px;padding:12px 22px;border-radius:12px;display:inline-block;font-weight:800}
   .fehlerfrage{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--linie);font-size:.88rem}
   .fehlerfrage b{color:var(--rot-dkl)}
   .abzeichen{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .abzeichen .ab{background:#fff;border:1.5px solid var(--linie);border-radius:14px;padding:9px 13px;font-size:.8rem;
+  .abzeichen .ab{background:var(--glas);border:1.5px solid var(--linie);border-radius:14px;padding:9px 13px;font-size:.8rem;
     display:flex;gap:7px;align-items:center}
-  .abzeichen .ab.holt{border-color:var(--akzent);background:#fff9ec}
+  .abzeichen .ab.holt{border-color:rgba(255,194,71,.55);background:rgba(255,194,71,.12);color:var(--akzent)}
   .abzeichen .ab.grau{opacity:.45;filter:grayscale(1)}
   .fisch-deko{display:block;margin:0 auto;max-width:230px}
 </style>
@@ -224,12 +257,12 @@ const REGIONEN = [
 ];
 
 const GEBIETE = [
-  {id:1, name:"Allgemeine Fischkunde", kurz:"Allg. Fischkunde", farbe:"#1179ae", icon:"🐟"},
-  {id:2, name:"Spezielle Fischkunde",  kurz:"Spez. Fischkunde", farbe:"#0e8a5c", icon:"🎣"},
-  {id:3, name:"Gewässerkunde",         kurz:"Gewässerkunde",    farbe:"#0d94a5", icon:"🌊"},
-  {id:4, name:"Fischfang & Gerätekunde",kurz:"Gerätekunde",     farbe:"#b07f1a", icon:"🪝"},
-  {id:5, name:"Natur-, Tier- & Umweltschutz",kurz:"Natur & Umwelt",farbe:"#4a8b2e",icon:"🌿"},
-  {id:6, name:"Fischereirecht",        kurz:"Fischereirecht",   farbe:"#7a4a8b", icon:"⚖️"}
+  {id:1, name:"Allgemeine Fischkunde", kurz:"Allg. Fischkunde", farbe:"#3fb0e0", icon:"🐟"},
+  {id:2, name:"Spezielle Fischkunde",  kurz:"Spez. Fischkunde", farbe:"#35c98d", icon:"🎣"},
+  {id:3, name:"Gewässerkunde",         kurz:"Gewässerkunde",    farbe:"#2cc2d6", icon:"🌊"},
+  {id:4, name:"Fischfang & Gerätekunde",kurz:"Gerätekunde",     farbe:"#e8b33c", icon:"🪝"},
+  {id:5, name:"Natur-, Tier- & Umweltschutz",kurz:"Natur & Umwelt",farbe:"#79c74c",icon:"🌿"},
+  {id:6, name:"Fischereirecht",        kurz:"Fischereirecht",   farbe:"#b483c9", icon:"⚖️"}
 ];
 
 /* =========================================================================
@@ -707,7 +740,7 @@ function konfetti(){
     setTimeout(()=>s.remove(),5200);
   }
 }
-const LOGO_SVG = `<svg viewBox="0 0 64 64" fill="none"><path d="M8 32c8-12 22-18 34-14l12-8-3 14 3 14-12-8c-12 4-26-2-34-14z" transform="translate(0 6)" fill="#ffb43a"/><circle cx="20" cy="34" r="3" fill="#06304d"/><path d="M46 10l6 10-12 1z" fill="#ffb43a" opacity=".85"/></svg>`;
+const LOGO_SVG = `<svg viewBox="0 0 64 64" fill="none"><path d="M8 32c8-12 22-18 34-14l12-8-3 14 3 14-12-8c-12 4-26-2-34-14z" transform="translate(0 6)" fill="#ffb43a"/><circle cx="20" cy="34" r="3" fill="#050c13"/><path d="M46 10l6 10-12 1z" fill="#ffb43a" opacity=".85"/></svg>`;
 const FISCH_DEKO = `<svg class="fisch-deko" viewBox="0 0 240 110" fill="none">
  <path d="M20 55C50 20 110 8 150 30l40-22-8 40 8 40-40-22c-40 22-100 10-130-25z" fill="url(#g1)"/>
  <circle cx="60" cy="52" r="6" fill="#06304d"/><circle cx="62" cy="50" r="2" fill="#fff"/>
@@ -746,6 +779,7 @@ function kopf(){
   return `<header class="top">
     <div class="logo" onclick="go('dashboard')">${LOGO_SVG} Angel<span class="up">Up</span></div>
     <div class="kopf-rechts">
+      <a class="zur-website" href="index.html">← Website</a>
       <span class="chip">📍 ${reg?reg.name:''}</span>
       <span class="chip">${rolleTxt} ${name} <button onclick="logout()">abmelden</button></span>
       ${state.rolle==='pruefling'?`<span class="chip">⭐ <b>${state.xp}</b> XP</span>`:''}
@@ -800,7 +834,7 @@ function viewAuth(){
     ${feld('a_pw','Passwort (mind. 6 Zeichen)','password','••••••••')}
     <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Ich bin …</label>
     <select id="a_rolle" onchange="document.getElementById('a_extra_wrap').style.display=this.value==='ausbilder'?'block':'block';document.getElementById('a_extra_label').textContent=this.value==='ausbilder'?'Ausbilder-Freischaltcode':'Kurs-Code vom Ausbilder (optional)'"
-      style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit;background:#fff">
+      style="width:100%;padding:12px 14px;font-size:.95rem">
       <option value="pruefling">🎓 Prüfling</option>
       <option value="ausbilder">👨‍🏫 Ausbilder</option>
     </select>
@@ -1178,7 +1212,7 @@ function viewLernSitzung(){
   <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
   <div class="quizbox">
     <div class="quiz-kopf">
-      <span class="badge" style="background:${s.farbe};color:#fff">${s.icon} ${s.titel}</span>
+      <span class="badge" style="background:${s.farbe};color:#04140b;border-color:transparent">${s.icon} ${s.titel}</span>
       <span class="badge">Frage ${s.pos+1} / ${s.reihe.length}</span>
       <span class="badge">🔥 ${state.streak}</span>
     </div>
@@ -1461,7 +1495,7 @@ function kursSchnitt(gid){
   if(!m.length) return 0;
   return Math.round(m.reduce((a,p)=>a+p.gebiete[gid],0)/m.length);
 }
-function heatFarbe(v){ return v>=75?'var(--gruen)':v>=50?'#e8a317':'var(--rot)'; }
+function heatFarbe(v){ return v>=75?'var(--gruen)':v>=50?'var(--akzent)':'var(--rot)'; }
 function viewAusbilder(){
   if(!state.kursDaten){ ladeKursDaten();
     return `<h1>Ausbilder-Cockpit 👨‍🏫</h1><p class="lead">Lade Kursdaten…</p>`; }
@@ -1556,7 +1590,7 @@ function viewSchueler(){
   </div>
   ${schwach.length?`<div class="hinweis"><strong>Wiederholen mit ${p.name.split(' ')[0]}:</strong> ${schwach.join(', ')}</div>`
     :`<div class="hinweis blau"><strong>Stark:</strong> Keine kritischen Bereiche – prüfungsbereit!</div>`}
-  <table class="gebiete" style="background:#fff;border-radius:var(--radius);box-shadow:var(--schatten);padding:8px">
+  <table class="gebiete" style="background:var(--glas);border:1px solid var(--linie);border-radius:var(--radius);box-shadow:var(--schatten);padding:8px">
     <thead><tr><th>Sachgebiet</th><th class="zahl">Lernstand</th><th style="text-align:right">Einschätzung</th></tr></thead>
     <tbody>${zeilen}</tbody>
   </table>`;

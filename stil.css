@@ -359,6 +359,7 @@ section{padding:clamp(56px,8vw,110px) 0;position:relative}
 .fuss a:hover{color:var(--tuerkis)}
 .fuss .unten{margin-top:38px;padding-top:24px;border-top:1px solid var(--linie);
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.83rem;color:var(--text-3)}
+.fuss .unten a{display:inline;margin:0}
 
 /* ---------------- Formulare ---------------- */
 label.f{display:block;margin-bottom:15px}
