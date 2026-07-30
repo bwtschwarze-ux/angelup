@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<title>Videokurs – AngelUp | Online zur Fischerprüfung</title>
+<meta name="description" content="Der AngelUp Videokurs: sechs Module entlang der Prüfungssachgebiete, gedreht mit echtem Gerät. Online lernen und direkt zur Prüfung in Aurich.">
+<link rel="canonical" href="https://angelup.de/lernen.html">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Nur für den Lernbereich – alles andere kommt aus stil.css */
+.lern-gitter{display:grid;grid-template-columns:330px 1fr;gap:24px;align-items:start}
+@media(max-width:960px){.lern-gitter{grid-template-columns:1fr}}
+.modulliste{display:grid;gap:11px;position:sticky;top:78px}
+@media(max-width:960px){.modulliste{position:static}}
+.mod-kopf{
+  width:100%;text-align:left;font-family:inherit;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border:1px solid var(--linie);border-radius:var(--r-s);padding:15px 17px;color:var(--text);
+  display:flex;gap:13px;align-items:center;transition:border-color .22s,background .22s
+}
+.mod-kopf:hover{border-color:var(--linie-2);background:var(--glas-2)}
+.mod-kopf.aktiv{border-color:rgba(46,230,197,.45);background:linear-gradient(165deg,rgba(46,230,197,.12),rgba(255,255,255,.02))}
+.mod-kopf .mnr{
+  width:34px;height:34px;flex:0 0 34px;border-radius:11px;display:grid;place-items:center;
+  font-weight:800;font-size:.9rem;background:rgba(255,255,255,.07);border:1px solid var(--linie)
+}
+.mod-kopf.aktiv .mnr{background:linear-gradient(140deg,var(--tuerkis),var(--tuerkis-2));color:#03211c;border-color:transparent}
+.mod-kopf .mtit{font-weight:700;font-size:.96rem;line-height:1.3}
+.mod-kopf .msub{font-size:.78rem;color:var(--text-3);margin-top:2px}
+
+.lektion{
+  display:flex;gap:14px;align-items:center;padding:15px 17px;border-radius:var(--r-s);
+  border:1px solid var(--linie);background:rgba(255,255,255,.03);transition:border-color .22s,background .22s
+}
+.lektion:hover{border-color:var(--linie-2);background:var(--glas-2)}
+.lektion .lnr{width:30px;height:30px;flex:0 0 30px;border-radius:9px;display:grid;place-items:center;
+  font-size:.8rem;font-weight:800;background:rgba(255,255,255,.06);border:1px solid var(--linie);color:var(--text-2);
+  font-family:inherit;cursor:pointer;padding:0;transition:.18s}
+.lektion .lnr:hover{border-color:var(--tuerkis);color:var(--tuerkis)}
+.lektion.spielbar{cursor:pointer}
+.lektion.spielbar:hover{border-color:rgba(46,230,197,.45)}
+.lektion .ltxt{flex:1;min-width:0}
+.lektion .ltit{font-weight:650;font-size:.96rem}
+.lektion .lsub{font-size:.82rem;color:var(--text-3);margin-top:2px}
+.lektion .lzeit{font-size:.8rem;color:var(--text-3);white-space:nowrap}
+.lektion .lstatus{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;white-space:nowrap}
+.lstatus.frei{color:var(--tuerkis);background:rgba(46,230,197,.1);border:1px solid rgba(46,230,197,.3)}
+.lstatus.zu{color:var(--gold);background:rgba(255,194,71,.09);border:1px solid rgba(255,194,71,.26)}
+.lstatus.bald{color:var(--text-3);background:var(--glas);border:1px solid var(--linie)}
+
+.buehne{aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;position:relative;
+  background:linear-gradient(150deg,#0e2836,#08161f);border:1px solid var(--linie);display:grid;place-items:center}
+.buehne::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(closest-side at 50% 118%,rgba(46,230,197,.22),transparent 70%)}
+.buehne .mitte-txt{position:relative;z-index:2;text-align:center;padding:24px;max-width:460px}
+.buehne video{position:relative;z-index:3;width:100%;height:100%;object-fit:contain;background:#000}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Videokurs</a>
+      <a href="kurs.html">Lehrgang</a>
+      <a class="btn t" href="kurs.html">Platz sichern</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<!-- =============== Kopf =============== -->
+<section style="padding-bottom:34px">
+  <div class="wrap">
+    <span class="etikett gold">Videokurs · im Aufbau</span>
+    <h1 style="font-size:clamp(1.9rem,4.5vw,3rem);margin:16px 0 14px">
+      Online lernen, <span class="leuchte">vor Ort bestehen</span>
+    </h1>
+    <p class="lead" style="max-width:680px">
+      Sechs Module entlang der Prüfungssachgebiete, dazu der Praxisteil – gedreht mit unserem eigenen
+      Gerät im Laden und am Wasser. Du arbeitest sie durch, wann du willst, und kommst zum Lehrgang
+      und zur Prüfung nach Aurich.
+    </p>
+
+    <div class="karte" style="margin-top:26px;padding:22px 24px">
+      <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:13px">
+        <div><b>Dein Fortschritt</b> <span class="klein" id="fortText">– noch nicht gestartet</span></div>
+        <span class="klein" id="fortProzent">0 %</span>
+      </div>
+      <div class="balken"><i id="fortBalken" style="width:0"></i></div>
+      <p class="klein" style="margin:13px 0 0">
+        Der Fortschritt wird auf diesem Gerät gespeichert. Sobald du dich anmeldest, zählt er geräteübergreifend.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =============== Kurs =============== -->
+<section style="padding-top:0">
+  <div class="wrap lern-gitter">
+
+    <!-- Modulliste -->
+    <aside>
+      <h4 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:14px">Module</h4>
+      <div class="modulliste" id="modulliste"></div>
+      <div class="karte" style="margin-top:18px;padding:20px">
+        <h3 style="font-size:1rem;margin-bottom:8px">Noch nicht freigeschaltet?</h3>
+        <p style="font-size:.9rem;margin-bottom:16px">Der Videokurs ist im Kurspaket enthalten. Buch deinen Platz für August, dann kommst du sofort rein.</p>
+        <a class="btn voll" href="kurs.html">Platz sichern</a>
+      </div>
+    </aside>
+
+    <!-- Inhalt -->
+    <div>
+      <div class="buehne" id="buehne">
+        <div class="mitte-txt">
+          <div style="font-size:3rem;margin-bottom:10px" id="buehneSym">🎬</div>
+          <h3 id="buehneTitel" style="margin-bottom:6px">Wähle links ein Modul</h3>
+          <p class="klein" id="buehneText">Die Lektionen erscheinen dann hier.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap">
+          <div>
+            <div class="etikett grau" id="modEtikett">Modul</div>
+            <h2 style="font-size:clamp(1.35rem,2.6vw,1.9rem);margin:12px 0 6px" id="modTitel">Fischkunde &amp; Hege</h2>
+            <p class="lead" style="margin:0;max-width:600px" id="modText"></p>
+          </div>
+        </div>
+
+        <div style="display:grid;gap:11px;margin-top:24px" id="lektionen"></div>
+
+        <div class="hinweis blau" style="margin-top:26px">
+          <b>Wichtig:</b> Der Videokurs bereitet dich vor – den 30-stündigen Pflichtlehrgang ersetzt er nicht.
+          Für die Fischerprüfung in Niedersachsen musst du am Präsenzlehrgang teilnehmen.
+          <a href="kurs.html">Termine ansehen</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== Aufruf =============== -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="aufruf">
+      <span class="etikett"><span class="punkt"></span>Kurs &amp; Prüfung August 2026</span>
+      <h2 style="margin:18px 0 12px">Vom ersten Video bis zum Schein</h2>
+      <p class="lead" style="max-width:600px;margin:0 auto 28px">
+        Videokurs, Fragentrainer, Lehrgang und Prüfung – ein Anbieter, ein Preis, ein Ansprechpartner.
+      </p>
+      <div class="btn-reihe zentriert">
+        <a class="btn gross" href="kurs.html">Platz sichern</a>
+        <a class="btn geist gross" href="app.html">Fragen kostenlos üben</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobil-cta"><a class="btn" href="kurs.html">Platz für August sichern</a></div>
+
+<script>
+var SB_URL = 'https://vqjpwhqpcybpblgtjuxw.supabase.co';
+var SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+
+/* ---------- Navigation ---------- */
+var nav = document.getElementById('nav'), burger = document.getElementById('burger'), navLinks = document.getElementById('navLinks');
+burger.addEventListener('click', function(){
+  var a = navLinks.classList.toggle('auf');
+  burger.setAttribute('aria-expanded', a ? 'true' : 'false');
+  burger.textContent = a ? '✕' : '☰';
+});
+addEventListener('scroll', function(){ nav.classList.toggle('fest', scrollY > 12); }, {passive:true});
+
+/* ---------- Kursstruktur (Rückfallebene, solange die Datenbank leer ist) ---------- */
+var STANDARD = [
+  { nr:1, sym:'🐟', titel:'Fischkunde & Hege',
+    beschreibung:'Die prüfungsrelevanten Arten sicher bestimmen, ihre Lebensräume kennen und wissen, welche Schonzeiten und Mindestmaße gelten.',
+    lektionen:[
+      {nr:1, titel:'Aufbau eines Fisches', text:'Flossen, Seitenlinie, Kiemen – die Begriffe, die in der Prüfung vorkommen.', dauer:'8 Min', frei:true},
+      {nr:2, titel:'Friedfische erkennen', text:'Karpfen, Brassen, Rotauge, Schleie: die sicheren Unterscheidungsmerkmale.', dauer:'12 Min'},
+      {nr:3, titel:'Raubfische erkennen', text:'Hecht, Zander, Barsch, Wels – Merkmale, Verwechslungsgefahr, Lebensweise.', dauer:'12 Min'},
+      {nr:4, titel:'Schonzeiten und Mindestmaße', text:'Was in Niedersachsen gilt und wie du richtig misst.', dauer:'9 Min'},
+      {nr:5, titel:'Fischkrankheiten und Hege', text:'Woran du einen kranken Fisch erkennst und was Hege bedeutet.', dauer:'10 Min'}
+    ]},
+  { nr:2, sym:'🎣', titel:'Gerätekunde',
+    beschreibung:'Ruten, Rollen, Schnüre, Haken und Montagen – was wofür taugt und wie du es sauber zusammenbaust.',
+    lektionen:[
+      {nr:1, titel:'Ruten und Rollen', text:'Welche Kombination passt zu welcher Angelart.', dauer:'11 Min'},
+      {nr:2, titel:'Schnüre, Vorfächer, Haken', text:'Tragkraft, Durchmesser, Hakengrößen – und wann was.', dauer:'10 Min'},
+      {nr:3, titel:'Die wichtigsten Knoten', text:'Am Gerät gefilmt, langsam und in Großaufnahme.', dauer:'14 Min'},
+      {nr:4, titel:'Grundmontage und Posenmontage', text:'Schritt für Schritt aufgebaut, wie du es in der Praxisprüfung zeigen musst.', dauer:'15 Min'},
+      {nr:5, titel:'Zubehör und Pflicht-Ausrüstung', text:'Kescher, Hakenlöser, Maßband, Betäuber – was immer dabei sein muss.', dauer:'7 Min'}
+    ]},
+  { nr:3, sym:'💧', titel:'Gewässerkunde',
+    beschreibung:'Stillgewässer, Fließgewässer, Nahrungsketten und Wasserqualität – und was das für dein Angeln bedeutet.',
+    lektionen:[
+      {nr:1, titel:'Stillgewässer verstehen', text:'Zonen, Schichtung, Sauerstoff – warum der Fisch steht, wo er steht.', dauer:'11 Min'},
+      {nr:2, titel:'Fließgewässer verstehen', text:'Von der Forellen- bis zur Brassenregion.', dauer:'10 Min'},
+      {nr:3, titel:'Nahrungskette und Gewässergüte', text:'Plankton, Kleinlebewesen, Fisch – und was Verschmutzung anrichtet.', dauer:'9 Min'},
+      {nr:4, titel:'Gewässer in Ostfriesland', text:'Kanäle, Tiefs und Seen bei uns vor der Tür.', dauer:'8 Min'}
+    ]},
+  { nr:4, sym:'🛡️', titel:'Natur- & Tierschutz',
+    beschreibung:'Waidgerechtes Angeln, Umgang mit dem Fang, Betäuben und Töten. Der Teil, auf den es wirklich ankommt.',
+    lektionen:[
+      {nr:1, titel:'Waidgerechtigkeit', text:'Was der Begriff konkret bedeutet – nicht nur als Prüfungsantwort.', dauer:'9 Min'},
+      {nr:2, titel:'Fisch richtig versorgen', text:'Betäuben, töten, Kiemenschnitt – korrekt und ruhig gezeigt.', dauer:'12 Min', hinweis:'sachlich, ohne Effekthascherei'},
+      {nr:3, titel:'Zurücksetzen ohne Schaden', text:'Haken lösen, Handling, Schleimhaut schützen.', dauer:'8 Min'},
+      {nr:4, titel:'Natur- und Artenschutz', text:'Geschützte Arten, Uferschutz, Verhalten am Wasser.', dauer:'10 Min'}
+    ]},
+  { nr:5, sym:'📜', titel:'Rechtskunde',
+    beschreibung:'Fischereirecht, Tierschutzgesetz und die Regeln in Niedersachsen – verständlich statt Paragrafenwüste.',
+    lektionen:[
+      {nr:1, titel:'Fischereischein und Erlaubnisschein', text:'Was du wirklich brauchst, bevor du angelst.', dauer:'8 Min'},
+      {nr:2, titel:'Niedersächsisches Fischereigesetz', text:'Die Punkte, die in der Prüfung abgefragt werden.', dauer:'13 Min'},
+      {nr:3, titel:'Tierschutzgesetz für Angler', text:'Was verboten ist und warum.', dauer:'10 Min'},
+      {nr:4, titel:'Ordnungswidrigkeiten und Strafen', text:'Was passiert, wenn man es falsch macht.', dauer:'7 Min'}
+    ]},
+  { nr:6, sym:'🧰', titel:'Praxis am Wasser',
+    beschreibung:'Der Praxisteil: Montage bauen, werfen, Fisch versorgen. Gefilmt mit echtem Gerät, Schritt für Schritt.',
+    lektionen:[
+      {nr:1, titel:'Rute aufbauen und Rolle montieren', text:'In der Reihenfolge, in der es in der Prüfung verlangt wird.', dauer:'10 Min'},
+      {nr:2, titel:'Montage in der Prüfung', text:'Die typische Prüfungsaufgabe komplett durchgespielt.', dauer:'14 Min'},
+      {nr:3, titel:'Wurftechnik', text:'Sicher und kontrolliert werfen – auch mit Publikum.', dauer:'9 Min'},
+      {nr:4, titel:'Der Prüfungstag', text:'Ablauf, Zeitplan, was du mitbringst und was wir stellen.', dauer:'11 Min', frei:true}
+    ]}
+];
+
+var module = STANDARD, aktiv = 0;
+var STAND_KEY = 'angelup-videokurs';
+var stand = {};
+try { stand = JSON.parse(localStorage.getItem(STAND_KEY) || '{}'); } catch(e){ stand = {}; }
+
+function speichern(){ try{ localStorage.setItem(STAND_KEY, JSON.stringify(stand)); }catch(e){} }
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function lektionenGesamt(){
+  return module.reduce(function(s,m){ return s + m.lektionen.length; }, 0);
+}
+function fortschrittZeichnen(){
+  var ges = lektionenGesamt();
+  var fertig = Object.keys(stand).filter(function(k){ return stand[k]; }).length;
+  var p = ges ? Math.round(fertig / ges * 100) : 0;
+  document.getElementById('fortBalken').style.width = p + '%';
+  document.getElementById('fortProzent').textContent = p + ' %';
+  document.getElementById('fortText').textContent = fertig
+    ? '– ' + fertig + ' von ' + ges + ' Lektionen erledigt'
+    : '– noch nicht gestartet';
+}
+
+function modulListeZeichnen(){
+  document.getElementById('modulliste').innerHTML = module.map(function(m,i){
+    return '<button class="mod-kopf' + (i === aktiv ? ' aktiv' : '') + '" data-i="' + i + '">'
+      + '<span class="mnr">' + esc(m.nr) + '</span>'
+      + '<span><span class="mtit">' + esc(m.titel) + '</span>'
+      + '<span class="msub">' + m.lektionen.length + ' Lektionen</span></span>'
+      + '</button>';
+  }).join('');
+  document.querySelectorAll('.mod-kopf').forEach(function(b){
+    b.addEventListener('click', function(){ aktiv = +b.dataset.i; zeichnen(); window.scrollTo({top:document.querySelector('.lern-gitter').offsetTop - 70, behavior:'smooth'}); });
+  });
+}
+
+function zeichnen(){
+  var m = module[aktiv];
+  modulListeZeichnen();
+  buehneZuruecksetzen(m);
+  document.getElementById('modEtikett').textContent = 'Modul ' + m.nr;
+  document.getElementById('modTitel').textContent = m.titel;
+  document.getElementById('modText').textContent = m.beschreibung || '';
+
+  document.getElementById('lektionen').innerHTML = m.lektionen.map(function(l,i){
+    var key = m.nr + '.' + l.nr;
+    var erledigt = !!stand[key];
+    var status = l.video
+      ? (l.frei ? '<span class="lstatus frei">▶ Vorschau</span>' : '<span class="lstatus zu">🔒 im Kurs</span>')
+      : '<span class="lstatus bald">in Produktion</span>';
+    return '<div class="lektion' + (l.video ? ' spielbar' : '') + '" data-i="' + i + '" data-key="' + key + '">'
+      + '<button class="lnr" data-hak="' + key + '" title="Als erledigt markieren" aria-label="Als erledigt markieren">'
+      + (erledigt ? '✓' : esc(l.nr)) + '</button>'
+      + '<span class="ltxt"><span class="ltit">' + esc(l.titel) + '</span>'
+      + '<span class="lsub">' + esc(l.text) + '</span></span>'
+      + '<span class="lzeit">' + esc(l.dauer || '') + '</span>'
+      + status
+      + '</div>';
+  }).join('');
+
+  document.querySelectorAll('#lektionen .lnr').forEach(function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      var k = b.dataset.hak;
+      stand[k] = !stand[k];
+      speichern();
+      b.textContent = stand[k] ? '✓' : k.split('.')[1];
+      fortschrittZeichnen();
+    });
+  });
+  document.querySelectorAll('#lektionen .lektion.spielbar').forEach(function(z){
+    z.addEventListener('click', function(){ abspielen(module[aktiv].lektionen[+z.dataset.i]); });
+  });
+
+  fortschrittZeichnen();
+}
+
+/* ---------- Bühne ---------- */
+function buehneZuruecksetzen(m){
+  document.getElementById('buehne').innerHTML =
+    '<div class="mitte-txt">'
+    + '<div style="font-size:3rem;margin-bottom:10px">' + esc(m.sym || '🎬') + '</div>'
+    + '<h3 style="margin-bottom:6px">' + esc(m.titel) + '</h3>'
+    + '<p class="klein">' + (m.lektionen.some(function(l){ return l.video; })
+        ? 'Tipp auf eine Lektion mit ▶, um sie hier abzuspielen.'
+        : 'Die Videos zu diesem Modul werden gerade produziert.') + '</p>'
+    + '</div>';
+}
+
+function buehneMeldung(txt, sym){
+  document.getElementById('buehne').innerHTML =
+    '<div class="mitte-txt"><div style="font-size:2.6rem;margin-bottom:10px">' + esc(sym || '🔒') + '</div>'
+    + '<p class="klein" style="font-size:.95rem">' + esc(txt) + '</p>'
+    + '<a class="btn t" style="margin-top:16px" href="kurs.html">Zugang sichern</a></div>';
+}
+
+function abspielen(l){
+  if(!l || !l.video) return;
+  if(!l.id){ buehneMeldung('Dieses Video ist noch nicht freigeschaltet.', '⏳'); return; }
+  document.getElementById('buehne').innerHTML = '<div class="mitte-txt"><p class="klein">Video wird geladen …</p></div>';
+
+  var kopf = { apikey: SB_KEY };
+  var token = null;
+  try{
+    for(var i = 0; i < localStorage.length; i++){
+      var k = localStorage.key(i);
+      if(k && k.indexOf('sb-') === 0 && k.indexOf('-auth-token') > 0){
+        token = (JSON.parse(localStorage.getItem(k)) || {}).access_token || null;
+      }
+    }
+  }catch(e){}
+  kopf.Authorization = 'Bearer ' + (token || SB_KEY);
+
+  fetch(SB_URL + '/functions/v1/video?lektion=' + encodeURIComponent(l.id), { headers: kopf })
+    .then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); })
+    .then(function(a){
+      if(!a.ok || !a.d.url){
+        buehneMeldung(a.d && a.d.fehler ? a.d.fehler : 'Video nicht verfügbar.',
+                      a.d && a.d.inProduktion ? '⏳' : '🔒');
+        return;
+      }
+      document.getElementById('buehne').innerHTML =
+        '<video controls playsinline preload="metadata" src="' + esc(a.d.url) + '"></video>';
+    })
+    .catch(function(){ buehneMeldung('Video konnte nicht geladen werden. Bitte später noch einmal.', '⚠️'); });
+}
+
+/* ---------- Struktur aus der Datenbank laden, sonst Standard ---------- */
+fetch(SB_URL + '/rest/v1/online_kurs_oeffentlich?select=id,nummer,sym,titel,beschreibung,lektionen&order=sortierung', {
+    headers:{ apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+  })
+  .then(function(r){ return r.ok ? r.json() : null; })
+  .then(function(d){
+    if(Array.isArray(d) && d.length){
+      module = d.map(function(m){
+        var lek = (m.lektionen || []).map(function(l){
+          return { id:l.id, nr:l.nummer, titel:l.titel, text:l.text, dauer:l.dauer, frei:l.frei, video:l.video };
+        });
+        return { nr:m.nummer, sym:m.sym, titel:m.titel, beschreibung:m.beschreibung, lektionen:lek };
+      }).filter(function(m){ return m.lektionen.length; });
+    }
+  })
+  .catch(function(){})
+  .then(function(){ if(aktiv >= module.length) aktiv = 0; zeichnen(); });
+
+zeichnen();
+</script>
+</body>
+</html>

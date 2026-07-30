@@ -2,7 +2,7 @@
   "name": "AngelUp – Fischerprüfung einfach bestehen",
   "short_name": "AngelUp",
   "description": "Deine moderne Vorbereitung auf die Fischerprüfung – lernen, üben, bestehen.",
-  "start_url": "./",
+  "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#06304d",
   "theme_color": "#06304d",

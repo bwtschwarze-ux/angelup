@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06304d">
+<meta name="description" content="AngelUp – Deine moderne Vorbereitung auf die Fischerprüfung. Lernen, üben, bestehen.">
+<title>AngelUp – Fischerprüfung einfach bestehen</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AngelUp">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  :root{
+    --tiefsee:#06304d; --wasser:#0b4f79; --welle:#1179ae; --hell:#e8f4fb;
+    --akzent:#ffb43a; --akzent2:#ff8c42;
+    --gruen:#19b47a; --gruen-dkl:#0e8a5c; --rot:#e85454; --rot-dkl:#c73e3e;
+    --karte:#ffffff; --text:#12293a; --grau:#5d7286; --linie:#dbe7ef;
+    --radius:18px; --radius-s:12px;
+    --schatten:0 4px 20px rgba(6,48,77,.10);
+    --schatten-hover:0 8px 28px rgba(6,48,77,.18);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(175deg,var(--hell) 0%,#f4fafd 40%,#eef6fb 100%);
+    color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+  /* ---------- Kopf ---------- */
+  header.top{background:linear-gradient(120deg,var(--tiefsee) 0%,var(--wasser) 60%,var(--welle) 100%);
+    color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    position:sticky;top:0;z-index:40;box-shadow:0 2px 14px rgba(6,48,77,.35)}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.12rem;letter-spacing:.2px;cursor:pointer}
+  .logo svg{width:30px;height:30px}
+  .logo .up{color:var(--akzent)}
+  .kopf-rechts{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .chip{font-size:.74rem;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+    padding:4px 11px;border-radius:20px;display:flex;gap:6px;align-items:center;white-space:nowrap}
+  .chip b{color:var(--akzent)}
+  .chip button{background:transparent;border:none;color:#fff;cursor:pointer;font-size:.74rem;
+    text-decoration:underline;padding:0}
+  main{max-width:960px;margin:0 auto;padding:22px 16px 80px}
+  h1{font-size:1.6rem;margin:.2em 0 .35em;font-weight:800}
+  h2{font-size:1.22rem;margin:1.4em 0 .55em;font-weight:750}
+  p.lead{color:var(--grau);margin-top:0;font-size:.97rem}
+  /* ---------- Karten & Buttons ---------- */
+  .karte{background:var(--karte);border-radius:var(--radius);padding:20px;box-shadow:var(--schatten);
+    border:1px solid rgba(219,231,239,.7);transition:.18s}
+  .karte.klick{cursor:pointer}
+  .karte.klick:hover{transform:translateY(-3px);box-shadow:var(--schatten-hover)}
+  .karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(120deg,var(--akzent),var(--akzent2));
+    color:#3a2200;border:none;border-radius:13px;padding:12px 20px;font-size:.95rem;font-weight:750;
+    cursor:pointer;transition:.15s;text-decoration:none;box-shadow:0 3px 12px rgba(255,140,66,.35)}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,140,66,.45)}
+  .btn.blau{background:linear-gradient(120deg,var(--wasser),var(--welle));color:#fff;box-shadow:0 3px 12px rgba(17,121,174,.35)}
+  .btn.gruen{background:linear-gradient(120deg,var(--gruen-dkl),var(--gruen));color:#fff;box-shadow:0 3px 12px rgba(25,180,122,.35)}
+  .btn.ghost{background:#fff;color:var(--wasser);border:2px solid var(--welle);box-shadow:none}
+  .btn.gross{width:100%;padding:15px;font-size:1.03rem}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+  .zurueck{background:none;border:none;color:var(--wasser);cursor:pointer;font-size:.92rem;font-weight:650;padding:6px 0;margin-bottom:8px}
+  .hinweis{background:#fff7e8;border:1px solid #f2ddab;border-radius:var(--radius-s);padding:11px 15px;
+    font-size:.83rem;color:#7d5c12;margin:14px 0}
+  .hinweis.blau{background:#e9f4fb;border-color:#bcdcf0;color:#155a86}
+  /* ---------- Region & Rollenwahl ---------- */
+  .held{position:relative;text-align:center;padding:34px 16px 10px;overflow:hidden}
+  .held h1{font-size:2rem}
+  .held .unter{color:var(--grau);max-width:560px;margin:0 auto 8px}
+  .fischschwarm{position:absolute;inset:0;pointer-events:none;opacity:.1;z-index:-1}
+  .region-karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:20px}
+  .region{position:relative;text-align:left}
+  .region h3{margin:0 0 3px;font-size:1.03rem}
+  .region p{margin:0;font-size:.82rem;color:var(--grau)}
+  .region .bald{position:absolute;top:12px;right:12px;font-size:.68rem;font-weight:800;letter-spacing:.5px;
+    background:var(--linie);color:var(--grau);padding:3px 9px;border-radius:20px;text-transform:uppercase}
+  .region .aktiv-tag{position:absolute;top:12px;right:12px;font-size:.68rem;font-weight:800;letter-spacing:.5px;
+    background:var(--gruen);color:#fff;padding:3px 9px;border-radius:20px;text-transform:uppercase}
+  .region.gesperrt{opacity:.55;cursor:default}
+  .region.gesperrt:hover{transform:none;box-shadow:var(--schatten)}
+  .rollen{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  @media(max-width:600px){.rollen{grid-template-columns:1fr}.held h1{font-size:1.55rem}}
+  /* ---------- Statuszeile / Gamification ---------- */
+  .statusleiste{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0 20px}
+  .stat{background:#fff;border-radius:var(--radius-s);padding:12px 14px;box-shadow:var(--schatten);
+    display:flex;align-items:center;gap:11px;border:1px solid rgba(219,231,239,.7)}
+  .stat .sym{font-size:1.5rem}
+  .stat .wert{font-weight:800;font-size:1.08rem;line-height:1.1}
+  .stat .label{font-size:.72rem;color:var(--grau)}
+  .xp-balken{height:7px;background:var(--linie);border-radius:8px;overflow:hidden;margin-top:5px}
+  .xp-balken>span{display:block;height:100%;background:linear-gradient(90deg,var(--akzent),var(--akzent2));transition:.4s}
+  /* ---------- Sachgebiets-Karten ---------- */
+  .gebiet-kopf{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+  .gebiet-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.25rem;color:#fff;flex:none}
+  .gebiet-karte h3{margin:0;font-size:.99rem}
+  .gebiet-karte .zahlen{font-size:.78rem;color:var(--grau)}
+  .fortschritt{height:8px;background:var(--linie);border-radius:8px;overflow:hidden;margin:9px 0 11px}
+  .fortschritt>span{display:block;height:100%;border-radius:8px;transition:.4s}
+  /* ---------- Quiz ---------- */
+  .quizbox{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--schatten);border:1px solid rgba(219,231,239,.7)}
+  .quiz-kopf{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--grau);
+    margin-bottom:13px;flex-wrap:wrap;gap:8px}
+  .badge{background:var(--hell);border-radius:20px;padding:5px 12px;font-weight:700;color:var(--wasser)}
+  .badge.timer{background:#fdecec;color:var(--rot-dkl);font-variant-numeric:tabular-nums}
+  .badge.timer.knapp{animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.5}}
+  .progressbalken{height:7px;background:var(--linie);border-radius:8px;overflow:hidden;margin-bottom:18px}
+  .progressbalken>span{display:block;height:100%;background:linear-gradient(90deg,var(--welle),var(--gruen));transition:.3s}
+  .bestehen-leiste{margin:-10px 0 16px;padding:8px 12px;border-radius:10px;background:rgba(26,158,99,.09);
+    border:1px solid rgba(26,158,99,.22);font-size:.82rem;color:var(--gruen-dkl);text-align:center;line-height:1.5}
+  .frage-zeile{display:flex;gap:10px;align-items:flex-start;margin-bottom:16px}
+  .frage{font-size:1.14rem;font-weight:700;flex:1}
+  .sprecher{background:var(--hell);border:none;border-radius:10px;width:40px;height:40px;font-size:1.15rem;
+    cursor:pointer;flex:none;transition:.15s}
+  .sprecher:hover{background:#d8ecf7}
+  .sprecher.an{background:var(--welle);color:#fff}
+  .antwort{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;background:#fff;
+    border:2px solid var(--linie);border-radius:13px;padding:13px 15px;margin-bottom:10px;font-size:.95rem;
+    cursor:pointer;transition:.13s;font-family:inherit;color:var(--text)}
+  .antwort:hover{border-color:var(--welle);background:var(--hell)}
+  .antwort.gewaehlt{border-color:var(--wasser);background:var(--hell);font-weight:650}
+  .antwort.richtig{border-color:var(--gruen);background:#e9f9f2;font-weight:650}
+  .antwort.falsch{border-color:var(--rot);background:#fdeeee}
+  .antwort:disabled{cursor:default}
+  .antwort .buchstabe{display:grid;place-items:center;min-width:27px;height:27px;border-radius:8px;
+    background:var(--linie);font-weight:800;font-size:.8rem;flex:none;margin-top:1px}
+  .antwort.richtig .buchstabe{background:var(--gruen);color:#fff}
+  .antwort.falsch .buchstabe{background:var(--rot);color:#fff}
+  .erklaerung{border-radius:var(--radius-s);padding:14px 16px;font-size:.9rem;margin-top:8px;animation:auf .25s ease}
+  .erklaerung.gut{background:#e9f9f2;border-left:5px solid var(--gruen)}
+  .erklaerung.schlecht{background:#fdf0ec;border-left:5px solid var(--akzent2)}
+  .erklaerung .titel{font-weight:800;margin-bottom:3px}
+  .eselsbruecke{background:linear-gradient(120deg,#fff7e0,#ffefc2);border:1.5px dashed var(--akzent);
+    border-radius:var(--radius-s);padding:13px 15px;font-size:.9rem;margin-top:10px;animation:auf .3s ease}
+  .eselsbruecke .titel{font-weight:800;color:#8a6512;display:flex;gap:7px;align-items:center}
+  .hilfebox{background:#eef5fc;border-left:5px solid var(--wasser);border-radius:var(--radius-s);
+    padding:13px 15px;font-size:.9rem;margin-top:8px;animation:auf .25s ease}
+  .hilfebox .titel{font-weight:800;color:#1c5a8a;margin-bottom:3px}
+  .hilfe-link{background:none;border:none;color:var(--wasser);font-size:.82rem;font-weight:650;
+    cursor:pointer;text-decoration:underline;padding:0;margin-top:4px}
+  .fischfig{margin:6px auto 12px;padding:0;max-width:460px;text-align:center}
+  .fischbild{display:block;width:100%;max-width:460px;height:auto;max-height:280px;margin:0 auto;
+    background:#f4f8fb;border:1px solid var(--linie);border-radius:var(--radius-s);
+    object-fit:contain;padding:6px}
+  .fischfig figcaption{font-size:.7rem;color:var(--grau);margin-top:4px;line-height:1.3}
+  .fischfig figcaption a{color:var(--wasser);text-decoration:none}
+  .fischfig figcaption a:hover{text-decoration:underline}
+  @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .quiz-fuss{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+  /* ---------- Ergebnis ---------- */
+  .ergebnis-kreis{width:160px;height:160px;border-radius:50%;display:grid;place-items:center;margin:12px auto;
+    background:conic-gradient(var(--gruen) var(--pct,0%),var(--linie) 0);position:relative}
+  .ergebnis-kreis::after{content:"";position:absolute;inset:13px;background:#fff;border-radius:50%}
+  .ergebnis-kreis .zahl{position:relative;z-index:1;text-align:center}
+  .ergebnis-kreis .zahl b{font-size:2rem;display:block}
+  .status-gross{text-align:center;font-size:1.45rem;font-weight:800;margin:8px 0}
+  .status-gross.bestanden{color:var(--gruen-dkl)}
+  .status-gross.durchgefallen{color:var(--rot-dkl)}
+  table.gebiete{width:100%;border-collapse:collapse;margin-top:14px;font-size:.88rem}
+  table.gebiete th,table.gebiete td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--linie)}
+  table.gebiete td.zahl{text-align:right;font-variant-numeric:tabular-nums}
+  .pill{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:20px}
+  .pill.ok{background:#e9f9f2;color:var(--gruen-dkl)}
+  .pill.no{background:#fdeeee;color:var(--rot-dkl)}
+  .konfetti{position:fixed;top:-12px;font-size:1.2rem;z-index:99;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+  /* ---------- Videos ---------- */
+  .video-karte{display:flex;gap:13px;align-items:center}
+  .video-karte .thumb{width:56px;height:56px;border-radius:14px;background:linear-gradient(120deg,var(--tiefsee),var(--welle));
+    display:grid;place-items:center;font-size:1.5rem;flex:none;color:#fff}
+  .video-karte h3{margin:0 0 2px;font-size:.95rem}
+  .video-karte p{margin:0;font-size:.78rem;color:var(--grau)}
+  a.extern{color:var(--wasser);font-weight:700;text-decoration:none;font-size:.85rem}
+  a.extern:hover{text-decoration:underline}
+  /* ---------- Ausbilder ---------- */
+  table.prueflinge{width:100%;border-collapse:collapse;font-size:.87rem;background:#fff;border-radius:var(--radius);
+    overflow:hidden;box-shadow:var(--schatten)}
+  table.prueflinge th{background:var(--wasser);color:#fff;text-align:left;padding:12px;font-size:.8rem}
+  table.prueflinge td{padding:12px;border-bottom:1px solid var(--linie)}
+  table.prueflinge tr:last-child td{border-bottom:none}
+  table.prueflinge tr.klick{cursor:pointer}
+  table.prueflinge tr.klick:hover td{background:var(--hell)}
+  .mini-balken{height:8px;width:90px;background:var(--linie);border-radius:8px;overflow:hidden;display:inline-block;
+    vertical-align:middle;margin-right:8px}
+  .mini-balken>span{display:block;height:100%}
+  .heat{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}
+  .heat .zelle{border-radius:var(--radius-s);padding:11px 8px;text-align:center;color:#fff;font-weight:800;font-size:1.02rem}
+  .heat .zelle small{display:block;font-weight:650;font-size:.62rem;opacity:.9;margin-top:2px;line-height:1.25}
+  @media(max-width:700px){.heat{grid-template-columns:repeat(3,1fr)}}
+  .code-box{background:linear-gradient(120deg,var(--tiefsee),var(--wasser));color:#fff;font-family:ui-monospace,monospace;
+    font-size:1.25rem;letter-spacing:3px;padding:12px 22px;border-radius:12px;display:inline-block;font-weight:800}
+  .fehlerfrage{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--linie);font-size:.88rem}
+  .fehlerfrage b{color:var(--rot-dkl)}
+  .abzeichen{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .abzeichen .ab{background:#fff;border:1.5px solid var(--linie);border-radius:14px;padding:9px 13px;font-size:.8rem;
+    display:flex;gap:7px;align-items:center}
+  .abzeichen .ab.holt{border-color:var(--akzent);background:#fff9ec}
+  .abzeichen .ab.grau{opacity:.45;filter:grayscale(1)}
+  .fisch-deko{display:block;margin:0 auto;max-width:230px}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+/* =========================================================================
+   ANGELUP – Fischerprüfung einfach bestehen (Prototyp v2)
+   Erreichbar später über: angelup.de + angelscheinwerk.de
+   Regionen: Weser-Ems aktiv · NRW / Niedersachsen (Binnen) / Bremen folgen
+   Prüfungsregeln Weser-Ems (offiziell, Prüfungsordnung AFV Stand 2026):
+   60 Fragen · 3 Antworten · 60 Min · bestanden ab 45/60 UND ≥6 je Sachgebiet
+   FRAGEN: aktuell selbst erstellte Beispiele – werden durch den offiziellen
+   Katalog (360 Fragen, Stand 2024) ersetzt, sobald sauber eingelesen.
+   ========================================================================= */
+
+const REGIONEN = [
+  {id:"weser-ems", name:"Weser-Ems", traeger:"Angelfischerverband im LFV Weser-Ems e.V.", aktiv:true,
+   regeln:{fragenGesamt:60, fragenProGebiet:10, zeitMinuten:60, bestehenGesamt:45, bestehenProGebiet:6}},
+  {id:"niedersachsen", name:"Niedersachsen (Binnen)", traeger:"AVN – Anglerverband Niedersachsen", aktiv:false},
+  {id:"nrw", name:"Nordrhein-Westfalen", traeger:"Staatliche Fischerprüfung NRW", aktiv:false},
+  {id:"bremen", name:"Bremen", traeger:"Fischerprüfung Land Bremen", aktiv:false}
+];
+
+const GEBIETE = [
+  {id:1, name:"Allgemeine Fischkunde", kurz:"Allg. Fischkunde", farbe:"#1179ae", icon:"🐟"},
+  {id:2, name:"Spezielle Fischkunde",  kurz:"Spez. Fischkunde", farbe:"#0e8a5c", icon:"🎣"},
+  {id:3, name:"Gewässerkunde",         kurz:"Gewässerkunde",    farbe:"#0d94a5", icon:"🌊"},
+  {id:4, name:"Fischfang & Gerätekunde",kurz:"Gerätekunde",     farbe:"#b07f1a", icon:"🪝"},
+  {id:5, name:"Natur-, Tier- & Umweltschutz",kurz:"Natur & Umwelt",farbe:"#4a8b2e",icon:"🌿"},
+  {id:6, name:"Fischereirecht",        kurz:"Fischereirecht",   farbe:"#7a4a8b", icon:"⚖️"}
+];
+
+/* =========================================================================
+   FRAGENKATALOG Fischerprüfung Weser-Ems (Stand 2024)
+   Quelle: offizieller Katalog (Foto-Vorlage von Mark).
+   Antworten: eingekreiste = im Katalog markiert (Ground Truth);
+   übrige fachlich bestimmt. Noch fehlende Seiten siehe Statusdoc.
+   Format: {g:Gebiet-ID, f:Frage, a:[3 Antworten], r:Index richtige, e:Erklärung}
+   ========================================================================= */
+const FRAGEN = [
+  /* ============ 1 · ALLGEMEINE FISCHKUNDE (Fragen 30–60) ============ */
+  {g:1,f:"Wo befindet sich beim Fisch die Gallenblase?",a:["am Dünndarm","an der Leber","an den Nieren"],r:1,e:"Die Gallenblase sitzt an der Leber. Sie darf beim Ausweiden nicht verletzt werden, sonst wird das Fleisch bitter."},
+  {g:1,f:"Bei welchen Süßwasserfischen hat die Leber eine andere Farbe als rotbraun?",a:["bei Forellen und Lachsen","bei Barschen und Karpfen","bei Hechten und Quappen"],r:2,e:"Bei Hecht und Quappe ist die Leber anders (heller/gelblich) gefärbt als die typisch rotbraune Leber der meisten Süßwasserfische."},
+  {g:1,f:"Wie ist die gesunde Leber bei den meisten Süßwasserfischen gefärbt?",a:["rotbraun","grün","weißlich, gelblich"],r:0,e:"Eine gesunde Fischleber ist bei den meisten Arten rotbraun. Verfärbungen können auf Krankheit hindeuten."},
+  {g:1,f:"Wo liegen die Nieren beim Fisch?",a:["unter der Wirbelsäule vom Kopf bis teilweise hinter dem After","über der Wirbelsäule bis zum Schwanzende","der Fisch hat keine Nieren"],r:0,e:"Die Nieren liegen als dunkler Streifen direkt unter der Wirbelsäule. Beim Ausweiden restlos entfernen."},
+  {g:1,f:"Worauf sollte beim Ausweiden eines Fisches zum Verzehr unbedingt geachtet werden?",a:["Gallenblase nicht zerschneiden, Nieren restlos entfernen","den Fisch in möglichst viele kleine Stücke schneiden","da gibt es nichts zu beachten, Fisch schmeckt immer"],r:0,e:"Geplatzte Galle macht das Fleisch bitter, Nierenreste verderben schnell – beides sorgfältig entfernen."},
+  {g:1,f:"An welcher Stelle des Fischschädels ist das Gehirn zu finden?",a:["zwischen Augenhinterrand und Schädelende","über den Nasengruben","unter dem ersten Rückenwirbel"],r:0,e:"Das Gehirn liegt zwischen Augenhinterrand und Schädelende – wichtig zu wissen für das korrekte Betäuben."},
+  {g:1,f:"Warum ist es wichtig, die Lage des Fischhirnes zu kennen?",a:["um den Fisch vorschriftsmäßig betäuben zu können","um ihn durch Gehirnstich ausbluten zu lassen","um Gleichgewichtsstörungen beurteilen zu können"],r:0,e:"Nur mit Kenntnis der Hirnlage lässt sich der Fisch mit einem gezielten Schlag wirksam betäuben."},
+  {g:1,f:"Wie muss der Fisch wirksam betäubt werden?",a:["durch einen kräftigen Schlag auf die Schädeldecke oberhalb des Gehirns","durch einen Herzstich","durch Durchtrennen der Wirbelsäule"],r:0,e:"Betäubt wird mit einem kräftigen Schlag auf die Schädeldecke oberhalb des Gehirns; erst danach folgt der Herzstich."},
+  {g:1,f:"Wo verläuft der Hauptnervenstrang bei Fischen?",a:["in der Wirbelsäule","an der Seitenlinie","im Fischkörper, unterseits der Bauchhöhle"],r:0,e:"Das Rückenmark (Hauptnervenstrang) verläuft im Kanal der Wirbelsäule."},
+  {g:1,f:"Wozu dient das Seitenlinienorgan?",a:["Messung der Wassertemperatur","Abwehr von Krankheitserregern","Wahrnehmung von Wasserschwingungen/-strömungen"],r:2,e:"Über die Seitenlinie nimmt der Fisch Druckwellen und Strömungen wahr – eine Art „Ferntastsinn“."},
+  {g:1,f:"Bei welchen Fischen ist das Seitenlinienorgan am Kopf besonders stark entwickelt?",a:["bei Hechten und Zandern","bei den Karpfenartigen (Cypriniden) und beim Aal","bei Bitterlingen"],r:1,e:"Cypriniden und Aal orientieren sich stark über Tast- und Strömungssinn – ihr Seitenliniensystem am Kopf ist besonders ausgeprägt."},
+  {g:1,f:"Wie ist der Geschmackssinn der Fische ausgebildet?",a:["schlecht","gar nicht","sehr gut"],r:2,e:"Fische haben einen sehr gut ausgebildeten Geschmackssinn."},
+  {g:1,f:"Wo sind beim Fisch die Geschmacksknospen angeordnet?",a:["nur an der Schwanzflosse","nur auf der Zunge","am ganzen Körper"],r:2,e:"Geschmacksknospen sitzen über den ganzen Körper verteilt, gehäuft am Kopf."},
+  {g:1,f:"Wo sind die Geschmacksknospen beim Fisch am häufigsten zu finden?",a:["am Kopf, an den Lippen und Barteln","an den Brust- und Bauchflossen","auf den Schuppen"],r:0,e:"Am dichtesten sitzen die Geschmacksknospen am Kopf, an Lippen und Barteln."},
+  {g:1,f:"Bei welchen Fischen ist der Geschmackssinn besonders gut ausgebildet?",a:["bei den Karpfenartigen (Cypriniden) und beim Aal","bei den Barschartigen (Perciden)","bei Hechten und Zandern"],r:0,e:"Cypriniden und Aal suchen ihre Nahrung stark über den Geschmack – dieser ist bei ihnen besonders ausgeprägt."},
+  {g:1,f:"Wie ist das Auge des Fisches beschaffen?",a:["normalsichtig, Hell- und Dunkelsehen schlecht","weitsichtig, Hell- und Dunkelsehen gar nicht","kurzsichtig, Hell- und Dunkelsehen gut"],r:2,e:"Fische sind kurzsichtig, können aber hell und dunkel gut unterscheiden."},
+  {g:1,f:"Können Fische aus dem Wasser heraussehen?",a:["ja, aber begrenzt","nur, wenn die Sonne scheint","nein, überhaupt nicht"],r:0,e:"Durch das „Snellsche Fenster“ können Fische begrenzt aus dem Wasser heraussehen."},
+  {g:1,f:"Welche Geräusche können Fische wahrnehmen?",a:["keine, denn Fische haben keine Ohren","einige, aber nur sehr undeutlich","alle durch das Wasser übertragenen Schallwellen werden wahrgenommen"],r:2,e:"Fische besitzen ein Innenohr und die Seitenlinie – sie nehmen im Wasser übertragene Schallwellen wahr."},
+  {g:1,f:"Welcher Fisch wird als Milchner bezeichnet?",a:["eine besondere Fischart","der weibliche Fisch","der männliche Fisch"],r:2,e:"Der Milchner ist der männliche Fisch (Samen = Milch). Das Weibchen heißt Rogner."},
+  {g:1,f:"Was ist ein Rogner?",a:["ein weiblicher Fisch","ein männlicher Fisch","ein Fisch, der sich nicht zur Fortpflanzung eignet"],r:0,e:"Der Rogner ist der weibliche Fisch (Eier = Rogen)."},
+  {g:1,f:"Was ist ein Laichhaken?",a:["ein spezieller Angelhaken","eine hakenartige Ausbildung des Unterkiefers beim Milchner großmauliger Salmoniden","ein Gaff zum Fangen großer Laichfische"],r:1,e:"Der Laichhaken ist die hakenförmige Verformung des Unterkiefers bei männlichen Salmoniden zur Laichzeit."},
+  {g:1,f:"Welche Fische sind Sommerlaicher?",a:["Hecht, Barsch, Zander","Karpfen, Wels, Schleie","Quappe, Bachforelle"],r:1,e:"Karpfen, Wels und Schleie laichen im warmen Wasser des Sommers."},
+  {g:1,f:"Fische werden als Sommerlaicher bezeichnet, wenn sie …",a:["bei einer Wassertemperatur von weniger als 10 °C laichen","erst im August ablaichen","bei einer Wassertemperatur von 17 °C und mehr laichen"],r:2,e:"Sommerlaicher laichen bei Wassertemperaturen von etwa 17 °C und mehr."},
+  {g:1,f:"Welche Fische laichen im Herbst und Winter?",a:["Quappe, Bach-, Meer- und Seeforelle, Lachs","Äsche und Barbe","Brassen, Döbel, Aland und Rotauge"],r:0,e:"Quappe, die Forellen und der Lachs laichen im Herbst/Winter bei niedrigen Temperaturen."},
+  {g:1,f:"Bei welchen Fischen dauert die natürliche Entwicklung des Laichs am längsten?",a:["bei den Herbst- und Winterlaichern","bei den Frühjahrslaichern","bei den Sommerlaichern"],r:0,e:"Im kalten Wasser entwickelt sich der Laich am langsamsten – bei den Herbst- und Winterlaichern dauert es am längsten."},
+  {g:1,f:"Welcher Süßwasserfisch produziert die meisten Eier?",a:["Dreistachliger Stichling","Hecht","Karpfen"],r:2,e:"Der Karpfen produziert die meisten Eier (bis über eine Million pro kg Körpergewicht)."},
+  {g:1,f:"Welcher Fisch legt seine Eier in selbstgebaute Nester?",a:["Dreistachliger Stichling","Karpfen","Bitterling"],r:0,e:"Der Dreistachlige Stichling baut ein Nest, das das Männchen bewacht."},
+  {g:1,f:"Welcher Fisch legt seine Eier in Muscheln?",a:["Schlammpeitzger","Bitterling","Gründling"],r:1,e:"Der Bitterling legt seine Eier mit einer Legeröhre in Teich- und Flussmuscheln ab."},
+  {g:1,f:"Was sind Wanderfische?",a:["Fische, die zur Nahrungssuche weit schwimmen","Fische, die weite Wege zu ihren Laichplätzen zurücklegen","Fische, die nicht standorttreu sind"],r:1,e:"Wanderfische (z. B. Lachs, Aal) legen weite Strecken zu ihren Laichplätzen zurück."},
+  {g:1,f:"Welcher Fisch wandert zum Laichen vom Süßwasser ins Salzwasser?",a:["Lachs","Aal","Zander"],r:1,e:"Der Aal wandert zum Laichen ins Meer (Sargassosee) – er ist katadrom. Der Lachs macht es umgekehrt."},
+  {g:1,f:"Dürfen klar erkennbar kranke, gefangene Fische ins Gewässer zurückgesetzt werden?",a:["ja, denn jede Krankheit heilt aus","nein","ja, denn kranke Fische dienen als Nahrung für Raubfische"],r:1,e:"Klar erkennbar kranke Fische dürfen nicht zurückgesetzt werden, um eine Ausbreitung der Krankheit zu verhindern."},
+
+  /* ============ 2 · SPEZIELLE FISCHKUNDE (Fragen 1–50) ============ */
+  {g:2,f:"Welche Arten gehören zu den Rundmäulern?",a:["Rotauge und Brassen","Bach-, Fluss- und Meerneunaugen","Zander und Hecht"],r:1,e:"Die Neunaugen sind Rundmäuler (Cyclostomata) – keine echten Fische, sondern kieferlose Wirbeltiere."},
+  {g:2,f:"Was für ein Skelett haben Neunaugen?",a:["ein Knochenskelett","ein knorpeliges Skelett","sie haben kein Stützskelett"],r:1,e:"Neunaugen besitzen ein knorpeliges Skelett."},
+  {g:2,f:"Woher hat das Neunauge seinen Namen?",a:["es hat ein Nasenloch und auf jeder Seite ein Auge sowie sieben Kiemenöffnungen","es hat neun Augen","es hat nur ein Auge an jeder Seite, aber neun Kiemenöffnungen"],r:0,e:"Nasenloch + Auge + sieben Kiemenöffnungen ergeben je Seite „neun Augen“ – daher der Name."},
+  {g:2,f:"Welche der aufgeführten Fischarten hat das geringste Sauerstoffbedürfnis?",a:["Karausche","Bachforelle","Hecht"],r:0,e:"Die Karausche ist extrem anspruchslos und übersteht sauerstoffarme Gewässer."},
+  {g:2,f:"Welche Fische haben Schlundzähne?",a:["Karpfenartige (Cypriniden)","Lachs-/Forellenartige (Salmoniden)","Barschartige (Perciden)"],r:0,e:"Cypriniden haben keine Kieferzähne, sondern Schlundzähne zum Zerkleinern der Nahrung."},
+  {g:2,f:"Welche unveränderlichen Merkmale zieht man bei den Karpfenartigen (Cypriniden) zur Artbestimmung heran?",a:["Anzahl und Stellung der Schlundzähne","Form der Hautzähne","Schuppenreihe an der Fettflosse"],r:0,e:"Anzahl und Stellung der Schlundzähne sind artspezifisch und unveränderlich – ideal zur Bestimmung."},
+  {g:2,f:"Bei welchen Fischen sind die Kiefer bezahnt?",a:["Brassen (Blei), Güster, Zährte","Aland, Döbel, Hasel","Forelle, Hecht, Barsch"],r:2,e:"Forelle, Hecht und Barsch (Raubfische) haben bezahnte Kiefer. Cypriniden haben keine Kieferzähne."},
+  {g:2,f:"In welcher Aufstellung ist die Anzahl der Barteln bei den Fischen richtig angegeben?",a:["Schleie-1, Quappe-4, Karpfen-6, Wels-2, Barbe-2, Gründling-4","Schleie-2, Quappe-1, Karpfen-4, Wels-6, Barbe-4, Gründling-2","Schleie-2, Quappe-6, Karpfen-6, Wels-4, Barbe-2, Gründling-2"],r:1,e:"Richtig: Schleie 2, Quappe 1, Karpfen 4, Wels 6, Barbe 4, Gründling 2."},
+  {g:2,f:"Welcher Fisch hat die meisten Barteln?",a:["Wels","Barbe","Schlammpeitzger"],r:2,e:"Der Schlammpeitzger hat 10 Barteln – mehr als jeder andere heimische Fisch."},
+  {g:2,f:"Welcher Fisch hat keine Barteln?",a:["Barbe","Nase","Quappe"],r:1,e:"Die Nase hat keine Barteln; sie erkennt man am unterständigen Maul mit verhornter Lippe."},
+  {g:2,f:"Welcher Fisch hat nur eine Bartel an der Unterlippe?",a:["Wels","Quappe","Barbe"],r:1,e:"Die Quappe (einziger heimischer Süßwasser-Dorschartiger) trägt eine einzelne Bartel am Kinn."},
+  {g:2,f:"Zu welcher Maulform sind die Fischarten richtig eingeordnet?",a:["unterständiges Maul: Nase, Barbe","unterständiges Maul: Flussbarsch, Zander, Rapfen","oberständiges Maul: Karpfen, Schleie, Zander"],r:0,e:"Nase und Barbe haben ein unterständiges Maul (Grundfische)."},
+  {g:2,f:"Welche Fische heften ihren Laich hauptsächlich an Pflanzen und Gestrüpp?",a:["Brassen, Schleie, Karpfen, Flussbarsch und Hecht","Bachforelle, Lachs und Elritze","Barbe, Quappe und Äsche"],r:0,e:"Diese Arten sind Krautlaicher – sie kleben ihre Eier an Wasserpflanzen."},
+  {g:2,f:"Welche Flossenstellung ist für das Rotauge (Plötze) kennzeichnend?",a:["die Rückenflosse beginnt senkrecht über dem Ansatz der Bauchflossen","die Rückenflosse beginnt senkrecht über dem Ansatz der Brustflossen","die Rückenflosse endet senkrecht vor dem Ansatz der Bauchflossen"],r:0,e:"Beim Rotauge beginnt die Rückenflosse senkrecht über dem Ansatz der Bauchflossen – Unterscheidung zur Rotfeder."},
+  {g:2,f:"Wie sieht der Döbel aus?",a:["großer Kopf, netzartige Zeichnung, breites Maul","hochrückig, bezahnte Kiefer, Fettflosse","lange Afterflosse"],r:0,e:"Der Döbel hat einen großen breiten Kopf und ein netzartiges Schuppenmuster."},
+  {g:2,f:"Wie sieht der Aland aus?",a:["torpedoförmiger Körper","Maul oberständig, Körperquerschnitt rund","endständiges Maul, etwas hochrückiger Körper"],r:2,e:"Der Aland hat ein endständiges Maul und einen etwas hochrückigen Körper."},
+  {g:2,f:"Welcher Fisch hat ein vorstülpbares Rüsselmaul?",a:["Hecht","Flussbarsch","Brassen"],r:2,e:"Der Brassen (Cyprinide) kann sein Maul rüsselartig vorstülpen, um Nahrung vom Grund aufzunehmen."},
+  {g:2,f:"Welche Körperform hat die Güster?",a:["pfeilförmig","torpedoförmig","hochrückig, seitlich zusammengedrückt"],r:2,e:"Die Güster ist wie der Brassen hochrückig und seitlich stark abgeflacht."},
+  {g:2,f:"Woran erkennt man den Schuppenkarpfen?",a:["vollständiges Schuppenkleid","Schuppen entlang der Seitenlinie und an den Flossenansätzen","keine oder nur ganz wenige verteilte Schuppen"],r:0,e:"Der Schuppenkarpfen ist vollständig beschuppt (im Gegensatz zu Spiegel- und Lederkarpfen)."},
+  {g:2,f:"In welchem Gewässerbereich hält sich die Schleie bevorzugt auf?",a:["Freiwasserzone","Gewässergrund","direkt an der Oberfläche"],r:1,e:"Die Schleie ist ein Grundfisch und hält sich bevorzugt am krautigen Gewässergrund auf."},
+  {g:2,f:"Bei welcher Fischart ist der Rogen giftig?",a:["Barbe","Wels","Quappe"],r:0,e:"Der Rogen (die Eier) der Barbe ist giftig und kann Übelkeit/Erbrechen auslösen."},
+  {g:2,f:"Welcher barschartige Fisch hat keinen spitzen Dorn am Kiemendeckel?",a:["Zander","Kaulbarsch","Flussbarsch"],r:1,e:"Der Kaulbarsch besitzt keinen spitzen Dorn am Kiemendeckel."},
+  {g:2,f:"Welches unveränderliche Merkmal erlaubt die Unterscheidung des Jungzanders von anderen Barschartigen?",a:["die blassere Färbung des Körpers","der fehlende spitze Dorn am Kiemendeckel","die nicht geteilte Rückenflosse"],r:0,e:"Der Jungzander ist blasser gefärbt; zusätzlich hat er (im Unterschied zum Kaulbarsch) zwei getrennte Rückenflossen und Hundszähne."},
+  {g:2,f:"Welcher Fisch klebt die Eier überwiegend an Wurzelwerk, Totholz und Steine?",a:["Bachforelle","Bitterling","Zander"],r:2,e:"Der Zander legt seine Eier an Wurzeln, Totholz und Steine und bewacht das Gelege."},
+  {g:2,f:"Welche Beschreibung trifft auf den Kaulbarsch zu?",a:["er hat nur hartstrahlige Flossen","zwischen der hart- und weichstrahligen Rückenflosse besteht eine Lücke","hartstrahlige Rückenflosse ist mit der weichstrahligen durch Flossenhaut verbunden"],r:2,e:"Beim Kaulbarsch sind hart- und weichstrahlige Rückenflosse durch Flossenhaut zu einer Flosse verbunden."},
+  {g:2,f:"Wo laicht der Europäische Aal?",a:["in den Flüssen","im Wattenmeer","in der Sargassosee"],r:2,e:"Der Europäische Aal wandert zum Laichen in die Sargassosee im Atlantik."},
+  {g:2,f:"Was sind Glasaale?",a:["Aale im Jugendstadium; ihr Körper ist transparent","Aale, die von einer Krankheit befallen sind","eine Kümmerform des Aales"],r:0,e:"Glasaale sind die durchsichtigen Jungaale, die vom Meer ins Süßwasser aufsteigen."},
+  {g:2,f:"Was sind Blankaale?",a:["hell gefärbte Aale mit breiter Maulspalte","Aale, die in das Süßwasser aufsteigen","Aale, die zum Laichen abwandern"],r:2,e:"Blankaale sind die geschlechtsreifen Aale, die silbrig gefärbt zum Laichen ins Meer abwandern."},
+  {g:2,f:"Welche Merkmale weist der zum Laichen abwandernde Aal auf?",a:["Rücken dunkel, Bauch silberglänzend, eingezogener After, erweiterte Augen, großer Fettgehalt","Gelbfärbung","hoher Fettgehalt, kleine Augen, wesentlich vergrößerte Flossen"],r:0,e:"Der abwandernde Blankaal ist silbrig, hat vergrößerte Augen und einen hohen Fettvorrat für die weite Wanderung."},
+  {g:2,f:"Wie oft laicht der Aal in seinem Leben ab?",a:["einmal","dreimal","jedes Jahr"],r:0,e:"Der Aal laicht nur einmal in seinem Leben und stirbt danach."},
+  {g:2,f:"Welche Fische haben keine Bauchflossen?",a:["Schleie und Barbe","Hecht und Zander","Meeraal (Conger) und Flussaal"],r:2,e:"Aale besitzen keine Bauchflossen; Rücken-, Schwanz- und Afterflosse bilden einen durchgehenden Saum."},
+  {g:2,f:"Wie unterscheidet man die Quappe vom Wels?",a:["sie hat eine Bartel und eine geteilte, lang ausgezogene Rücken- und Afterflosse","sie hat sechs Barteln und eine kleine vorn liegende Rückenflosse","sie hat vier Barteln und kehlständige Bauchflossen"],r:0,e:"Die Quappe hat nur eine Kinnbartel und lang ausgezogene Rücken- und Afterflossen; der Wels hat sechs Barteln."},
+  {g:2,f:"Welcher im Süßwasser lebende Fisch hat kehlständige Bauchflossen?",a:["Flussbarsch","Quappe","Aal"],r:1,e:"Die Quappe hat kehlständige Bauchflossen (vor den Brustflossen)."},
+  {g:2,f:"Wodurch unterscheidet sich der Wels vom Zwerg- oder Katzenwels? Der Wels hat …",a:["einen langen Rückenflossensaum und sechs gleichlange Barteln","keine Barteln und einen langen Rücken- und Afterflossensaum","vier kürzere Barteln am Unterkiefer und zwei sehr lange am Oberkiefer"],r:2,e:"Der Wels hat zwei sehr lange Barteln am Oberkiefer und vier kürzere am Unterkiefer sowie nur eine kleine Rückenflosse."},
+  {g:2,f:"Durch welches deutlich sichtbare Merkmal unterscheiden sich Lachsartige (Salmoniden) von Karpfenartigen (Cypriniden)?",a:["durch die Fettflosse","durch die Stachelstrahlen","durch einen geschlossenen Flossensaum um den Hinterkörper"],r:0,e:"Salmoniden besitzen als Erkennungsmerkmal eine kleine Fettflosse zwischen Rücken- und Schwanzflosse."},
+  {g:2,f:"Welche Fische bevorzugen klares, kühles und sauerstoffreiches Wasser?",a:["Karpfenartige (Cypriniden)","Lachsartige (Salmoniden)","Welse"],r:1,e:"Salmoniden brauchen kühles, klares, sauerstoffreiches Wasser (Forellenregion)."},
+  {g:2,f:"Welche Fische haben den höchsten Sauerstoffbedarf?",a:["Karauschen","Zander","Forellen"],r:2,e:"Forellen (Salmoniden) haben den höchsten Sauerstoffbedarf."},
+  {g:2,f:"Welche Lachsartigen (Salmoniden) sind einheimische Fische?",a:["Regenbogenforellen","Bachsaiblinge","Bach- und Meerforellen"],r:2,e:"Bach- und Meerforelle sind heimisch; Regenbogenforelle und Bachsaibling wurden aus Nordamerika eingeführt."},
+  {g:2,f:"Welche Fischarten sind in Europa nicht heimisch?",a:["Äsche und Wels","Bach- und Meerforellen","Bachsaibling und Regenbogenforelle"],r:2,e:"Bachsaibling und Regenbogenforelle stammen aus Nordamerika und sind bei uns nicht heimisch."},
+  {g:2,f:"Welche Fischarten sind Kieslaicher?",a:["Nase, Barbe, Bach- und Meerforellen","Hecht, Zander, Barsch, Brassen","Karpfen, Schleie, Rotauge, Karausche"],r:0,e:"Nase, Barbe und die Forellen laichen auf kiesigem Untergrund (Kieslaicher)."},
+  {g:2,f:"Wo laicht die Bachforelle?",a:["an Kraut","im Freiwasser","auf kiesigem Untergrund"],r:2,e:"Die Bachforelle ist ein Kieslaicher und legt ihre Eier in Laichgruben im Kies ab."},
+  {g:2,f:"Woran erkenne ich den Äschenmilchner?",a:["an den stärker ausgeprägten Bauchflossen","an der lang ausgezogenen Afterflosse mit vielen schwarzen Punkten","an der wimpelartig lang ausgezogenen Rückenflosse"],r:2,e:"Das Äschenmännchen hat eine besonders große, wimpelartig ausgezogene Rückenflosse (Fahne)."},
+  {g:2,f:"Woran erkennt man bei den meisten großmauligen Lachsartigen (Salmoniden) den Milchner?",a:["am größeren Kopf und am Laichhaken","am Laichausschlag","am vorstülpbaren Rüsselmaul"],r:0,e:"Männchen großmauliger Salmoniden erkennt man am größeren Kopf und am Laichhaken des Unterkiefers."},
+  {g:2,f:"Bei welcher Fischart aus der Familie der Lachsartigen (Salmoniden) haben die paarigen Flossen und die Afterflosse einen weiß-schwarzen Saum?",a:["Bachsaibling","Regenbogenforelle","Bachforelle"],r:0,e:"Der Bachsaibling hat den typischen weiß-schwarzen Saum an den unteren Flossen."},
+  {g:2,f:"Wie unterscheidet sich die Regenbogenforelle von der Bachforelle?",a:["die Regenbogenforelle hat eine unterständige Maulspalte","sie hat auf beiden Seiten des Körpers ein rosa schillerndes Längsband","die Männchen bilden im Alter keinen Laichhaken am Unterkiefer aus"],r:1,e:"Die Regenbogenforelle trägt ein rosa/violett schillerndes Längsband auf beiden Körperseiten."},
+  {g:2,f:"Welche Fische sind Dorschartige?",a:["Makrele, Hornhecht, Aalmutter","Steinbutt, Scholle, Flunder","Köhler, Wittling, Schellfisch"],r:2,e:"Köhler, Wittling und Schellfisch gehören zu den Dorschartigen (Gadidae)."},
+  {g:2,f:"Welche Arten sind Plattfische?",a:["Rotauge und Brassen","Hering und Maifisch","Scholle und Flunder"],r:2,e:"Scholle und Flunder sind Plattfische."},
+  {g:2,f:"Woran ist der Hornhecht zu erkennen?",a:["schnabelartiges Maul, grüne Gräten und langgestreckter Körper","die zweite Rückenflosse ist größer als die erste","er hat eine besonders große Afterflosse und zwei Rückenflossen"],r:0,e:"Der Hornhecht hat ein schnabelartiges Maul, einen langgestreckten Körper und auffällig grün gefärbte Gräten."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"rotauge",a:["Rotfeder","Rotauge","Güster"],r:1,e:"Das Rotauge (Plötze) hat die Rückenflosse SENKRECHT über dem Bauchflossenansatz und ein rotes Auge – so unterscheidet man es von der Rotfeder."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"brassen",a:["Brassen","Karausche","Karpfen"],r:0,e:"Der Brassen (Blei) ist extrem hochrückig, seitlich abgeflacht, bronzefarben und hat eine sehr lange Afterflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"karpfen",a:["Karausche","Schleie","Karpfen"],r:2,e:"Der Karpfen erkennt man an den 4 Barteln (2 kurze oben, 2 lange unten) und der langen Rückenflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"hecht",a:["Zander","Hecht","Wels"],r:1,e:"Der Hecht hat ein entenschnabelartig verlängertes Maul, hellen Fleckenmuster und die Rückenflosse steht WEIT hinten gegenüber der Afterflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"zander",a:["Barsch","Hecht","Zander"],r:2,e:"Der Zander hat 2 getrennte Rückenflossen (vordere stachelig), schwache Querbänder und ist deutlich schlanker als der Barsch."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"barsch",a:["Zander","Flussbarsch","Kaulbarsch"],r:1,e:"Der Flussbarsch hat 5–9 dunkle Querbänder, einen schwarzen Fleck am Ende der vorderen Rückenflosse und leuchtend orange-rote Brustflossen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"bachforelle",a:["Regenbogenforelle","Bachforelle","Bachsaibling"],r:1,e:"Die Bachforelle hat rote und schwarze Tupfen (oft mit hellem Hof), keinen weißen Flossensaum und kein rosa Längsband."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"regenbogenforelle",a:["Bachforelle","Bachsaibling","Regenbogenforelle"],r:2,e:"Die Regenbogenforelle trägt ein rosa/violett schillerndes Längsband über die ganze Flanke und viele kleine schwarze Punkte auch auf den Flossen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"bachsaibling",a:["Bachforelle","Bachsaibling","Regenbogenforelle"],r:1,e:"Der Bachsaibling hat helle Flecken auf dunklem Rücken, rote Punkte mit blauem Hof und typische weiß-schwarze Ränder an den unteren Flossen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"aal",a:["Neunauge","Wels","Aal"],r:2,e:"Der Aal hat einen extrem langgestreckten, schlangenförmigen Körper und einen durchgehenden Flossensaum vom Rücken um den Schwanz bis zum Bauch."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"wels",a:["Aal","Wels","Quappe"],r:1,e:"Der Wels hat einen massiven, breiten Kopf, 2 lange und 4 kürzere Barteln, eine winzige Rückenflosse und eine extrem lange Afterflosse."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"schleie",a:["Karpfen","Schleie","Karausche"],r:1,e:"Die Schleie hat sehr kleine dichte Schuppen, abgerundete Flossen und 2 winzige Barteln – kein Vergleich zum Karpfen mit 4 Barteln."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"rotfeder",a:["Rotauge","Rotfeder","Güster"],r:1,e:"Die Rotfeder hat die Rückenflosse deutlich HINTER dem Bauchflossenansatz (Unterschied zum Rotauge), leuchtend rote Flossen und ein gelbes Auge."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"karausche",a:["Karpfen","Karausche","Schleie"],r:1,e:"Die Karausche ist hochrückig, hat KEINE Barteln (Unterschied zum Karpfen) und eine lange Rückenflosse mit vielen Strahlen."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"barbe",a:["Nase","Barbe","Döbel"],r:1,e:"Die Barbe hat einen langgestreckten Körper, ein unterständiges Maul und 4 Barteln – ein typischer Grundfisch der Barbenregion."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"dorsch",a:["Wittling","Köhler","Dorsch"],r:2,e:"Der Dorsch (Kabeljau) hat 3 Rückenflossen, 2 Afterflossen und eine typische Kinnbartel am Unterkiefer."},
+  {g:2,f:"Welcher Fisch ist das?",bild:"hornhecht",a:["Hornhecht","Makrele","Meerforelle"],r:0,e:"Der Hornhecht hat ein schnabelartig verlängertes Maul, einen extrem langgestreckten Körper – und typischerweise grüne Gräten."},
+
+  /* ============ 3 · GEWÄSSERKUNDE (Fragen 1–53) ============ */
+  {g:3,f:"Welches Wasser ist in der Regel sauerstoffarm?",a:["Wasser in Teichen","das Wasser kalter, klarer Gebirgsbäche","Grundwasser"],r:2,e:"Grundwasser hat wegen fehlendem Kontakt zur Luft und zu Pflanzen kaum gelösten Sauerstoff."},
+  {g:3,f:"Bei welcher Temperatur ist Wasser am dichtesten und damit am schwersten?",a:["- 4°C","0°C","+ 4°C"],r:2,e:"Wasser hat bei +4°C seine höchste Dichte – deshalb friert ein See von oben und nicht von unten zu."},
+  {g:3,f:"Welches Gewässer ist am sauerstoffhaltigsten?",a:["kalter, klarer Bergbach","Brackwasser","warmes, stehendes Gewässer"],r:0,e:"Kaltes, klares, strömendes Wasser kann am meisten Sauerstoff lösen und wird durch die Strömung gut durchmischt."},
+  {g:3,f:"Welchen Einfluss hat die Wassertemperatur auf den Sauerstoffgehalt?",a:["im kalten Wasser ist mehr Sauerstoff gelöst","im warmen Wasser ist der Sauerstoffgehalt am höchsten","die Wassertemperatur hat keinen Einfluss auf den Sauerstoffgehalt"],r:0,e:"Kaltes Wasser kann deutlich mehr Sauerstoff lösen als warmes Wasser."},
+  {g:3,f:"Warum sind nährstoffhaltige Einleitungen für ein Gewässer schädlich?",a:["beim Abbau wird dem Gewässer Sauerstoff entzogen","das Wasser wird trübe, so dass man die Fische nicht mehr erkennen kann","das Wasser erwärmt sich zu sehr"],r:0,e:"Beim bakteriellen Abbau der eingeleiteten Nährstoffe wird dem Wasser Sauerstoff entzogen, was zu Sauerstoffmangel führen kann."},
+  {g:3,f:"Welchen Einfluss haben Nährstoffeinträge auf das Wasser?",a:["das Wasser wird mit Sauerstoff angereichert","das Wasser wird klarer","fördert übermäßigen Pflanzenwuchs mit allen Folgen"],r:2,e:"Zu viele Nährstoffe (Eutrophierung) fördern übermäßiges Pflanzen- und Algenwachstum mit negativen Folgen für den Sauerstoffhaushalt."},
+  {g:3,f:"Welche pH-Werte sind für Fische gut geeignet?",a:["6,5 - 8,5","3,0 - 5,0","9,5 - 12,0"],r:0,e:"Der für Fische verträgliche pH-Bereich liegt etwa zwischen 6,5 und 8,5 (neutral bis leicht alkalisch)."},
+  {g:3,f:"Sinkt der pH-Wert unter 7, ist das Wasser",a:["sauer","alkalisch","neutral geblieben"],r:0,e:"pH-Werte unter 7 kennzeichnen saures Wasser, über 7 alkalisches (basisches) Wasser, genau 7 ist neutral."},
+  {g:3,f:"Was zeigt der pH-Wert?",a:["den Reaktionszustand des Wassers (sauer/neutral/alkalisch)","den Eisengehalt des Wassers","den Sauerstoffgehalt des Wassers"],r:0,e:"Der pH-Wert gibt an, ob Wasser sauer, neutral oder alkalisch reagiert."},
+  {g:3,f:"Welche chemische Wasseruntersuchung kann mit geringem Aufwand durchgeführt werden?",a:["der Kaliumpermanganatverbrauch","die Bestimmung des Phosphatgehaltes","die pH-Wert-Bestimmung"],r:2,e:"Die pH-Wert-Bestimmung lässt sich einfach und mit geringem Aufwand durchführen, z. B. mit Teststreifen."},
+  {g:3,f:"Wie wird der Zustand des Wassers bezeichnet, wenn der pH-Wert über 7 steigt?",a:["sauer","alkalisch","neutral"],r:1,e:"Ein pH-Wert über 7 wird als alkalisch (basisch) bezeichnet."},
+  {g:3,f:"Worauf deutet Notatmung bei Fischen hin?",a:["Laichaktivität","Sauerstoffmangel","Nahrungsaufnahme"],r:1,e:"Fische schnappen bei Sauerstoffmangel an der Wasseroberfläche nach Luft (Notatmung)."},
+  {g:3,f:"Wie weit reicht die Uferzone in stehenden Gewässern vom Ufer aus?",a:["bis zu einer Wassertiefe von 5 Meter","soweit Licht bis auf den Boden dringt","immer 10 Meter vom Ufer"],r:1,e:"Die Uferzone reicht so weit, wie noch genügend Licht für Pflanzenwachstum bis auf den Grund dringt."},
+  {g:3,f:"Welche Zone des Sees ist im Hinblick auf den Fischzuwachs die ertragreichste?",a:["Freiwasserzone","Uferzone","Lichtlose Tiefe"],r:1,e:"Die Uferzone bietet Nahrung, Deckung und Laichplätze und ist daher am ertragreichsten."},
+  {g:3,f:"In welcher Reihenfolge kommen Wasserpflanzen in stehenden Gewässern vom Ufer zur Seemitte hin vor?",a:["Schwimmblattpflanzen, unterseeische Wiesen, Laichkräuter und Gelegegürtel","Gelegegürtel, Schwimmblattpflanzen, Laichkräuter und unterseeische Wiesen","unterseeische Wiesen, Gelegegürtel, Laichkräuter und Schwimmblattpflanzen"],r:1,e:"Vom Ufer zur Seemitte folgen: Gelegegürtel (Röhricht), Schwimmblattpflanzen, Laichkräuter, dann die unterseeischen Wiesen."},
+  {g:3,f:"Wodurch wird die Freiwasserzone gekennzeichnet?",a:["seitlich durch das Ufer, nach oben durch die Luft, nach unten durch den Grund","seitlich durch das Gelege, nach oben durch die Sprungschicht, nach unten durch die Schlammschicht","seitlich durch die Uferzone, nach oben durch den Wasserspiegel, nach unten durch die Bodenzone"],r:2,e:"Die Freiwasserzone (Pelagial) wird seitlich von der Uferzone, nach oben vom Wasserspiegel und nach unten von der Bodenzone begrenzt."},
+  {g:3,f:"Warum kann es besonders in stehenden Gewässern unter dem Eis zum Verenden der Fische kommen?",a:["die Wassertemperaturen sind zu niedrig, so dass Fische erfrieren","aus der Luft kann kein Stickstoff ins Wasser gelangen, Fische ersticken","Fische ersticken, weil das Wasser keinen Sauerstoff aus der Luft aufnehmen kann"],r:2,e:"Unter einer geschlossenen Eisdecke kann kein Sauerstoff aus der Luft ins Wasser gelangen – bei Sauerstoffmangel ersticken die Fische."},
+  {g:3,f:"Was wird unter Frühjahrs- und Herbstvollzirkulation in stehenden Gewässern verstanden?",a:["die Frühjahrs- und Herbstabfischung von Teichen","die vollständige temperaturbedingte Umwälzung der Wassermasse in allen Wassertiefen","die teilweise Umwälzung der Wassermasse in den verschiedenen Tiefen"],r:1,e:"Im Frühjahr und Herbst gleicht sich die Wassertemperatur an, wodurch sich die gesamte Wassermasse durchmischt (Vollzirkulation)."},
+  {g:3,f:"Stehende Gewässer sind besonders ertragreich, wenn",a:["das Tageslicht überall bis auf den Grund dringt und die Wassermasse mehrmals pro Jahr umgeschichtet wird","das Wasser einen Zu- und Abfluss hat","eine dauerhafte chemische Schichtung vorhanden ist"],r:0,e:"Flache, gut durchlichtete und regelmäßig durchmischte Gewässer sind besonders nährstoff- und ertragreich."},
+  {g:3,f:"Was ist notwendig, damit Pflanzen Sauerstoff produzieren können?",a:["das Wasser muss stark alkalisch sein","das Licht","die Wassertemperatur muss über 18°C liegen"],r:1,e:"Ohne Licht findet keine Fotosynthese statt – Pflanzen produzieren dann keinen Sauerstoff."},
+  {g:3,f:"Geben Überwasserpflanzen Sauerstoff an das Wasser ab?",a:["nein, überhaupt nicht","ja, sehr gut","ja, nur am Tag bei Sonnenlicht"],r:0,e:"Überwasserpflanzen (z. B. Schilf) geben ihren Sauerstoff über die Blätter an die Luft ab, nicht an das Wasser."},
+  {g:3,f:"Warum sind Algen und Unterwasserpflanzen für ein Gewässer so wichtig?",a:["sie bilden einen wichtigen Teil der Nahrungskette","hier laichen alle Salmoniden ab","sie bilden das Ende der Nahrungskette in einem Gewässer"],r:0,e:"Algen und Unterwasserpflanzen stehen am Anfang der Nahrungskette und versorgen viele Wasserlebewesen mit Nahrung und Sauerstoff."},
+  {g:3,f:"Welche Wasserpflanzen reichern das Wasser in stehenden Gewässern am besten mit Sauerstoff an?",a:["Laichkräuter und Pflanzen der unterseeischen Wiesen","See- und Teichrosen","Schilf und Kalmus"],r:0,e:"Submerse Pflanzen wie Laichkräuter und die unterseeischen Wiesen reichern das Wasser direkt mit Sauerstoff an, da sie vollständig unter Wasser stehen."},
+  {g:3,f:"Welche Wasserpflanzen bezeichnen wir als Unterwasserpflanzen?",a:["Schilf, Binsen","Seerosen, Teichrosen","Wasserpest, Hornblatt"],r:2,e:"Wasserpest und Hornblatt wachsen vollständig unter Wasser (submers) und zählen zu den Unterwasserpflanzen."},
+  {g:3,f:"Welche Wasserpflanzen sind fischereilich besonders wertvoll?",a:["Wasserlinsen, Seerosen und Froschbiss","Tannenwedel, Segge und Igelkolben","Pflanzen der Laichkrautzone und der unterseeischen Wiesen"],r:2,e:"Die Laichkrautzone und die unterseeischen Wiesen bieten Laichplätze, Nahrung und Sauerstoff und sind fischereilich besonders wertvoll."},
+  {g:3,f:"Was versteht man unter Wasserpest?",a:["Eine Unterwasserpflanze","Verseuchtes Wasser","Eine Fischkrankheit"],r:0,e:"Die Wasserpest (Elodea) ist eine schnellwüchsige Unterwasserpflanze, kein Krankheitsbegriff."},
+  {g:3,f:"Was wird unter dem Begriff Fotosynthese verstanden?",a:["die Unterwasserfotografie von Pflanzen und Fischen","die wissenschaftliche Erforschung von neuen Fischarten","Pflanzen bauen unter Lichteinwirkung organische Stoffe für ihr Wachstum auf"],r:2,e:"Fotosynthese ist der Prozess, bei dem Pflanzen mithilfe von Licht organische Stoffe aufbauen und dabei Sauerstoff freisetzen."},
+  {g:3,f:"Woraus setzt sich pflanzliches Plankton hauptsächlich zusammen?",a:["Aus einzelligen Grün- und Kieselalgen","Aus abgerissenen Stängeln der Wasserpest","Aus Fadenalgen und Abwasserpilzen"],r:0,e:"Pflanzliches Plankton (Phytoplankton) besteht hauptsächlich aus einzelligen Grün- und Kieselalgen."},
+  {g:3,f:"Was versteht der Fischer unter Wasserblüte?",a:["übermäßige Anreicherung des Wassers mit Blütenstaub","übermäßige Entwicklung verschiedener Algenarten","die Blüten der Schwimmblattpflanzen"],r:1,e:"Als Wasserblüte bezeichnet man die massenhafte Vermehrung von Algen, die das Wasser grün oder trüb färbt."},
+  {g:3,f:"Was wird als pflanzlicher Aufwuchs bezeichnet?",a:["Weidewuchs am Ufer","Algen an Gegenständen und Pflanzen im Wasser","Wasserpflanzenkulturen"],r:1,e:"Aufwuchs bezeichnet den Algenbelag, der sich auf Steinen, Pflanzen und anderen Gegenständen im Wasser bildet."},
+  {g:3,f:"Welche Fischnährtiere sind für die Ernährung der Fischbrut besonders wichtig?",a:["Muscheln und Schnecken","tierisches Plankton","Anflugnahrung"],r:1,e:"Junge Fischbrut ernährt sich vor allem von kleinem tierischem Plankton (Zooplankton)."},
+  {g:3,f:"Welche Faktoren sind für die Gewässergüte mit ausschlaggebend?",a:["die fischereiliche Nutzung","der Verschmutzungsgrad und das Vorkommen bestimmter Lebewesen","die Strömungsgeschwindigkeit"],r:1,e:"Die Gewässergüte wird anhand des Verschmutzungsgrades und der vorkommenden Zeigerorganismen (Kleinlebewesen) bestimmt."},
+  {g:3,f:"Welche Fischnährtiere leben vor allem am Gewässergrund der Brassen- und Brackwasserregion?",a:["Hüpferlinge","Schlammröhrenwürmer","Wasserflöhe"],r:1,e:"Im schlammigen Grund der Brassen- und Brackwasserregion leben vor allem Schlammröhrenwürmer."},
+  {g:3,f:"Woran sind Insekten und zumeist auch deren Larven erkennbar?",a:["sie haben 3 Paar Beine","sie haben mindestens 5 Paar Beine","sie haben stets 2 Paar Beine"],r:0,e:"Insekten haben grundsätzlich 3 Beinpaare (6 Beine) – ein Hauptmerkmal zur Bestimmung."},
+  {g:3,f:"Welche Käfer können bei Massenauftreten fischereischädlich sein?",a:["Marienkäfer","Gelbrandkäfer","Maikäfer"],r:1,e:"Gelbrandkäfer und ihre Larven sind räuberisch und können bei Massenauftreten Fischbrut erbeuten."},
+  {g:3,f:"Im Stoffkreislauf eines Gewässers finden wir hauptsächlich folgende Lebewesen",a:["Pflanzen, Bakterien, Tiere","Äschen, Karpfen, Hecht","Rohrkolben, Schilf, Wasserpest"],r:0,e:"Der Stoffkreislauf eines Gewässers wird von Pflanzen (Produzenten), Tieren (Konsumenten) und Bakterien (Destruenten) getragen."},
+  {g:3,f:"Wie nennt man die Qualitätsstufen der Fließgewässer, die durch darin vorkommende Kleinlebewesen und Mikroorganismen bestimmt werden können?",a:["Gewässergüteklassen","Fischereibezirke","Fließwasserregionen"],r:0,e:"Die Gewässergüteklassen (I bis IV) beschreiben den Verschmutzungsgrad anhand von Zeigerorganismen."},
+  {g:3,f:"Bei welchen Insekten gibt es Arten, deren Larven sich ein Gehäuse bauen?",a:["Libellen","Steinfliegen","Köcherfliegen"],r:2,e:"Köcherfliegenlarven bauen sich charakteristische Gehäuse (Köcher) aus Sandkörnern, Pflanzenteilen oder Schneckenschalen."},
+  {g:3,f:"Was ist ein Fischegel?",a:["ein Darmschmarotzer","ein blutsaugender Außenparasit","ein auf den Kiemen schmarotzender Kleinkrebs"],r:1,e:"Der Fischegel ist ein blutsaugender äußerer Parasit, der sich an der Haut von Fischen festsetzt."},
+  {g:3,f:"Welcher Parasit schmarotzt auf der Haut von Fischen?",a:["die Karpfenlaus","der Riemenwurm","der Schwimmblasenwurm"],r:0,e:"Die Karpfenlaus (Argulus) ist ein Hautparasit, der sich an der Fischhaut festsaugt."},
+  {g:3,f:"Welche Tiere sind Außenparasiten?",a:["Eintagsfliege, Schlammröhrenwürmer, Zuckmückenlarven","Viren und Bandwürmer","Fischegel, Karpfenlaus, Kiemenkrebs"],r:2,e:"Fischegel, Karpfenlaus und Kiemenkrebs leben außen am Fisch und zählen zu den Außenparasiten."},
+  {g:3,f:"In welcher Reihenfolge unterscheiden wir die fischereilichen Fließwasserregionen von der Quelle bis zur Mündung ins Meer?",a:["Forellen-, Äschen-, Brassen-, Barben- und Brackwasserregion","Forellen-, Äschen-, Barben-, Brassen- und Brackwasserregion","Forellen-, Barben-, Äschen-, Brassen- und Brackwasserregion"],r:1,e:"Von der Quelle zur Mündung: Forellenregion, Äschenregion, Barbenregion, Brassenregion, Brackwasserregion."},
+  {g:3,f:"Bilden sich beim Fließgewässer von der Quelle bis zur Mündung unterschiedliche Lebensräume (Biotope) für Fische?",a:["es gibt verschiedene Gewässerregionen, die von der Strömungsgeschwindigkeit, Temperatur, Wasser- und Bodenbeschaffenheit abhängig sind","ja, es kommt auf die Breite des Gewässers an","nein, die Lebensräume für Fische sind überall gleich"],r:0,e:"Von der Quelle bis zur Mündung entstehen unterschiedliche Gewässerregionen, geprägt von Strömung, Temperatur sowie Wasser- und Bodenbeschaffenheit."},
+  {g:3,f:"In welcher Fließwasserregion ist der Jahrestemperaturunterschied am geringsten?",a:["in der Brackwasserregion","in der Barbenregion","in der Forellenregion"],r:2,e:"Die Forellenregion liegt quellnah – dort schwanken die Wassertemperaturen übers Jahr am wenigsten."},
+  {g:3,f:"Welche Fließwasserregion ist am sauerstoffreichsten?",a:["Brackwasserregion","Barbenregion","Forellenregion"],r:2,e:"Die Forellenregion hat kaltes, schnell fließendes und stark verwirbeltes Wasser – dort ist der Sauerstoffgehalt am höchsten."},
+  {g:3,f:"Welche Fließwasserregion liegt der Quelle am nächsten?",a:["Barbenregion","Brassenregion","Forellenregion"],r:2,e:"Die Forellenregion beginnt direkt an der Quelle."},
+  {g:3,f:"In welcher Flussregion leben die meisten Fischarten?",a:["Äschenregion","Brassenregion","Forellenregion"],r:1,e:"In der Brassenregion (unterster, langsamer fließender Abschnitt) leben die meisten unterschiedlichen Fischarten."},
+  {g:3,f:"Welches Wasser ist für Bachforellen vorteilhaft?",a:["strömendes, warmes und leicht getrübtes Wasser","fließendes, im Sommer kaltes und sauerstoffreiches Wasser","reißendes, weiches und leicht trübes Wasser"],r:1,e:"Bachforellen brauchen kühles, sauerstoffreiches, fließendes Wasser, auch im Sommer."},
+  {g:3,f:"In welcher Region eines Flusses ist der Sauerstoffgehalt am geringsten?",a:["Äschenregion","Forellenregion","Brackwasserregion"],r:2,e:"In der Brackwasserregion (Mündungsbereich) ist das Wasser wärmer und langsamer fließend – dort ist der Sauerstoffgehalt am geringsten."},
+  {g:3,f:"Welche Eigenschaften kennzeichnen die Barbenregion der Fließgewässer?",a:["kiesiger Untergrund, gleichmäßige Strömung und Pflanzenwuchs","schlammiger Untergrund, langsam fließendes Wasser","felsiger Untergrund, rasch fließendes Wasser"],r:0,e:"Die Barbenregion hat kiesigen Untergrund, gleichmäßige Strömung und Pflanzenbewuchs."},
+  {g:3,f:"Welche Eigenschaften kennzeichnen die Brassenregion?",a:["schlammiger Untergrund, langsam fließendes Wasser","kiesiger Untergrund, gleichmäßige Strömung und Pflanzenwuchs","felsiger Untergrund, gleichmäßige Strömung und Pflanzenwuchs"],r:0,e:"Die Brassenregion hat schlammigen Untergrund und langsam fließendes Wasser."},
+  {g:3,f:"Was ist ein Altarm?",a:["Ein Gewässer, dessen Wasser gealtert ist","Ein Gewässer mit überaltertem Fischbestand","Ein früherer Teil eines Flusses"],r:2,e:"Ein Altarm ist ein ehemaliger Flussabschnitt, der vom Hauptfluss abgetrennt wurde, z. B. durch Laufverlagerung."},
+  {g:3,f:"Wonach sollen sich Art und Menge des Fischbesatzes vorrangig richten?",a:["nach dem Preis der Fische","nach den Mehrheitsbeschlüssen der Gewässerpächter","nach der fischereibiologischen Eignung und der vorhandenen Nahrung"],r:2,e:"Fischbesatz sollte sich vorrangig nach der fischereibiologischen Eignung des Gewässers und dem vorhandenen Nahrungsangebot richten, nicht nach Preis oder Mehrheitsbeschlüssen."},
+
+  /* ============ 3 · GEWÄSSERKUNDE (Fragen 54–60) ============ */
+  {g:3,f:"Sind beim Fischbesatz auch die Fischarten zu berücksichtigen, die fischereilich nicht genutzt werden?",a:["ja, nur wenn sie im Gewässer noch nicht vorkommen","nein, denn sie sind Nahrungskonkurrenten der Nutzfische","ja, weil sie wichtige Glieder der Lebensgemeinschaft sind und zum Artenschutz beitragen"],r:2,e:"Auch nicht genutzte Arten gehören zur Lebensgemeinschaft und sind für den Artenschutz wichtig."},
+  {g:3,f:"Was kann aus einer chemischen Wasseruntersuchung in Verbindung mit einer biologischen Gewässeruntersuchung ersehen werden?",a:["Angelmethode für das Gewässer","Eignung des Gewässers für bestimmte Fischarten","im Gewässer kann Netzfischerei betrieben werden"],r:1,e:"Chemische und biologische Untersuchung zusammen zeigen, für welche Fischarten das Gewässer geeignet ist."},
+  {g:3,f:"Was sollte eine Fangmeldung enthalten?",a:["Fischart, Anzahl und Gewicht der Fische sowie den Gewässernamen","Färbung der Fische","Fanggeräte und Verwendung des Fanges"],r:0,e:"Eine Fangmeldung enthält Fischart, Anzahl, Gewicht und den Gewässernamen – wichtig für die Hege."},
+  {g:3,f:"Für welche Fischarten sollen besonders günstige Laichmöglichkeiten geschaffen werden?",a:["für alle Fische, die ins Gewässer gehören und sich ungenügend vermehren","nur für die teuren Besatzfische","nur für Fische mit hohem Marktwert"],r:0,e:"Laichhilfen sollen allen standortgerechten Arten helfen, die sich zu wenig vermehren."},
+  {g:3,f:"Wie können Laichmöglichkeiten in einem Gewässer gefördert werden?",a:["durch Uferbegradigungen an den Gewässern","durch Anlage von Laichwiesen, durch Einbringen von Kies und Steinen","durch Entfernen von Wasserpflanzen und Laichkräutern"],r:1,e:"Laichwiesen sowie eingebrachter Kies und Steine schaffen neue Laichplätze."},
+  {g:3,f:"Wie verhalte ich mich als Angler, wenn ich einen vermeintlich kranken Fisch gefangen habe?",a:["ich setze ihn umgehend zurück","ich benachrichtige den Vereinsvorstand, der Weiteres veranlasst","ich töte und zerschneide den Fisch und vergrabe ihn am Ufer"],r:1,e:"Bei Krankheitsverdacht den Vereinsvorstand/Gewässerwart informieren, der das Weitere veranlasst."},
+  {g:3,f:"Was sind Fischtreppen oder Fischpässe?",a:["bevorzugte Routen im Zuge von Fischwanderungen","spezielle Bauten in Fließgewässern, die den Fischen das Überwinden von Hindernissen (Schleusen, Wehre, Staue) ermöglichen","Zugänge zu Angelplätzen"],r:1,e:"Fischtreppen/-pässe ermöglichen Fischen das Überwinden von Wehren, Schleusen und Staustufen."},
+
+  /* ============ 4 · FISCHFANG UND GERÄTEKUNDE (Fragen 1–60) ============ */
+  {g:4,f:"Worauf sollte bei der Wahl einer Angelschnur besonders geachtet werden?",a:["auf die Lebensdauer","auf den Durchmesser und die Tragkraft","auf die Färbung der Schnur"],r:1,e:"Entscheidend sind Durchmesser und Tragkraft – passend zu Fisch und Gewässer."},
+  {g:4,f:"Wie heißt die weltweit verbreitete Standardbezeichnung für die Gewichtsklassen der Fliegenschnüre?",a:["AFTMA","OPEC","IGFA"],r:0,e:"Die AFTMA-Klasse gibt das Gewicht der Fliegenschnur an und muss zur Rute passen."},
+  {g:4,f:"Welche Schnur ist beim Friedfischfang für das Vorfach, im Hinblick auf die Hauptschnur, zu wählen?",a:["spielt keine Rolle","ist das Vorfach sehr lang, soll der Durchmesser größer sein","für das Vorfach sollte eine geringere Schnurstärke gewählt werden"],r:2,e:"Ein dünneres Vorfach reißt im Zweifel zuerst – so verliert man nur Haken und Vorfach, nicht die Hauptschnur."},
+  {g:4,f:"Was ist mit angerauter Angelschnur zu machen?",a:["abschneiden und sachgerecht entsorgen","abschneiden und kleingeschnitten ins Gebüsch werfen","Schnur mit Spezialspray glätten"],r:0,e:"Beschädigte Schnur abschneiden und im Müll entsorgen – nie im Gewässer/Ufer liegen lassen (Gefahr für Tiere)."},
+  {g:4,f:"Welche Merkmale zeichnen moderne geflochtene Angelschnüre aus?",a:["sie besitzen bei gleichem Durchmesser eine geringere Tragkraft als monofile Schnüre","sie haben eine erheblich geringere Dehnung und eine höhere Tragkraft als monofile Schnüre","bei gleichem Durchmesser sind sie im Wasser weniger sichtbar"],r:1,e:"Geflochtene Schnüre dehnen kaum und tragen bei gleichem Durchmesser mehr als monofile."},
+  {g:4,f:"Wovon hängt in erster Linie die zu verwendende Schnurstärke ab?",a:["von der Gewässerart und Fangerwartung","von der Gewässertiefe","von der Größe der Schnurführungsringe"],r:0,e:"Die Schnurstärke richtet sich nach Gewässerart und erwarteter Fischgröße."},
+  {g:4,f:"An einem Angelgerät wird welcher Teil als Vorfach bezeichnet?",a:["der Schnurteil, der an der Rutenspitze befestigt wird","der Schnurteil zwischen Hauptschnur und Haken","der Schnurteil, der von der Hauptschnur auf die Rolle gewickelt wird"],r:1,e:"Das Vorfach ist das Schnurstück zwischen Hauptschnur und Haken."},
+  {g:4,f:"Welcher Knoten hat sich beim Verbinden monofiler Schnüre besonders bewährt?",a:["möglichst unkompliziert, z. B. der Weberknoten","Blut- oder Tönnchenknoten","die Art des Knotens hat keinen Einfluss auf die Festigkeit"],r:1,e:"Zum Verbinden monofiler Schnüre eignet sich der Blut-/Tönnchenknoten."},
+  {g:4,f:"Warum sind schadhafte Schnurführungsringe an der Angelrute nicht fischwaidgerecht?",a:["sie beschädigen die Schnur, sodass sie reißen kann","sie behindern den Schnurablauf beim Wurf entscheidend","sie beschädigen die Schnur, die dann von den Fischen leichter gesehen wird"],r:0,e:"Beschädigte Ringe rauen die Schnur an – sie kann im Drill reißen und der Fisch entkommt verletzt."},
+  {g:4,f:"Was gefährdet eine monofile Angelschnur am meisten?",a:["schadhafte Ringe, scharfe Kanten an der Rolle, ultraviolettes Licht","langes Liegenlassen im Wasser","starke Kälte"],r:0,e:"Scharfe Kanten und UV-Licht schwächen monofile Schnur am stärksten – daher regelmäßig erneuern."},
+  {g:4,f:"Wie soll die Angelschnur beim Anhieb geführt werden?",a:["gespannt, Fühlung mit dem Fisch","spielt keine Rolle","locker, leicht durchhängend"],r:0,e:"Nur bei gespannter Schnur (Fühlung zum Fisch) sitzt der Anhieb sicher."},
+  {g:4,f:"Welcher Teil der Angelschnur nutzt sich am stärksten ab?",a:["die hinteren, an der Rolle angebundenen Meter","die gesamte Schnur wird gleichmäßig abgenutzt","die ersten Meter hinter dem Haken"],r:2,e:"Die letzten Meter vor dem Haken sind am stärksten beansprucht – regelmäßig kürzen/neu knüpfen."},
+  {g:4,f:"Welches ist beim Fliegenfischen das zu werfende Gewicht?",a:["Bleibeschwerung","Fliege","Fliegenschnur"],r:2,e:"Beim Fliegenfischen wird das Gewicht der Fliegenschnur geworfen – die Fliege ist nahezu gewichtslos."},
+  {g:4,f:"Wie beeinflussen Knoten die Tragfähigkeit der Schnur?",a:["die Tragfähigkeit ist am Knoten größer","die Tragfähigkeit der geknoteten Schnur ändert sich nicht","die Tragfähigkeit ist am Knoten geringer"],r:2,e:"Jeder Knoten schwächt die Schnur – an der Knotenstelle ist die Tragkraft geringer."},
+  {g:4,f:"Warum soll beim Hechtfang ein Stahlvorfach verwendet werden?",a:["der Köder könnte sich in der Angelschnur verfangen","der schwere Kunstköder könnte besser geführt werden","die Angelschnur könnte beim Drill an den Zähnen des Hechtes scheuern und reißen"],r:2,e:"Die scharfen Hechtzähne würden eine normale Schnur durchtrennen – ein Stahlvorfach verhindert das."},
+  {g:4,f:"Wonach richtet sich weitgehend die Länge der Angelrute?",a:["nach der Größe des Gewässers","nach der Größe des Fisches","nach der Uferbeschaffenheit"],r:2,e:"Die Rutenlänge richtet sich vor allem nach der Uferbeschaffenheit (Bewuchs, Platz zum Werfen)."},
+  {g:4,f:"Welche Vorteile haben Kohlefaserruten?",a:["sie sind besonders elastisch","sie sind trotz großer Steifheit besonders leicht und daher gut zu handhaben","sie besitzen eine besonders hohe Bruchfestigkeit und leiten keinen Strom"],r:1,e:"Kohlefaserruten sind sehr leicht und steif – aber sie leiten Strom (Vorsicht bei Gewitter!)."},
+  {g:4,f:"Was wird als Rutenaktion bezeichnet?",a:["die Art der Verwendung der Rute","die Stärke der Rute","die Art der Durchbiegung der Rute bei Belastung"],r:2,e:"Die Aktion beschreibt, wie und wo sich die Rute unter Last durchbiegt (z. B. Spitzen- oder Vollaktion)."},
+  {g:4,f:"Weshalb wird bei den meisten Angelruten das Wurfgewicht angegeben?",a:["so weiß man, bis zu welchem Gewicht man die Fische herausheben kann","die Tragkraft der Schnur lässt sich so auswählen","die Rute kann so beim Wurf nicht überlastet werden"],r:2,e:"Das angegebene Wurfgewicht schützt die Rute vor Überlastung beim Wurf."},
+  {g:4,f:"An welcher Stelle der Fliegenrute befindet sich die Fliegenrolle?",a:["vor der Wurfhand, am oberen Ende des Rutengriffes","hinter der Wurfhand, am hinteren Ende der Rute","unter der Wurfhand, am oberen Griffteil"],r:1,e:"Bei der Fliegenrute sitzt die Rolle hinter der Wurfhand am unteren Rutenende."},
+  {g:4,f:"Was ist eine Teleskoprute?",a:["eine zusammenschiebbare Angelrute","eine leichte Hohlglasfiberrute, die zusammengesteckt wird","eine besonders lange, einteilige Stipprute"],r:0,e:"Eine Teleskoprute lässt sich zum Transport zusammenschieben."},
+  {g:4,f:"Wie sollte die Angelrute beschaffen sein, die der Angler beim Brandungsfischen benutzt?",a:["es sollten nur Kopfruten benutzt werden","die Rute sollte dem Brandungsbereich entsprechend stark und lang sein","es sollten kurze, steife Ruten benutzt werden"],r:1,e:"Brandungsruten müssen lang und kräftig sein, um schwere Bleie weit über die Brandung zu werfen."},
+  {g:4,f:"Worauf ist bei der Benutzung von Kohlefaserruten zu achten?",a:["Kohlefaserruten leiten Strom sehr gut, darum ist Vorsicht bei Gewitter und in der Nähe von Stromleitungen geboten","Kohlefaserruten sind hoch belastbar, deshalb kann die Schnur leicht reißen","Kohlefaserruten sind nicht elektrisch leitend"],r:0,e:"Kohlefaser leitet Strom – bei Gewitter oder unter Stromleitungen besteht Lebensgefahr."},
+  {g:4,f:"Für welche Fangmethoden eignet sich die Stationärrolle besonders gut?",a:["sie eignet sich gleich gut für alle Fangmethoden","für das Fliegenfischen","für die leichte und mittlere Spinnfischerei und für das Grundangeln"],r:2,e:"Die Stationärrolle ist der Allrounder für leichtes/mittleres Spinnfischen und Grundangeln."},
+  {g:4,f:"Wie stark wird normalerweise die Schnurbremse bei der Stationärrolle für den Drill eingestellt?",a:["die Reißfestigkeit der Schnur darf nicht überschritten werden","etwas stärker als die Reißfestigkeit der Schnur","so stark, dass der Fisch keine Schnur abziehen kann"],r:0,e:"Die Bremse darf nie stärker als die Reißfestigkeit der Schnur eingestellt sein, sonst reißt sie im Drill."},
+  {g:4,f:"Welche Einrichtung einer Angelrolle verhindert einen Schnurriss beim Drill eines Fisches?",a:["Schnurbremse","Übersetzung","Rücklaufsperre"],r:0,e:"Die Schnurbremse gibt bei starkem Zug Schnur frei und verhindert so den Schnurriss."},
+  {g:4,f:"Welche Aufgabe hat die einstellbare Schnurbremse bei den Angelrollen?",a:["die Bremse nach der Größe des zu erwartenden Fisches einzustellen","die Bremswirkung an die Reißfestigkeit der Schnur anzupassen","sie so einzustellen, dass der Fisch keine Schnur beim Drill abziehen kann"],r:1,e:"Die Bremse wird an die Reißfestigkeit der Schnur angepasst."},
+  {g:4,f:"Bei welchem Rollentyp dreht sich beim Auswerfen die Schnurspule nicht?",a:["Multirolle","Stationärrolle","Grundrolle"],r:1,e:"Bei der Stationärrolle steht die Spule fest; die Schnur läuft beim Wurf über den Spulenrand ab."},
+  {g:4,f:"Welche Hilfsgeräte muss der Angler beim Fischfang mit sich führen?",a:["akustische Bissanzeiger","Unterfangkescher, Maßband, Schlagholz, scharfes Messer und Hakenlöser","Ersatzruten und Sitzgelegenheit"],r:1,e:"Zur waidgerechten Versorgung gehören Kescher, Maßband, Betäubungsgerät, Messer und Hakenlöser."},
+  {g:4,f:"Für welche Angelmethode sind Multi- und Stationärrolle nicht geeignet?",a:["für das Grundfischen","für das Spinnfischen","für das Fliegenfischen"],r:2,e:"Fürs Fliegenfischen braucht man eine Fliegenrolle – Multi- und Stationärrolle sind ungeeignet."},
+  {g:4,f:"Welcher Rollentyp ist heute bei uns am gebräuchlichsten?",a:["Multirolle","einfache Rolle","Stationärrolle"],r:2,e:"Die Stationärrolle ist heute der am weitesten verbreitete Rollentyp."},
+  {g:4,f:"Was ist eine Multirolle?",a:["eine übersetzte Rolle mit nicht rotierender Schnurspule","eine übersetzte Rolle mit sich drehender Schnurspule","eine einfache Rolle ohne Übersetzung"],r:1,e:"Bei der Multirolle dreht sich die Spule beim Werfen und Einholen mit."},
+  {g:4,f:"Bei welchem Rollentyp dreht sich beim Werfen die Schnurspule?",a:["Stationärrolle","Kapselrolle","Multirolle"],r:2,e:"Nur bei der Multirolle dreht sich die Spule beim Werfen mit."},
+  {g:4,f:"Bei welcher Angelmethode werden in der Regel Drillinge verwendet?",a:["beim Spinnfischen","beim Fischen auf Friedfische, besonders auf Karpfen","beim Fliegenfischen"],r:0,e:"Beim Spinnfischen (Kunstköder) sind Drillinge üblich; auf Friedfische nutzt man Einzelhaken."},
+  {g:4,f:"Was sind „Wurmhaken“?",a:["Haken mit langen Schenkeln","Haken mit Widerhaken am Schenkel","Haken mit Öhr"],r:1,e:"Wurmhaken haben zusätzliche Widerhaken am Schenkel, damit der Wurm besser hält."},
+  {g:4,f:"Was bedeutet die Hakenskala von 1–18?",a:["Hakengröße 15 ist größer als Hakengröße 8","Hakengröße 3 ist kleiner als Hakengröße 13","Hakengröße 1 ist größer als Hakengröße 6"],r:2,e:"Je höher die Zahl, desto kleiner der Haken – also ist Größe 1 größer als Größe 6."},
+  {g:4,f:"Welche Angelhaken sollen beim Angeln auf Cypriniden benutzt werden?",a:["Drillingshaken","Zwillingshaken","einfache Haken"],r:2,e:"Auf Friedfische (Cypriniden) verwendet man einfache Haken – schonender und tierschutzgerecht."},
+  {g:4,f:"Sollte beim Angeln auf Cypriniden ein Zwillings- oder Drillingshaken benutzt werden?",a:["nur bei bestimmten Fischen","niemals","nur bei Kartoffelköder"],r:1,e:"Auf Friedfische niemals Mehrfachhaken – aus Tierschutzgründen nur Einzelhaken."},
+  {g:4,f:"Welche Angelmethode ist für Forellen die schonendste?",a:["Angeln mit Wurm","Angeln mit kleinen Spinnern und Blinkern","Angeln mit der Fliege"],r:2,e:"Beim Fliegenfischen wird der Fisch fast immer vorn im Maul gehakt – die schonendste Methode."},
+  {g:4,f:"Was bezeichnet man als Stippfischen?",a:["das Angeln auf kleine Friedfische","das Angeln auf große Karpfen","das Angeln auf kleine Hechte"],r:0,e:"Stippfischen ist das Angeln auf kleine Friedfische mit einer Rute ohne Rolle."},
+  {g:4,f:"Welches besondere Zubehör benötigt man zum Feederfischen?",a:["Futterkorb, Wechselspitzen, Rutenablage","Fliegenschnur, Fliegenrolle, Streamer","Bissanzeiger, Sitzkiepe, Kopfrute"],r:0,e:"Zum Feedern gehören Futterkorb, feinfühlige Wechselspitzen und eine Rutenablage."},
+  {g:4,f:"Was verstehen wir unter Flugangeln oder Fliegenfischen?",a:["eine besondere Angelmethode mit der Wasserkugel","eine besondere Angelmethode unter Verwendung von künstlichen Fliegen und besonderer Schnur","eine besondere Angelmethode unter Verwendung von künstlichen Spinnern und Wobblern"],r:1,e:"Fliegenfischen nutzt künstliche Fliegen und eine schwere Fliegenschnur als Wurfgewicht."},
+  {g:4,f:"Was ist für den Fangerfolg beim Spinnfischen ausschlaggebend?",a:["die Art der Rutenringe","die Führung des Köders im Wasser","die Geschmeidigkeit der Schnur"],r:1,e:"Entscheidend ist die verführerische Köderführung im Wasser."},
+  {g:4,f:"Welche Regel gilt bei der Zusammenstellung von Rute, Schnur und Haken?",a:["weiche Rutenspitze, dünne Schnur und kleiner Haken","steife Rutenspitze, dünne Schnur und großer Haken","weiche Rutenspitze, starke Schnur und kleiner Haken"],r:0,e:"Die Bauteile müssen zueinander passen: weiche Spitze, dünne Schnur und kleiner Haken bilden ein stimmiges, feines Gerät."},
+  {g:4,f:"Warum ist das Fliegenfischen die schonendste Angelmethode?",a:["der Fisch wird fast ausnahmslos in der vorderen Maulpartie gehakt","der gehakte Fisch kann besonders leicht gedrillt werden","man verwendet nur kleine Angelhaken"],r:0,e:"Beim Fliegenfischen sitzt der Haken fast immer vorn im Maul – der Fisch wird kaum verletzt."},
+  {g:4,f:"Was ist beim Landen eines größeren Fisches zu beachten?",a:["Fisch so schnell wie möglich mit der Rute aus dem Wasser heben","nach dem Drill den Fisch mit dem Unterfangkescher landen","Rute weglegen und Schnur mit den Händen ziehen"],r:1,e:"Größere Fische werden schonend mit dem Kescher gelandet, nie über die Rute aus dem Wasser gehoben."},
+  {g:4,f:"Was muss vor Angelbeginn am Gerät geprüft werden?",a:["Bissanzeiger auf Funktionstüchtigkeit","Schnurführungsringe auf Risse, Schnur auf Tragfähigkeit und Rolle auf richtige Einstellung der Schnurbremse","ob ein Typenschild an der Rute vorhanden ist"],r:1,e:"Vor dem Angeln Ringe, Schnur und Bremseinstellung prüfen – so vermeidet man Schnurriss und Verlust des Fisches."},
+  {g:4,f:"Was ist beim Drill zu beachten?",a:["Schnur in stetiger Spannung halten","Schnur möglichst locker lassen","den Drill möglichst lange ausdehnen"],r:0,e:"Die Schnur muss im Drill stets gespannt bleiben, damit sich der Haken nicht löst."},
+  {g:4,f:"Was ist ein Springer?",a:["eine von der Hauptschnur abgehende kurze Seitenschnur mit künstlichem oder natürlichem Köder","ein Salmonide, der beim Drill aus dem Wasser springt","ein Insekt, das sich springend auf dem Wasser bewegt"],r:0,e:"Ein Springer ist ein zusätzlicher Köder an einer kurzen Seitenschnur der Hauptschnur."},
+  {g:4,f:"Welcher Rutenring wird am stärksten belastet?",a:["Leit- oder Führungsring","alle Ringe werden gleich stark belastet","Spitzen- oder Endring"],r:2,e:"Der Spitzenring wird beim Wurf und im Drill am stärksten belastet."},
+  {g:4,f:"Was ist ein Wobbler?",a:["ein Gummiköder mit Bleikopf","eine ein- oder mehrteilige Fischimitation, die im Wasser taumelnde Bewegungen ausführt","ein im Wasser sich drehender Metallköder"],r:1,e:"Ein Wobbler ist ein Kunstköder in Fischform, der beim Einholen taumelt."},
+  {g:4,f:"Wodurch zeichnet sich ein Spinner aus?",a:["das Spinnerblatt dreht sich um die Achse","er ist deutlich größer als ein Pilker","es handelt sich um eine Fischnachbildung"],r:0,e:"Beim Spinner rotiert das Blatt um die Achse und erzeugt Druckwellen und Lichtreflexe."},
+  {g:4,f:"Was versteht man unter einem Twister?",a:["die beim Fliegenfischen noch nicht gestreckte Schnur","ein Angelköder aus weichem Kunststoff","eine Fliegenmade, die sich schon verpuppt hat"],r:1,e:"Ein Twister ist ein Weichplastik-Köder mit verführerisch schlagendem Schwanz."},
+  {g:4,f:"Was versteht man unter einem Pilker?",a:["ein Kunstköder für den Fang von Barschen","ein schwerer Metallköder für das Meeresfischen","ein Landegerät, um schwerere Fische zu bergen"],r:1,e:"Ein Pilker ist ein schwerer Metallköder für das Meeresangeln (z. B. auf Dorsch/Köhler)."},
+  {g:4,f:"Welcher Spinnköder ist gewöhnlich mit einer Tauchschaufel versehen?",a:["Blinker","Spinner","Wobbler"],r:2,e:"Die Tauchschaufel des Wobblers bestimmt Lauftiefe und Taumelbewegung."},
+  {g:4,f:"Was soll ein zwischen Schnur und Vorfach eingefügter Wirbel bewirken?",a:["er soll das Verdrehen der Schnur verhindern","es werden Hänger vermieden","der Fisch kann den Köder besser erkennen"],r:0,e:"Der Wirbel verhindert, dass sich die Schnur durch rotierende Köder verdreht (Drall)."},
+  {g:4,f:"Wie soll beim Spinnfischen ein Verdrehen der Angelschnur vermieden werden?",a:["man benutzt starke Schnüre","durch Einschaltung eines Wirbels","man verwendet ein Stahlvorfach"],r:1,e:"Ein Wirbel zwischen Schnur und Köder verhindert das Verdrehen der Schnur."},
+  {g:4,f:"Bei welcher Posenart wird ein Stopper verwendet?",a:["bei der Federkielpose","bei der Gleitpose (Laufpose)","bei der Antennenpose"],r:1,e:"Bei der Gleitpose begrenzt ein Stopperknoten die eingestellte Angeltiefe."},
+  {g:4,f:"Welchen Zweck erfüllt in erster Linie eine Pose (Floß, Schwimmer)?",a:["sie ermöglicht erst den gezielten Weitwurf des Köders","sie verhindert das Hängenbleiben der Schnur im Kraut","sie hält den Köder in einer bestimmten Wassertiefe und zeigt den Biss an"],r:2,e:"Die Pose hält den Köder auf Tiefe und zeigt durch ihre Bewegung den Biss an."},
+  {g:4,f:"Wozu dient eine Löseschere oder Lösezange?",a:["zum Festhalten des Fisches beim Auslösen des Angelhakens","zum Lösen des Hakens vom Stahlvorfach","zum schonenden Herauslösen des Hakens aus dem Maul des Fisches"],r:2,e:"Mit der Lösezange löst man den Haken schnell und schonend aus dem Maul des Fisches."},
+
+  /* ============ 5 · NATUR-, TIER- UND UMWELTSCHUTZ (Fragen 1–56) ============ */
+  {g:5,f:"Was ist das Ziel der Naturschutzgesetzgebung?",a:["die Sicherung der Natur als Lebens- und Erholungsraum","sie dient ausschließlich der Landwirtschaft zur Ertragssteigerung","sie dient ausschließlich jagd- und fischereilichen Zwecken"],r:0,e:"Der Naturschutz sichert die Natur als Lebens- und Erholungsraum für Mensch und Tier."},
+  {g:5,f:"Welche Ziele beinhaltet die Naturschutzgesetzgebung?",a:["Natur und Landschaft zu schützen und zu pflegen, um die Lebensgrundlage für Mensch und Tier zu erhalten","zum Schutz der Landschaft den Menschen zu hindern, die Natur zu betreten","ausschließlich fischereiliche Ziele zu verwirklichen"],r:0,e:"Ziel ist der Schutz und die Pflege von Natur und Landschaft als Lebensgrundlage."},
+  {g:5,f:"Was sind Naturschutzgebiete?",a:["sie haben keine besondere Bedeutung","rechtsverbindlich festgesetzte Gebiete zum Schutz von Natur und Landschaft","sie sind Landschaftsschutzgebieten gleichgesetzt"],r:1,e:"Naturschutzgebiete sind rechtsverbindlich festgesetzte Gebiete mit strengem Schutz."},
+  {g:5,f:"Wodurch sollen die Lebensgrundlage des Menschen sowie seine Erholung in Natur und Landschaft nachhaltig gesichert werden?",a:["Naturschutzgesetzgebung","Bürgerliches Recht","Strafrecht"],r:0,e:"Die Naturschutzgesetzgebung sichert Lebensgrundlage und Erholung nachhaltig."},
+  {g:5,f:"Was bedeutet für den Angler der § 1 des Bundesnaturschutzgesetzes (Schutz und Erhalt von Tier- und Pflanzenwelt)?",a:["laichreife Fische dürfen nicht gefangen werden","Auftrag, die Fischbestände art- und altersgerecht zu hegen und dem Gewässer anzupassen","Angler sollen befischte Gewässer ständig mit fangfähigen Fischen besetzen"],r:1,e:"Für den Angler folgt daraus der Hegeauftrag: Bestände art- und altersgerecht pflegen."},
+  {g:5,f:"Was bedeutet für den Angler Naturschutz?",a:["nur der Schutz und die Erhaltung der Reinheit von Gewässern","die Sicherung ausreichender Besatzmaßnahmen","der Schutz der Lebensgemeinschaften von Pflanzen und Tieren im und am Wasser und ihre Hege"],r:2,e:"Naturschutz heißt Schutz und Hege der gesamten Lebensgemeinschaft im und am Wasser."},
+  {g:5,f:"Welche grundsätzliche Aussage enthält das Bundesnaturschutzgesetz bezüglich Wasserflächen?",a:["Wasserflächen sind zu erhalten, zu vermehren und vor Verunreinigungen zu schützen, um ihre natürliche Selbstreinigungskraft zu bewahren","ausschließlich Wasserflächen in Moorbereichen sind zu schützen","welche Fischarten in den einzelnen Gewässertypen einzusetzen sind"],r:0,e:"Wasserflächen sind zu erhalten, zu vermehren und vor Verunreinigung zu schützen."},
+  {g:5,f:"Welchen Einfluss können nicht heimische Tierarten auf unsere Natur ausüben?",a:["sie können das biologische Gleichgewicht stören","sie können für die heimische Natur eine Bereicherung darstellen","sie haben keinen Einfluss auf die heimische Natur"],r:0,e:"Nicht heimische Arten können das biologische Gleichgewicht empfindlich stören."},
+  {g:5,f:"Was ist ein Biotop?",a:["ein Lebensraum, der nur Fischen dient","der Lebensraum einer bestimmten Pflanzen- und Tiergesellschaft oder einer einzelnen Art","verschiedene Arten von Gewässertypen"],r:1,e:"Ein Biotop ist der Lebensraum einer bestimmten Lebensgemeinschaft von Pflanzen und Tieren."},
+  {g:5,f:"Wie soll sich ein Angler im Uferbereich von Gewässern verhalten?",a:["er darf seinen Angelplatz so herrichten, dass er gut fischen kann","keine Pflanzen im Wasser und Uferbereich beschädigen oder beseitigen","es gibt keine Verhaltensregeln"],r:1,e:"Uferpflanzen dürfen nicht beschädigt werden – sie sind Lebens- und Laichraum."},
+  {g:5,f:"Was soll der Angler stets beachten?",a:["er soll im Rahmen seiner Möglichkeiten am Gewässer Naturschutz praktizieren","dass Gewässer ständig mit fangreifen Fischen nachbesetzt werden","er muss durch Besatz nicht einheimischer Fische eine große Artenvielfalt erzielen"],r:0,e:"Der Angler soll immer aktiven Naturschutz am Gewässer betreiben."},
+  {g:5,f:"Warum werden Landschaftsschutzgebiete eingerichtet?",a:["zur Erhaltung des Naturhaushaltes und der Nutzbarkeit seiner Naturgüter zur Erholung der Menschen","um Anglern und Jägern ihr Hobby zu sichern","um diese Gebiete von jeglichen Einflüssen der Umwelt abzuschirmen"],r:0,e:"Landschaftsschutzgebiete erhalten den Naturhaushalt und die Erholungsfunktion der Landschaft."},
+  {g:5,f:"Sind heimische Teich- und Seerosen besonders geschützt?",a:["es gibt keine besonderen Vorschriften, die ihren Schutz regeln","ja, denn sie stehen unter Naturschutz, weil selten geworden und sogar vom Aussterben bedroht","nein, denn sie sind aus Sicht der Fischerei wenig nützlich"],r:1,e:"Heimische Teich- und Seerosen stehen unter Naturschutz und dürfen nicht entnommen werden."},
+  {g:5,f:"Wie verhalte ich mich, wenn ich an einem Gewässer Unken, Frösche oder Kröten entdecke?",a:["sie stehen unter Naturschutz und dürfen nicht verjagt, gefangen oder getötet werden","verjagen, da sie die Fische beunruhigen","fangen, um sie für Beobachtungszwecke in einem Terrarium zu halten"],r:0,e:"Alle heimischen Amphibien stehen unter Naturschutz – nicht stören, fangen oder töten."},
+  {g:5,f:"Was ist zu beachten, wenn zu starke Wasserpflanzenbestände gelichtet werden sollen?",a:["gute Angelplätze sollen geschaffen werden","Arbeiten nicht während der Laichzeit durchführen und geschützte Pflanzen nicht beseitigen","der Untergrund des Gewässers darf nicht zu stark aufgewühlt werden"],r:1,e:"Pflegearbeiten nicht in der Laichzeit und geschützte Pflanzen dabei schonen."},
+  {g:5,f:"Welche Frösche, Unken, Salamander und Molche stehen unter Naturschutz?",a:["nur Kröten und Molche","alle","mit Ausnahme des Wasserfrosches, alle"],r:1,e:"Alle heimischen Lurche (Amphibien) stehen unter Naturschutz."},
+  {g:5,f:"Was versteht das Naturschutzgesetz unter Artenschutz?",a:["Schutz und Pflege wildlebender Tiere und Pflanzen einschließlich ihrer Entwicklungsstadien, Lebensräume und Lebensgemeinschaften","Erhöhung des Fischbesatzes","Vertreibung von Wasservögeln"],r:0,e:"Artenschutz umfasst Tiere, Pflanzen, ihre Entwicklungsstadien und Lebensräume."},
+  {g:5,f:"Welche Auskunft geben „Rote Listen“ im Naturschutz?",a:["sie dienen ausschließlich der Bestandsregulierung von Fischbeständen","sie geben Auskunft über den Gefährdungsgrad einzelner Tier- und Pflanzenarten","sie gelten nur für stehende Gewässer"],r:1,e:"Rote Listen zeigen, wie stark einzelne Arten in ihrem Bestand gefährdet sind."},
+  {g:5,f:"Darf der Angler Libellenlarven als Köder benutzen?",a:["ja","nein, sie stehen unter besonderem Schutz","nur wenn sie vorher betäubt werden"],r:1,e:"Libellen und ihre Larven stehen unter Schutz und dürfen nicht als Köder verwendet werden."},
+  {g:5,f:"Was besagt u. a. der § 1 des Tierschutzgesetzes?",a:["für den Angler hat der § 1 keine Aussagekraft, da er nur Landtiere betrifft","niemand darf einem Tier ohne vernünftigen Grund Schmerzen, Leiden oder Schäden zufügen oder es töten","er regelt das Töten gefangener Fische"],r:1,e:"Kernsatz des Tierschutzgesetzes: keinem Tier ohne vernünftigen Grund Schmerzen, Leiden oder Schäden zufügen."},
+  {g:5,f:"Welche Handlungen verstoßen gegen das Tierschutzgesetz?",a:["die Errichtung von Fischtreppen","das Zurücksetzen maßiger Fische, unsachgemäßer Transport, unsachgemäße Tötung","die Elektrofischerei zur Bestandsregulierung"],r:1,e:"Unsachgemäßer Umgang (falscher Transport, unsachgemäße Tötung) verstößt gegen das Tierschutzgesetz."},
+  {g:5,f:"Wann verstößt der Angler gegen das Tierschutzgesetz?",a:["er verwendet einen lebendigen Köderfisch","er nimmt an einem Hegefischen zur Bestandsregulierung teil","bei der Elektrofischerei, die zur Arterhaltung dient"],r:0,e:"Die Verwendung lebender Köderfische ist verboten und verstößt gegen das Tierschutzgesetz."},
+  {g:5,f:"Was sind vernünftige Gründe für das Angeln?",a:["Angeln um Preise und Pokale","Verwertung des Fanges durch Mensch und Tier oder Bestandsregulierung","ausschließlich die Freude beim Drill großer Fische"],r:1,e:"Vernünftiger Grund ist die Verwertung des Fanges oder die Hege/Bestandsregulierung – nicht der Sport allein."},
+  {g:5,f:"Warum sind Mindestmaße für Fische unbedingt erforderlich?",a:["um dem Fisch wenigstens einmal die Möglichkeit zum Laichen zu geben, damit die Art erhalten wird","um dem Angler möglichst kapitale Fische zu sichern","Mindestmaße sind nicht erforderlich"],r:0,e:"Das Mindestmaß stellt sicher, dass der Fisch mindestens einmal ablaichen konnte."},
+  {g:5,f:"Wie ist der untermaßige Fisch nach dem Fang zu behandeln?",a:["vorsichtig mit nassen Händen anfassen, Haken entfernen und schonend zurücksetzen","ihn sofort töten, um ihm Stress zu ersparen","mit trockenen Händen anfassen, damit er nicht aus den Händen rutscht"],r:0,e:"Mit nassen Händen anfassen (Schleimhaut schützen) und schonend zurücksetzen."},
+  {g:5,f:"Was versteht man unter dem Begriff waidgerechtes Fischen?",a:["die Verwendung lebender Köderfische","die Einstellung zur Kreatur Fisch unter Berücksichtigung des Tier- und Fischartenschutzes","das Reißen von Fischen"],r:1,e:"Waidgerecht heißt verantwortungsvoller, tierschutz- und artenschutzgerechter Umgang mit dem Fisch."},
+  {g:5,f:"Wodurch kann beim Fisch Stress hervorgerufen werden?",a:["ausschließlich durch den Fang","Beunruhigung, Sauerstoffmangel, unsachgemäße Hälterung und Ähnliches","ausschließlich durch die Hälterung"],r:1,e:"Stress entsteht durch Beunruhigung, Sauerstoffmangel und unsachgemäße Hälterung."},
+  {g:5,f:"Können Fische Schmerzen empfinden?",a:["nein, Fische sind schmerzunempfindlich","diese Frage ist nicht endgültig geklärt","ja, Fische können jedoch nur Schmerzen empfinden, wenn sie von außen gehakt werden"],r:1,e:"Nach dem Katalog gilt diese Frage als nicht endgültig geklärt – der Angler geht dennoch immer schonend vor."},
+  {g:5,f:"Darf man mit lebendem Köderfisch angeln?",a:["ja, mit Erlaubnis des Vereinsvorstandes","nein","ja, aber nur mit Raubfischen"],r:1,e:"Das Angeln mit lebendem Köderfisch ist verboten (Tierschutz)."},
+  {g:5,f:"Was ist ein Fischschonbezirk?",a:["ein Gewässerabschnitt, in dem das Angeln für bestimmte Zeitabschnitte oder ganzjährig verboten ist","ein Teich, der der Aufzucht von Fischbesatz dient","eine Gewässerstrecke, die nur mit der Fliegenrute befischt werden darf"],r:0,e:"Ein Fischschonbezirk ist zeitweise oder ganzjährig für den Fischfang gesperrt."},
+  {g:5,f:"Welche Bedeutung haben Schonzeiten?",a:["sie sollen ein ungestörtes Ablaichen ermöglichen und legen fest, dass bestimmte Fischarten während dieser Zeit nicht gefangen werden dürfen","während dieser Zeit müssen gefangene Fische besonders schonend behandelt werden","während dieser Schonzeit dürfen nur Raubfische gefangen werden"],r:0,e:"Schonzeiten schützen die Arten während der Laichzeit vor dem Fang."},
+  {g:5,f:"Was sind Artenschonzeiten?",a:["Zeiträume, in denen bestimmte Fischarten nicht gefangen werden dürfen","Zeiträume, in denen Milchner nicht gefangen werden dürfen","Zeiträume, die für Salmonidenbesatz festgelegt sind"],r:0,e:"In der Artenschonzeit darf die jeweilige Fischart nicht gefangen werden."},
+  {g:5,f:"Welche Fischart gilt als unmittelbar vom Aussterben bedrohte Art?",a:["Zander","Europäischer Stör","Bachforelle"],r:1,e:"Der Europäische Stör gilt als unmittelbar vom Aussterben bedroht."},
+  {g:5,f:"Welche Säugetiere, die im oder am Wasser leben, sind nach der Bundesartenschutzverordnung besonders geschützt?",a:["Biber, Fischotter","Bisam, Waschbär","Wasserratte (Schermaus), Wanderratte"],r:0,e:"Biber und Fischotter sind besonders geschützt; Bisam und Waschbär sind nicht heimisch und nicht geschützt."},
+  {g:5,f:"Weshalb sollen bei Besatzmaßnahmen bestandsbedrohte Fischarten eingesetzt werden, wenn sie für dieses Gewässer geeignet sind?",a:["bestandsbedrohte Fische sollten nicht eingesetzt werden, da ihre Überlebenschancen gering sind","der Bestand bedrohter Fische soll erhalten und vermehrt werden","es sind gute Köderfische für das Raubfischangeln"],r:1,e:"Besatz mit bedrohten, standortgerechten Arten hilft, deren Bestand zu erhalten und zu vermehren."},
+  {g:5,f:"Wann ist Besatz erforderlich?",a:["es findet keine natürliche Fortpflanzung statt","immer","die Angler sind wiederholt ohne Fang geblieben"],r:0,e:"Besatz ist nötig, wenn sich eine Art im Gewässer nicht ausreichend natürlich fortpflanzt."},
+  {g:5,f:"Können durch Angler Fischkrankheiten in offene Gewässer eingeschleppt werden?",a:["nein","ja","Fischkrankheiten kommen nur in Teichwirtschaften vor"],r:1,e:"Über Gerät, Kescher und Besatzfische können Krankheiten verschleppt werden – daher Hygiene und Gesundheitszeugnisse."},
+  {g:5,f:"Welche Bedeutung haben amtliche Gesundheitsbescheinigungen für Satzfische?",a:["Gewähr für schnelles Wachstum","Gewähr für gesunde Fische","Gewähr für Reinrassigkeit"],r:1,e:"Die Bescheinigung soll sicherstellen, dass nur gesunde Fische besetzt werden."},
+  {g:5,f:"Wie muss sich der Angler verhalten, wenn er in Ufernähe einen brütenden Vogel feststellt?",a:["er ist grundsätzlich nicht gehalten, die Brutsituation zu berücksichtigen","entsprechend weiten Abstand zum brütenden Vogel einnehmen, um das Brutgeschäft nicht zu stören","nachsehen, ob die Jungvögel schon geschlüpft sind"],r:1,e:"Ausreichend Abstand halten, um das Brutgeschäft nicht zu stören."},
+  {g:5,f:"Warum sind Fangstatistiken wichtig?",a:["sie geben Auskunft über Fischarten, Bestandsdichte und Abwuchs der Fische","es soll den Vereinsmitgliedern bewiesen werden, wie leistungsfähig der einzelne Angler ist","sie dienen dazu, Vereinsmitglieder zu kontrollieren"],r:0,e:"Fangstatistiken liefern wichtige Daten über Artenzusammensetzung, Bestand und Wachstum – Grundlage der Hege."},
+  {g:5,f:"Warum fordern Angler die Durchgängigkeit von Fließgewässern?",a:["dadurch kann sich der Biber besser verbreiten","viele Fischarten können nur dadurch ihre Laichgebiete erreichen","das wird von vielen Wassersportlern gewünscht"],r:1,e:"Nur durchgängige Fließgewässer erlauben Wanderfischen, ihre Laichgebiete zu erreichen."},
+  {g:5,f:"Welche Fische gehören nicht in die Forellenregion?",a:["Bachneunaugen, Elritze","Kaulbarsch, Aal","Mühlkoppe, Bachforelle"],r:1,e:"Kaulbarsch und Aal sind keine typischen Fische der kühlen, sauerstoffreichen Forellenregion."},
+  {g:5,f:"Sind laut Bundesartenschutzverordnung alle Lurche (Amphibien) und Kriechtiere (Reptilien) besonders geschützt?",a:["ja","ja, mit Ausnahme der Ringelnatter, alle","Kriechtiere (Reptilien) sind nicht geschützt"],r:0,e:"Alle heimischen Amphibien und Reptilien sind nach der Bundesartenschutzverordnung besonders geschützt."},
+  {g:5,f:"Welche Ziele haben sich die Deutschen Fischereivereine gesetzt?",a:["Gewässer- und Artenschutz","an den Wettangelveranstaltungen dürfen nur Vereinsmitglieder teilnehmen","die Mindestmaße bei Raubfischen abzuschaffen"],r:0,e:"Oberstes Ziel der Fischereivereine ist der Gewässer- und Artenschutz (Hege)."},
+  {g:5,f:"Was sind die Hauptursachen für Gewässerbelastungen?",a:["Beschattung durch Bäume","Einleitung von Abwässern und naturferner Gewässerausbau","Schilfanpflanzungen"],r:1,e:"Abwassereinleitungen und der naturferne Ausbau belasten Gewässer am stärksten."},
+  {g:5,f:"Was wird unter der Renaturierung eines Fließgewässers verstanden?",a:["die Verbauung und Regulierung des Fließgewässers","die Wiederherstellung eines möglichst naturnahen Zustandes","das Fließgewässer wird unter Naturschutz gestellt"],r:1,e:"Renaturierung bedeutet, ein Gewässer wieder in einen naturnahen Zustand zu versetzen."},
+  {g:5,f:"Welche Ursache kann zu einem Fischsterben führen?",a:["Einleitung von ungeklärten Abwässern","der Laichausschlag bei bestimmten Fischarten","Elektrofischen"],r:0,e:"Ungeklärte Abwässer entziehen Sauerstoff bzw. vergiften das Wasser – häufige Ursache für Fischsterben."},
+  {g:5,f:"Wer hat Beobachtungen über krankheitsverdächtige Fische zu melden?",a:["nur die Polizei","jeder Fischereiausübungsberechtigte","nur der Amtstierarzt"],r:1,e:"Jeder Fischereiausübungsberechtigte ist zur Meldung krankheitsverdächtiger Fische verpflichtet."},
+  {g:5,f:"Gewässergüteklassen geben Auskunft über …",a:["die Belastung eines Gewässers durch Schwermetalle","die Einteilung eines Gewässers in Abschnitte nach vorkommenden Fischarten","die chemische und biologische Beschaffenheit eines Gewässers"],r:2,e:"Die Gewässergüteklasse beschreibt die chemische und biologische Beschaffenheit (Belastungsgrad)."},
+  {g:5,f:"Welche Vogelarten ernähren sich hauptsächlich von Fischen?",a:["Stockente und Blässhuhn","Kormoran, Eisvogel und Haubentaucher","Kranich und Weißstorch"],r:1,e:"Kormoran, Eisvogel und Haubentaucher sind ausgesprochene Fischfresser."},
+  {g:5,f:"Was ist die Hauptursache für das Verschwinden vieler Fischnährtiere?",a:["Gewässerrenaturierungen","Insektizide, Gewässerverschmutzung, Wasserbaumaßnahmen, Sedimenteintrag","die starke Vermehrung ihrer natürlichen Feinde und Besatzmaßnahmen"],r:1,e:"Verschmutzung, Gifte und Verbauung vernichten die Kleinlebewesen, von denen die Fische leben."},
+  {g:5,f:"Was ist in Laichschongebieten verboten?",a:["jeder Fischfang und auch jede Beunruhigung der Fische während der Laichzeit","das Angeln mit lebenden Ködern","nur das Fischen mit Netzen"],r:0,e:"Im Laichschongebiet sind während der Laichzeit Fischfang und jede Beunruhigung verboten."},
+  {g:5,f:"Warum sollten in der Regel in Gewässer nur Jungfische eingesetzt werden?",a:["dies ergibt die Möglichkeit, dass untermaßige Fische mehrfach gefangen werden können","die natürliche Produktionskraft der Gewässer ist so besser zu nutzen","so besteht die Möglichkeit, beim Angeln mehr Fische zu fangen"],r:1,e:"Jungfische wachsen im Gewässer heran und nutzen dessen natürliche Produktionskraft besser aus."},
+  {g:5,f:"Wie soll ein Fischbestand in einem Gewässer aussehen und erhalten werden?",a:["mit möglichst großen Raubfischen","dem Gewässer entsprechend artenreich und in richtiger Alterszusammensetzung","mit möglichst großen Friedfischen"],r:1,e:"Ein gesunder Bestand ist artenreich und altersgemischt, passend zum Gewässertyp."},
+  {g:5,f:"Warum sollen in Salmonidengewässern grundsätzlich Grundräumungen unterbleiben?",a:["dadurch wird das Kanufahren erschwert","durch Grundräumungen werden die Kiesbetten als Laichstätten zerstört","durch Grundräumungen werden Kormorane angelockt"],r:1,e:"Grundräumungen zerstören die Kieslaichplätze der Salmoniden."},
+  {g:5,f:"Welche Auswirkungen hat der Bisam auf Gewässer?",a:["Bisame fressen Fische und können den Bestand gefährden","sie fressen Pflanzen und Muscheln und unterwühlen die Ufer","Bisame sind Fleischfresser und können Fischkrankheiten übertragen"],r:1,e:"Der Bisam frisst Pflanzen und Muscheln und untergräbt durch seine Baue die Ufer."},
+
+  /* ============ 6 · FISCHEREIRECHT (Fragen 6–60) ============ */
+  {g:6,f:"Wer stellt einen Fischereierlaubnisschein aus?",a:["das Ordnungsamt der Gemeinde oder Stadt","die Fischereibehörde des Landkreises","der Fischereiberechtigte, z. B. der Fischereiverein"],r:2,e:"Den Erlaubnisschein für ein bestimmtes Gewässer stellt der Fischereiberechtigte (meist der Verein/Pächter) aus."},
+  {g:6,f:"Wer ist berechtigt, in Niedersachsen die nach dem Fischereigesetz vorgeschriebene Fischerprüfung abzunehmen?",a:["die beiden anerkannten Landesfischereiverbände","die untere Fischereibehörde","die anerkannten Sportfischervereine"],r:0,e:"Die Fischerprüfung nehmen in Niedersachsen die beiden anerkannten Landesfischereiverbände ab."},
+  {g:6,f:"Durch welches Gesetz bzw. welche Verordnung ist das Töten von Fischen geregelt?",a:["durch das Tierschutzgesetz bzw. die Tierschutz-Schlachtverordnung","durch das Niedersächsische Fischereigesetz","durch das Naturschutzgesetz"],r:0,e:"Das Töten von Fischen regeln das Tierschutzgesetz und die Tierschutz-Schlachtverordnung."},
+  {g:6,f:"Welche Ausweise hat ein Angler in Niedersachsen bei Ausübung der Fischerei mit sich zu führen?",a:["den Fischereierlaubnisschein in Verbindung mit dem Personalausweis oder Fischereischein","den Personalausweis mit Lichtbild","das polizeiliche Führungszeugnis"],r:0,e:"Mitzuführen sind Fischereierlaubnisschein und Fischereischein (bzw. Personalausweis zur Identität)."},
+  {g:6,f:"Wer stellt in Niedersachsen den Fischereischein aus?",a:["der Landkreis","das Ordnungsamt der Gemeinde oder der Stadt","der Landesfischereiverband"],r:1,e:"Den Fischereischein stellt das Ordnungsamt der Gemeinde oder Stadt aus."},
+  {g:6,f:"Was benötigt man zum Erhalt eines Fischereischeins?",a:["Bescheinigung der Naturschutzbehörde","den Fischereischein erhält jeder","einen Fischerprüfungsausweis"],r:2,e:"Voraussetzung für den Fischereischein ist der Nachweis der bestandenen Fischerprüfung (Prüfungsausweis)."},
+  {g:6,f:"Ist in Niedersachsen der Fischereischein erforderlich?",a:["nein, für kein Fischgewässer","ja, für alle Fischgewässer","ja, nur für die Fischerei in Küstengewässern"],r:1,e:"In Niedersachsen ist der Fischereischein für alle Fischgewässer erforderlich."},
+  {g:6,f:"Für welchen Zeitraum wird in Niedersachsen der Fischereischein ausgestellt?",a:["5 Jahre","auf Lebenszeit","3 Jahre"],r:1,e:"In Niedersachsen wird der Fischereischein auf Lebenszeit ausgestellt."},
+  {g:6,f:"Gilt der Fischerprüfungsausweis auch als Erlaubnisschein zum Angeln in unseren Pachtgewässern?",a:["ja","nein","nur, wenn der Inhaber volljährig ist"],r:1,e:"Der Prüfungsausweis ist kein Erlaubnisschein – zum Angeln braucht es zusätzlich die Gewässererlaubnis."},
+  {g:6,f:"Werden in Niedersachsen an die Ausgabe des Fischereischeines Voraussetzungen geknüpft?",a:["ja, Mitgliedschaft in einem Fischereiverein","ja, Vollendung des 14. Lebensjahres und abgelegte Fischerprüfung","nein"],r:1,e:"Voraussetzung sind ein Mindestalter und die bestandene Fischerprüfung."},
+  {g:6,f:"Was versteht man unter dem Begriff „Uferbetretungsrecht“?",a:["das Betreten von nicht eingefriedeten Grundstücken in dem zur Ausübung der Fischerei erforderlichen Umfang","das Betreten von fest eingefriedeten Grundstücken zum Angeln","das Recht, jedes Grundstück zu betreten, wenn man einen Fischereischein besitzt"],r:0,e:"Das Uferbetretungsrecht erlaubt nur das Betreten nicht eingefriedeter Ufergrundstücke im nötigen Umfang."},
+  {g:6,f:"Sind einfach eingezäunte Viehweiden als eingefriedete Grundstücke anzusehen?",a:["nein","nur, wenn Vieh darauf weidet","ja, denn es besteht ja auf jeden Fall ein Zaun"],r:0,e:"Einfach eingezäunte Viehweiden gelten nicht als eingefriedete Grundstücke im Sinne des Betretungsrechts."},
+  {g:6,f:"Welche Grundstücke dürfen bei der Ausübung der Fischerei nicht betreten werden?",a:["dauernd eingefriedete Haus- und Hofgrundstücke, Forst- und Feldkulturen","Viehweiden mit einfachem Stacheldraht oder Elektrozaun","nur Streckenabschnitte innerhalb von Landschaftsschutzgebieten"],r:0,e:"Dauernd eingefriedete Haus-/Hofgrundstücke sowie Kulturen dürfen nicht betreten werden."},
+  {g:6,f:"Was versteht man unter Fischnacheile?",a:["die Verfolgung aufwärts ziehender Fische","den Fischfang auf überfluteten Grundstücken, solange die Verbindung mit dem Fluss besteht","das Beobachten der ausgesetzten Fische durch Taucher"],r:1,e:"Fischnacheile ist das Fischen auf überfluteten Flächen, solange sie mit dem Fluss verbunden sind."},
+  {g:6,f:"Kann eine Gemeinde verbieten, bestimmte Grundstücke oder Anlagen in Ausübung des Fischereirechtes zu betreten oder zu befahren?",a:["nein, sie muss mindestens die Zustimmung des Fischereiberechtigten oder Pächters einholen","ja, soweit es zum Schutz oder zur Abwehr von Gefahren für die öffentliche Sicherheit oder Ordnung erforderlich ist","nein, weil die gesetzliche Grundlage fehlt"],r:1,e:"Zum Schutz der öffentlichen Sicherheit und Ordnung darf die Gemeinde das Betreten einschränken."},
+  {g:6,f:"Welche Maßnahmen sind bei einer Gewässerverunreinigung besonders wichtig?",a:["Polizei benachrichtigen, Beweise sichern und Vereinsvorstand benachrichtigen","eine sofortige Unterrichtung der Presse","nichts unternehmen, man kann sowieso nichts machen"],r:0,e:"Bei einer Verunreinigung: Polizei rufen, Beweise sichern und den Vereinsvorstand informieren."},
+  {g:6,f:"Welche Vorgehensweise ist bei der Aufklärung von Gewässerverunreinigungen für die Durchsetzung von Entschädigungsforderungen wichtig?",a:["der zuständigen Ordnungsbehörde Bericht erstatten","Schadensanzeige bei der zuständigen Polizeidienststelle, Sicherung der Beweise, Ermittlung des Schadens","nach einem Fischsterben kann kein Schaden ermittelt werden"],r:1,e:"Für Schadenersatz sind Anzeige bei der Polizei, Beweissicherung und Schadensermittlung entscheidend."},
+  {g:6,f:"Wie werden Gewässerverunreinigungen oder sonstige nachteilige Veränderungen seiner Eigenschaften rechtlich gewertet?",a:["als Straftat nach dem Strafgesetzbuch","grundsätzlich als keine Straftat","als Verstoß gegen das Reinheitsgesetz"],r:0,e:"Gewässerverunreinigung ist eine Straftat nach dem Strafgesetzbuch (§ 324 StGB)."},
+  {g:6,f:"Welche Fakten sind bei Fischsterben neben der Entnahme von Gewässerproben und toten Fischen zusätzlich wichtig?",a:["die Bekanntmachung in der örtlichen Presse","die Anfertigung einer Skizze über die Entnahmeorte von Gewässerproben und das Auffinden toter Fische","die Unterrichtung der Vereinsmitglieder"],r:1,e:"Eine Skizze der Entnahme- und Fundorte dokumentiert den Schaden gerichtsfest."},
+  {g:6,f:"Warum gibt es Gesetze zur Reinhaltung der Gewässer?",a:["zum Schutz der Gewässer vor unerlaubten Einleitungen","zur Regelung der Anfütterung für die Fische","zur Eingrenzung des Bootsverkehrs"],r:0,e:"Die Gesetze schützen die Gewässer vor unerlaubten Einleitungen und Verunreinigungen."},
+  {g:6,f:"Darf ein Vereinsgewässerwart aus dem Gewässer des Nachbarvereines ohne Erlaubnis Fische zur Untersuchung entnehmen?",a:["nein, denn er benötigt hierzu die Fischereierlaubnis des Nachbarvereines","ja, denn er muss auch im Nachbargewässer über die Fischbestände informiert sein","er darf das, soweit es der Nachbarverein stillschweigend duldet"],r:0,e:"Auch der Gewässerwart braucht für ein fremdes Gewässer die Erlaubnis des dortigen Berechtigten."},
+  {g:6,f:"Darf die Polizei Angelgerät eines Anglers, der ohne Erlaubnis fischt, beschlagnahmen (einziehen)?",a:["ja","nein","nur nach Rücksprache mit dem Angelverein"],r:0,e:"Bei Fischwilderei kann die Polizei das Angelgerät beschlagnahmen."},
+  {g:6,f:"Welche der aufgeführten Maßnahmen zur Bestandsregulierung muss behördlich genehmigt werden?",a:["Elektrofischerei","Netzfischerei","das Fischen mit Reusen"],r:0,e:"Die Elektrofischerei ist genehmigungspflichtig und nur Fachkundigen erlaubt."},
+  {g:6,f:"Was sind gesetzlich verbotene Fangmethoden?",a:["der Einsatz von Giften und Sprengmitteln","das Fischen mit Netzen","das Fischen mit künstlichen Ködern"],r:0,e:"Gift und Sprengstoff sind streng verbotene Fangmethoden."},
+  {g:6,f:"Darf ich an einem Fischgewässer, an dem ich nicht berechtigt bin zu angeln, gebrauchsfertiges Angelgerät mit mir führen?",a:["nein","ja","nur beim Fliegenfischen"],r:0,e:"Am fremden Gewässer darf kein fangfertiges Gerät mitgeführt werden (Verdacht der Fischwilderei)."},
+  {g:6,f:"Wer ist berechtigt, Fischereiaufseher amtlich zu verpflichten?",a:["nur der Landkreis","das Ordnungsamt der Gemeinde oder Stadt auf Vorschlag des Fischereiberechtigten oder des Fischereipächters","die Fischereivereine können es selbstständig regeln"],r:1,e:"Das Ordnungsamt verpflichtet Fischereiaufseher auf Vorschlag des Berechtigten/Pächters amtlich."},
+  {g:6,f:"Warum ist die Verpflichtung von Fischereiaufsehern so wichtig?",a:["die Einhaltung der Bestimmungen über den Fischfang ist zu überwachen","Anzahl und Art der gefangenen Fische müssen ermittelt werden","über die Kontrolle der Ausweispapiere können schlechte Beitragszahler festgestellt werden"],r:0,e:"Der Fischereiaufseher überwacht die Einhaltung der Fischereibestimmungen."},
+  {g:6,f:"Wie hat sich der Angler einem sich ausweisenden Fischereiaufseher gegenüber zu verhalten?",a:["auf Verlangen die erforderlichen Ausweispapiere zeigen","der Fischereiaufseher hat keine Rechtsgrundlage, daher keine Verpflichtungen","ihn nicht beachten, notfalls auffordern, den Angelplatz zu verlassen"],r:0,e:"Dem ausgewiesenen Fischereiaufseher sind auf Verlangen die Papiere vorzuzeigen."},
+  {g:6,f:"Welche gesetzlichen Vorschriften gelten für die Fischerei auf deutschen Angelkuttern?",a:["keine","das deutsche Tierschutzrecht","das deutsche Naturschutzgesetz"],r:1,e:"Auf deutschen Kuttern gilt das deutsche Tierschutzrecht."},
+  {g:6,f:"Was sind Küstengewässer?",a:["die gesamte Nord- und Ostsee","die Gebiete innerhalb der 12-Meilen-Zone von Nord- und Ostsee, einschließlich aller Flüsse bis zu festgelegten Stellen","alle Gewässerteile innerhalb der Zehn-Meilen-Zone von Nord- und Ostsee"],r:1,e:"Küstengewässer sind die Bereiche innerhalb der 12-Seemeilen-Zone samt der Flussmündungen bis zu festgelegten Grenzen."},
+  {g:6,f:"Welcher Grundsatz gilt für den Umgang mit Fischen?",a:["keinem Fisch ohne vernünftigen Grund Schmerzen oder Leiden zuzufügen","zur Schonung der Fische sollten diese nach Anlandung nur mit trockenem Tuch angefasst werden","da Fische keine Schmerzen empfinden, gilt das Tierschutzgesetz nicht für Fische"],r:0,e:"Es gilt der tierschutzrechtliche Grundsatz: keinem Fisch ohne vernünftigen Grund Schmerzen oder Leiden zufügen."},
+  {g:6,f:"Was versteht man unter Hegepflicht?",a:["der Fischereiberechtigte ist verpflichtet, Maßnahmen zu ergreifen, die die Pflege und Erhaltung der Fischbestände und Gewässer gewährleisten","kranke Fische so lange in Netzgehegen zu halten, bis sie wieder gesund sind","Verpflichtung zur Gewässerunterhaltung und Räumung von Fischgewässern"],r:0,e:"Hegepflicht heißt, die Fischbestände und das Gewässer zu pflegen und zu erhalten."},
+  {g:6,f:"Wer ist für die Hege und Pflege an einem Gewässer verantwortlich?",a:["der Fischereiberechtigte bzw. der Pächter","der Inhaber des Erlaubnisscheines","der Landkreis"],r:0,e:"Verantwortlich für Hege und Pflege ist der Fischereiberechtigte bzw. Pächter."},
+  {g:6,f:"Kann ein Landkreis oder eine kreisfreie Stadt den Fischereiberechtigten Auflagen erteilen, bestimmte Mengen Satzfische einzubringen, und die Anzahl der Erlaubnisscheine begrenzen?",a:["ja","nein","nur mit Einwilligung des Fischereiberechtigten"],r:0,e:"Zur Erhaltung eines angemessenen Bestandes kann der Landkreis Besatzauflagen machen und Erlaubnisscheine begrenzen."},
+  {g:6,f:"Kann der Landkreis oder die kreisfreie Stadt die Ausgabe von Erlaubnisscheinen für ein Gewässer begrenzen?",a:["ja, zur Erhaltung eines angemessenen Fischbestandes","nur mit Zustimmung des Fischereiausübungsberechtigten","nur, wenn es sich um stehende Gewässer handelt"],r:0,e:"Zum Schutz des Bestandes kann die Ausgabe von Erlaubnisscheinen begrenzt werden."},
+  {g:6,f:"Nach welchen grundsätzlichen Dingen muss ich mich erkundigen, wenn ich ein fremdes Gewässer befischen will?",a:["nach den Vorschriften des Fischfanges für dieses Gewässer, z. B. Mindestmaße, Schonzeiten, Fangbegrenzungen","nach Möglichkeiten, Fische zu hältern","welche Rekordfänge hier in den letzten Jahren erzielt worden sind"],r:0,e:"Vorher immer Mindestmaße, Schonzeiten und Fangbegrenzungen des Gewässers erfragen."},
+  {g:6,f:"Ist ein Erlaubnisscheininhaber berechtigt, selbstständig Besatzmaßnahmen durchzuführen?",a:["nein","ja, denn diese Besatzmaßnahme geht nicht zu Lasten der Vereinsmitglieder","grundsätzlich ja, es sei denn, es handelt sich nicht um einheimische Fische"],r:0,e:"Besatzmaßnahmen darf nur der Fischereiberechtigte veranlassen, nicht der einzelne Erlaubnisscheininhaber."},
+  {g:6,f:"Kann ein Fischereiverein verlangen, dass an seinen Gewässern außer den gesetzlich vorgeschriebenen Ausweisen noch andere mitgeführt werden müssen?",a:["nein","ja, z. B. den Sportfischerpass des DAFV","nur, wenn er sich die Erlaubnis dazu besorgt"],r:1,e:"Der Verein kann zusätzliche Ausweise verlangen, z. B. den Sportfischerpass."},
+  {g:6,f:"Welche Behörde überwacht die Einhaltung der Hegepflicht?",a:["der zuständige Landkreis","die Wasserschifffahrtsdirektion","die Jahreshauptversammlung des jeweiligen Fischereivereins"],r:0,e:"Die Einhaltung der Hegepflicht überwacht der zuständige Landkreis (Fischereibehörde)."},
+  {g:6,f:"Welche Tierart darf durch berechtigte Personen gefangen werden?",a:["Eisvögel","Biber","Bisam"],r:2,e:"Der Bisam ist nicht heimisch und darf durch berechtigte Personen gefangen werden; Biber und Eisvogel sind geschützt."},
+  {g:6,f:"Regelt das Fischereirecht auch die Jagd auf fischfressende Vögel?",a:["nein","ja","nur für Kormorane"],r:0,e:"Die Jagd regelt das Jagdrecht, nicht das Fischereirecht."},
+  {g:6,f:"Wo sind die gesetzlichen Schonzeiten und Mindestmaße für Niedersachsen geregelt?",a:["in der Binnenfischereiordnung","in Verordnungen der Landkreise und der kreisfreien Städte","in Veröffentlichungen in den Tageszeitungen"],r:0,e:"Schonzeiten und Mindestmaße stehen in der Niedersächsischen Binnenfischereiordnung."},
+  {g:6,f:"Ist der Fischfang in Fischwegen (-treppen) erlaubt?",a:["ja, weil die Fangmöglichkeiten da besonders gut sind","nein, er ist da verboten","ja, nur am untersten Ende einer Fischtreppe"],r:1,e:"In Fischwegen/-treppen ist der Fischfang verboten – die Fische sollen ungestört wandern können."},
+  {g:6,f:"Dürfen Fische aus Zier- und Gartenteichen in ein offenes Gewässer ausgesetzt werden?",a:["ja, um den Fischbestand zu erhöhen","nein","nur, wenn es sich um Fische handelt, die aus dem offenen Gewässer stammen"],r:1,e:"Fische aus Gartenteichen dürfen nicht in offene Gewässer – Gefahr der Einschleppung von Krankheiten und Fremdarten."},
+  {g:6,f:"Müssen Aalkörbe/Reusen in Niedersachsen namentlich gekennzeichnet sein?",a:["nur in Ausnahmefällen","nein","ja"],r:2,e:"Aalkörbe und Reusen müssen in Niedersachsen mit dem Namen des Fischers gekennzeichnet sein."},
+  {g:6,f:"Darf ein Fischereiverein gesetzliche Schonmaße und Schonzeiten verändern?",a:["er darf Schonzeiten verlängern und Schonmaße heraufsetzen","nein","er darf Schonzeiten verkürzen und Schonmaße herabsetzen"],r:0,e:"Der Verein darf nur strenger sein: Schonzeiten verlängern und Schonmaße heraufsetzen."},
+  {g:6,f:"Welche Vorschrift regelt in Niedersachsen den Umgang mit untermaßigen oder während der Schonzeit gefangenen Fischen?",a:["das Naturschutzgesetz und seine Verordnungen","das Fischereigesetz und seine Binnenfischerei-Verordnung","das Bürgerliche Gesetzbuch"],r:1,e:"Das Niedersächsische Fischereigesetz mit der Binnenfischereiordnung regelt den Umgang mit solchen Fischen."},
+  {g:6,f:"Wie töte ich einen Fisch tierschutzgerecht?",a:["Fisch betäuben, durch Herzstich töten, Haken lösen","ihn durch Herzstich abstechen; sollte er sich dann noch bewegen, betäuben","Haken lösen und abwarten, bis er sich nicht mehr bewegt"],r:0,e:"Richtige Reihenfolge: erst betäuben (Schlag auf den Kopf), dann durch Herzstich töten."},
+  {g:6,f:"Für welche Fischarten ist u. a. in Niedersachsen eine Artenschonzeit festgelegt?",a:["Äsche, Bachforelle, Hecht, Meerforelle","Brassen, Rotauge, Rotfeder","Aal, Karpfen, Schleie"],r:0,e:"Für Äsche, Bachforelle, Hecht und Meerforelle gelten Artenschonzeiten."},
+  {g:6,f:"Welche Fischarten sind in Niedersachsen ganzjährig geschont?",a:["Rotauge, Rotfeder, Gründling","Bitterling, Elritze, Steinbeißer, Schlammpeitzger, Mühlkoppe","Aal, Karpfen, Zander"],r:1,e:"Bitterling, Elritze, Steinbeißer, Schlammpeitzger und Mühlkoppe sind ganzjährig geschont (bedrohte Kleinfische)."},
+  {g:6,f:"Wie misst man die Länge eines Fisches?",a:["von der Maulspitze bis zum Schwanzende","vom Kiemendeckel bis zur Schwanzspitze","von der Maulspitze bis zum Schwanzanfang"],r:0,e:"Die Fischlänge misst man von der Maulspitze bis zum Ende der Schwanzflosse."},
+  {g:6,f:"Welche Fische dürfen in Niedersachsen nicht gefangen werden, außer sie sind eingesetzt worden?",a:["Hechte, Zander, Barsche","Lachse, Meerforellen, Nasen, Rapfen","Kaulbarsche, Schleien, Aale"],r:1,e:"Lachs, Meerforelle, Nase und Rapfen dürfen nur befischt werden, wenn sie eingesetzt wurden (sonst geschützt)."},
+  {g:6,f:"Wie ist der gefangene, untermaßige Fisch zu behandeln?",a:["er ist nach den Bestimmungen des Tierschutzgesetzes zu töten","er ist mit nach Hause zu nehmen","er ist schonend zurückzusetzen"],r:2,e:"Untermaßige Fische sind schonend und unverzüglich zurückzusetzen."},
+  {g:6,f:"Welche Bedeutung kommt dem Schutz der Fischlaichplätze, des Fischlaiches, der Fischbrut und den Fischnährtieren zu?",a:["dieser Schutz ist lebensnotwendig für den Fortbestand unserer Fischarten","er hat keine besondere Bedeutung, denn Fischbrut und Fischnährtiere kommen in ungeheuren Mengen vor","er hat nur Bedeutung für die Forellen- und Äschenregion"],r:0,e:"Der Schutz von Laich, Brut und Nährtieren ist lebensnotwendig für den Fortbestand der Fischarten."},
+  {g:6,f:"Darf ein Fischereiverein bei der übermäßigen Entwicklung von Unterwasserpflanzen zur Bekämpfung Pflanzen fressende Fische (Grasfische) aussetzen?",a:["ja, nur in einem geschlossenen Gewässer","nein, nur mit behördlicher Genehmigung","nur mit Genehmigung des zuständigen Gewässerwartes"],r:1,e:"Das Aussetzen von Grasfischen ist nur mit behördlicher Genehmigung erlaubt (nicht heimische Art)."}
+];
+
+/* ---- Eselsbrücken: werden gezeigt, wenn eine Frage mehrfach falsch war ---- */
+const ESELSBRUECKEN = {
+  "Wo befindet sich beim Fisch die Gallenblase?": "GALLE hängt an der LEBER – wie das G am Anfang von beiden Wörtern zusammengehört.",
+  "In welcher Aufstellung ist die Anzahl der Barteln bei den Fischen richtig angegeben?": "Merksatz: Schleie 2 – Quappe 1 – Karpfen 4 – Wels 6 – Barbe 4 – Gründling 2. Der Wels hat als „Katze“ die meisten (6).",
+  "Welcher Fisch hat die meisten Barteln?": "Schlammpeitzger = der „Bartel-König“ mit 10 Barteln. Peitzger klingt nach vielen Peitschen.",
+  "Welcher Fisch hat keine Barteln?": "Die NASE braucht keine Barteln – sie riecht ja mit der Nase.",
+  "Durch welches deutlich sichtbare Merkmal unterscheiden sich Lachsartige (Salmoniden) von Karpfenartigen (Cypriniden)?": "Salmoniden sind „fett“ unterwegs – die kleine FETTflosse ist ihr Erkennungszeichen.",
+  "Wo laicht der Europäische Aal?": "Aal reist zum Laichen ans andere Ende der Welt: in die SARGASSOsee. Merke: „Aal sagt Sargasso adé.“",
+  "Wie oft laicht der Aal in seinem Leben ab?": "Der Aal laicht EINMAL und stirbt – ein einziges großes Finale.",
+  "Welcher Fisch legt seine Eier in Muscheln?": "BITTERling in die MUSCHEL – beide klingen weich und verborgen.",
+  "Warum soll beim Hechtfang ein Stahlvorfach verwendet werden?": "Hechtzähne = Scheren. Gegen Scheren hilft nur Draht (Stahl).",
+  "Was bedeutet die Hakenskala von 1–18?": "Je HÖHER die Zahl, desto KLEINER der Haken. 1 ist ein Brocken, 18 winzig.",
+  "Wie stark wird normalerweise die Schnurbremse bei der Stationärrolle für den Drill eingestellt?": "Bremse NIE stärker als die Schnur trägt – sonst reißt sie, statt Schnur zu geben.",
+  "Welchen Zweck erfüllt in erster Linie eine Pose (Floß, Schwimmer)?": "Die Pose hält die Tiefe und ist deine „Klingel“ – taucht sie ab, klingelt der Fisch an.",
+  "Was besagt u. a. der § 1 des Tierschutzgesetzes?": "§ 1 = die goldene Regel: keinem Tier OHNE vernünftigen Grund Schmerzen zufügen.",
+  "Wie ist der untermaßige Fisch nach dem Fang zu behandeln?": "Nasse Hände = Handschuhe für den Fisch, dann schonend zurück. Trockene Hände verbrennen seinen Schleim.",
+  "Warum sind Mindestmaße für Fische unbedingt erforderlich?": "Mindestmaß = einmal Kinder kriegen dürfen. Erst ablaichen, dann darf entnommen werden.",
+  "Für welchen Zeitraum wird in Niedersachsen der Fischereischein ausgestellt?": "In Niedersachsen gilt der Schein ein LEBEN lang – einmal bestanden, für immer gültig.",
+  "Wie misst man die Länge eines Fisches?": "Von der MAULspitze bis zum SCHWANZende – von ganz vorn bis ganz hinten, alles zählt.",
+  "Wie töte ich einen Fisch tierschutzgerecht?": "Reihenfolge B-H: erst Betäuben (Schlag), dann Herzstich. Nie umgekehrt.",
+  "Welche Fischarten sind in Niedersachsen ganzjährig geschont?": "Die kleinen Bedrohten: Bitterling, Elritze, Steinbeißer, Schlammpeitzger, Mühlkoppe – „BESSM“ bleibt ganz in Ruhe.",
+  "Welche Säugetiere, die im oder am Wasser leben, sind nach der Bundesartenschutzverordnung besonders geschützt?": "BIBER und OTTER sind geschützt – Bisam und Waschbär sind Zuwanderer ohne Schutz.",
+  "Was sind Glasaale?": "GLASaal = durchsichtig wie GLAS. Der junge Aal, der ins Süßwasser aufsteigt.",
+  "Welche unveränderlichen Merkmale zieht man bei den Karpfenartigen (Cypriniden) zur Artbestimmung heran?": "Cypriniden haben keine Kieferzähne – man zählt die SCHLUNDzähne. Sie ändern sich ein Leben lang nicht.",
+  "Was versteht das Naturschutzgesetz unter Artenschutz?": "Artenschutz = das ganze Paket: Tier + Pflanze + ihre Eier/Larven + ihr Zuhause (Lebensraum)."
+};
+
+/* ---- Praxis-Videos (YouTube-Suchlinks – immer aktuelle Treffer, keine toten Links) ---- */
+const VIDEOS = [
+  {icon:"🪢", titel:"Angelknoten binden", text:"Clinch, Palomar & Schlaufenknoten Schritt für Schritt",
+   url:"https://www.youtube.com/results?search_query=angelknoten+binden+anleitung+anf%C3%A4nger"},
+  {icon:"🎣", titel:"Grundmontage bauen", text:"Einfache Grundblei-Montage für Einsteiger",
+   url:"https://www.youtube.com/results?search_query=grundmontage+angeln+anleitung+anf%C3%A4nger"},
+  {icon:"🎈", titel:"Posenmontage bauen", text:"Pose ausbleien und richtig einstellen",
+   url:"https://www.youtube.com/results?search_query=posenmontage+aufbauen+anleitung"},
+  {icon:"🧶", titel:"Rolle bespulen", text:"Schnur richtig und ohne Drall aufspulen",
+   url:"https://www.youtube.com/results?search_query=angelrolle+bespulen+anleitung"},
+  {icon:"🐡", titel:"Fisch waidgerecht versorgen", text:"Betäuben, töten, versorgen – tierschutzgerecht",
+   url:"https://www.youtube.com/results?search_query=fisch+waidgerecht+bet%C3%A4uben+t%C3%B6ten+anleitung"},
+  {icon:"🔧", titel:"Rute zusammenbauen", text:"Ringe fluchten, Rolle montieren – wichtig für die Praxisprüfung",
+   url:"https://www.youtube.com/results?search_query=angelrute+zusammenbauen+praxispr%C3%BCfung"}
+];
+
+/* ---- Level-Titel (Gamification) ---- */
+const LEVELS = ["Köderfisch","Jungangler","Posenprofi","Gewässerkenner","Rutenmeister","Prüfungsjäger","Fischerkönig"];
+const XP_PRO_LEVEL = 120;
+
+/* Ausbilder-Daten kommen live aus der Datenbank (siehe ladeKursDaten) */
+
+/* =========================== SUPABASE (Login & Cloud-Speicherung) =========================== */
+const SB_URL = "https://vqjpwhqpcybpblgtjuxw.supabase.co";
+const SB_KEY = "sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9";
+const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+const AUSBILDER_FREISCHALTCODE = "AUSBILDER2026"; // Code für Ausbilder-Registrierung (änderbar)
+
+/* =========================== ZUSTAND =========================== */
+let state = {
+  user: null, profil: null, authTab: 'login', authMeldung: null, authBusy: false,
+  kursDaten: null,
+  region: null, rolle: null, view: 'region',
+  xp: 0, streak: 0, besteStreak: 0,
+  gelernt: {},            // frageIndex -> {richtig, versuche, fehlversuche}
+  fehlerkiste: new Set(), // frageIndizes, die zuletzt falsch waren
+  lernSitzung: null, pruefung: null, timerId: null,
+  vorlesen: false,
+  simsGesamt: 0, simsBestanden: 0,
+  lernzeitSek: 0, lernzeitTicker: null
+};
+
+/* Lernzeit läuft, solange aktiv gelernt/geprüft wird (Tab sichtbar) */
+function lernzeitStart(){
+  if(state.lernzeitTicker) return;
+  state.lernzeitTicker=setInterval(()=>{
+    if(document.hidden) return;
+    if(state.view==='lernsitzung'||state.view==='pruefung') state.lernzeitSek++;
+  },1000);
+}
+function lernzeitFormat(sek){
+  const h=Math.floor(sek/3600), m=Math.floor(sek%3600/60);
+  return h?`${h} h ${m} min`:`${m} min`;
+}
+
+/* =========================== HELFER =========================== */
+function regeln(){ const r=REGIONEN.find(r=>r.id===state.region); return (r&&r.regeln)||REGIONEN[0].regeln; }
+let _seed = 987654321;
+function rnd(){ _seed=(_seed*1103515245+12345)&0x7fffffff; return _seed/0x7fffffff; }
+function mische(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function level(){ return Math.min(LEVELS.length-1, Math.floor(state.xp/XP_PRO_LEVEL)); }
+function xpImLevel(){ return state.xp - level()*XP_PRO_LEVEL; }
+function gebietFortschritt(gid){
+  const fr=FRAGEN.map((f,i)=>({f,i})).filter(o=>o.f.g===gid);
+  const beantwortet=fr.filter(o=>state.gelernt[o.i]).length;
+  const richtig=fr.filter(o=>state.gelernt[o.i]&&state.gelernt[o.i].richtig).length;
+  return {gesamt:fr.length,beantwortet,richtig,pct:fr.length?Math.round(beantwortet/fr.length*100):0};
+}
+function sprich(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='de-DE'; u.rate=0.95;
+  window.speechSynthesis.speak(u);
+}
+function stopSprich(){ if('speechSynthesis' in window) window.speechSynthesis.cancel(); }
+function frageVorlesen(fr, perm){
+  const buchst=['A','B','C'];
+  const reihenfolge=perm||[0,1,2];
+  sprich(fr.f + ". " + reihenfolge.map((orig,i)=>"Antwort "+buchst[i]+": "+fr.a[orig]).join(". "));
+}
+function aktivePerm(idx){
+  if(state.lernSitzung&&state.lernSitzung.perms&&state.lernSitzung.perms[idx]) return state.lernSitzung.perms[idx];
+  if(state.pruefung&&state.pruefung.perms&&state.pruefung.perms[idx]) return state.pruefung.perms[idx];
+  return null;
+}
+function konfetti(){
+  const symbole=["🎉","🐟","⭐","🎣","💙","🏆"];
+  for(let i=0;i<36;i++){
+    const s=document.createElement('div');
+    s.className='konfetti'; s.textContent=symbole[Math.floor(rnd()*symbole.length)];
+    s.style.left=(rnd()*100)+'vw';
+    s.style.animationDuration=(2.2+rnd()*2.2)+'s';
+    s.style.animationDelay=(rnd()*0.9)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),5200);
+  }
+}
+const LOGO_SVG = `<svg viewBox="0 0 64 64" fill="none"><path d="M8 32c8-12 22-18 34-14l12-8-3 14 3 14-12-8c-12 4-26-2-34-14z" transform="translate(0 6)" fill="#ffb43a"/><circle cx="20" cy="34" r="3" fill="#06304d"/><path d="M46 10l6 10-12 1z" fill="#ffb43a" opacity=".85"/></svg>`;
+const FISCH_DEKO = `<svg class="fisch-deko" viewBox="0 0 240 110" fill="none">
+ <path d="M20 55C50 20 110 8 150 30l40-22-8 40 8 40-40-22c-40 22-100 10-130-25z" fill="url(#g1)"/>
+ <circle cx="60" cy="52" r="6" fill="#06304d"/><circle cx="62" cy="50" r="2" fill="#fff"/>
+ <path d="M95 38c14-6 34-6 48 0M95 70c14 6 34 6 48 0" stroke="#06304d" stroke-opacity=".25" stroke-width="3" stroke-linecap="round"/>
+ <defs><linearGradient id="g1" x1="20" y1="20" x2="200" y2="90"><stop stop-color="#1179ae"/><stop offset="1" stop-color="#19b47a"/></linearGradient></defs></svg>`;
+
+/* =========================== RENDER =========================== */
+const $=s=>document.querySelector(s);
+function render(){
+  const app=$('#app');
+  if(state.view==='region'){ app.innerHTML=viewRegion(); return; }
+  if(state.view==='rolle'){ app.innerHTML=viewRolle(); return; }
+  if(!state.user && state.view!=='impressum' && state.view!=='datenschutz' && state.view!=='pruefungsinfo'){ app.innerHTML=viewAuth(); return; }
+  if(!state.user){ app.innerHTML=`<main>${aktuelleView()}</main>`; return; }
+  app.innerHTML=kopf()+`<main>${aktuelleView()}${state.view==='dashboard'?fusszeile():''}</main>`;
+}
+function aktuelleView(){
+  switch(state.view){
+    case 'dashboard': return state.rolle==='ausbilder'?viewAusbilder():viewDashboard();
+    case 'lernsitzung': return viewLernSitzung();
+    case 'pruefung': return viewPruefung();
+    case 'ergebnis': return viewErgebnis();
+    case 'videos': return viewVideos();
+    case 'lehrplan': return viewLehrplan();
+    case 'schueler': return viewSchueler();
+    case 'pruefungsinfo': return viewPruefungsinfo();
+    case 'impressum': return viewImpressum();
+    case 'datenschutz': return viewDatenschutz();
+    default: return viewDashboard();
+  }
+}
+function kopf(){
+  const reg=REGIONEN.find(r=>r.id===state.region);
+  const rolleTxt=state.rolle==='ausbilder'?'👨‍🏫':'🎓';
+  const name=state.profil&&state.profil.name?state.profil.name.split(' ')[0]:'';
+  return `<header class="top">
+    <div class="logo" onclick="go('dashboard')">${LOGO_SVG} Angel<span class="up">Up</span></div>
+    <div class="kopf-rechts">
+      <span class="chip">📍 ${reg?reg.name:''}</span>
+      <span class="chip">${rolleTxt} ${name} <button onclick="logout()">abmelden</button></span>
+      ${state.rolle==='pruefling'?`<span class="chip">⭐ <b>${state.xp}</b> XP</span>`:''}
+    </div>
+  </header>`;
+}
+
+/* =========================== REGION =========================== */
+function viewRegion(){
+  const karten=REGIONEN.map(r=>{
+    if(r.aktiv) return `<div class="karte klick region" onclick="setRegion('${r.id}')">
+      <span class="aktiv-tag">Verfügbar</span><h3>📍 ${r.name}</h3><p>${r.traeger}</p>
+      <p style="margin-top:8px;font-weight:700;color:var(--gruen-dkl)">Jetzt lernen →</p></div>`;
+    return `<div class="karte region gesperrt"><span class="bald">Bald</span><h3>📍 ${r.name}</h3><p>${r.traeger}</p></div>`;
+  }).join('');
+  return `<div class="held">
+    ${FISCH_DEKO}
+    <h1>Angel<span style="color:var(--akzent2)">Up</span> 🎣</h1>
+    <p class="unter">Deine moderne Vorbereitung auf die Fischerprüfung – lernen mit Spaß, üben wie in der echten Prüfung, bestehen mit Sicherheit.</p>
+    <main style="padding-top:0">
+      <h2 style="text-align:center">Wo machst du deine Prüfung?</h2>
+      <div class="region-karten">${karten}</div>
+      <div class="hinweis blau" style="max-width:640px;margin:22px auto">
+        <strong>Hinweis:</strong> Weitere Regionen (Niedersachsen Binnen, NRW, Bremen) werden nach dem Start ergänzt. Die Fragen stammen aus dem offiziellen Weser-Ems-Katalog (310 eingepflegt) – dazu 17 Bild-Fragen mit echten Fotos zur Fischerkennung heimischer Arten.
+      </div>
+    </main>
+  </div>`;
+}
+function setRegion(id){ state.region=id; state.view='rolle'; render(); }
+function regionWechseln(){ stopSprich(); stopTimer(); state.region=null; state.view='region'; render(); }
+
+/* =========================== LOGIN / REGISTRIERUNG =========================== */
+function viewRolle(){ return viewAuth(); }
+function viewAuth(){
+  const t=state.authTab;
+  const meld=state.authMeldung?`<div class="hinweis ${state.authMeldung.ok?'blau':''}" style="text-align:left">${state.authMeldung.text}</div>`:'';
+  const tabs=`<div style="display:flex;gap:8px;justify-content:center;margin-bottom:18px">
+    <button class="btn ${t==='login'?'':'ghost'}" onclick="authTab('login')">Anmelden</button>
+    <button class="btn ${t==='register'?'':'ghost'}" onclick="authTab('register')">Registrieren</button>
+  </div>`;
+  const feld=(id,label,typ,ph)=>`<label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">${label}</label>
+    <input id="${id}" type="${typ}" placeholder="${ph}" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">`;
+  let form='';
+  if(t==='login'){
+    form=`${feld('a_email','E-Mail','email','du@beispiel.de')}
+    ${feld('a_pw','Passwort','password','••••••••')}
+    <button class="btn gross" style="margin-top:16px" onclick="loginKlick()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Anmelden'}</button>
+    <button class="zurueck" style="margin-top:10px" onclick="pwVergessen()">Passwort vergessen?</button>`;
+  } else {
+    form=`${feld('a_name','Dein Name','text','Vorname Nachname')}
+    ${feld('a_email','E-Mail','email','du@beispiel.de')}
+    ${feld('a_pw','Passwort (mind. 6 Zeichen)','password','••••••••')}
+    <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Ich bin …</label>
+    <select id="a_rolle" onchange="document.getElementById('a_extra_wrap').style.display=this.value==='ausbilder'?'block':'block';document.getElementById('a_extra_label').textContent=this.value==='ausbilder'?'Ausbilder-Freischaltcode':'Kurs-Code vom Ausbilder (optional)'"
+      style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit;background:#fff">
+      <option value="pruefling">🎓 Prüfling</option>
+      <option value="ausbilder">👨‍🏫 Ausbilder</option>
+    </select>
+    <div id="a_extra_wrap">
+      <label id="a_extra_label" style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Kurs-Code vom Ausbilder (optional)</label>
+      <input id="a_extra" type="text" placeholder="z.B. WE-A1B2C3" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">
+    </div>
+    <button class="btn gross gruen" style="margin-top:16px" onclick="registerKlick()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Kostenlos registrieren'}</button>
+    <p style="font-size:.72rem;color:var(--grau);margin-top:10px">Mit der Registrierung akzeptierst du die <a href="#" onclick="go('datenschutz');return false" style="color:var(--wasser)">Datenschutzerklärung</a>. Du bekommst eine Bestätigungs-E-Mail.</p>`;
+  }
+  return `<div class="held">
+    ${FISCH_DEKO}
+    <h1>Angel<span style="color:var(--akzent2)">Up</span> 🎣</h1>
+    <p class="unter">Melde dich an, um deinen Lernfortschritt zu speichern – auf jedem Gerät.</p>
+    <main style="padding-top:0;max-width:430px">
+      <div class="karte" style="text-align:center">${tabs}${meld}${form}</div>
+      <div class="karte" style="text-align:center;margin-top:14px">
+        <h3 style="margin:0 0 6px">Lieber mit Ausbilder vor Ort lernen?</h3>
+        <p style="font-size:.85rem;color:var(--grau);margin:0 0 12px">Vorbereitungslehrgang mit anschließender Fischerprüfung – die Plätze sind begrenzt.</p>
+        <a class="btn gross blau" href="kurs.html" style="text-decoration:none">Anmeldung zum Präsenzkurs</a>
+      </div>
+      ${fusszeile()}
+    </main>
+  </div>`;
+}
+function authTab(t){ state.authTab=t; state.authMeldung=null; render(); }
+async function loginKlick(){
+  if(!sb){ state.authMeldung={text:'Verbindung zum Login-Server fehlgeschlagen. Bitte Seite neu laden.'}; return render(); }
+  const email=document.getElementById('a_email').value.trim(), pw=document.getElementById('a_pw').value;
+  if(!email||!pw){ state.authMeldung={text:'Bitte E-Mail und Passwort eingeben.'}; return render(); }
+  state.authBusy=true; render();
+  const {error}=await sb.auth.signInWithPassword({email, password:pw});
+  state.authBusy=false;
+  if(error){
+    state.authMeldung={text: error.message.includes('Invalid login')?'E-Mail oder Passwort falsch.':error.message.includes('not confirmed')?'Bitte bestätige zuerst deine E-Mail (Posteingang prüfen).':'Anmeldung fehlgeschlagen: '+error.message};
+    return render();
+  }
+  await nachLogin();
+}
+async function registerKlick(){
+  if(!sb){ state.authMeldung={text:'Verbindung zum Login-Server fehlgeschlagen. Bitte Seite neu laden.'}; return render(); }
+  const name=document.getElementById('a_name').value.trim();
+  const email=document.getElementById('a_email').value.trim();
+  const pw=document.getElementById('a_pw').value;
+  const rolle=document.getElementById('a_rolle').value;
+  const extra=document.getElementById('a_extra').value.trim();
+  if(!name||!email||pw.length<6){ state.authMeldung={text:'Bitte Name, E-Mail und ein Passwort mit mind. 6 Zeichen eingeben.'}; return render(); }
+  if(rolle==='ausbilder' && extra!==AUSBILDER_FREISCHALTCODE){
+    state.authMeldung={text:'Der Ausbilder-Freischaltcode stimmt nicht. Du bekommst ihn vom AngelUp-Team.'}; return render();
+  }
+  state.authBusy=true; render();
+  const {error}=await sb.auth.signUp({email, password:pw,
+    options:{ data:{ name, rolle, kurs_code: rolle==='pruefling'?extra.toUpperCase():'' },
+      emailRedirectTo: location.origin + location.pathname }});
+  state.authBusy=false;
+  if(error){ state.authMeldung={text:'Registrierung fehlgeschlagen: '+error.message}; return render(); }
+  state.authMeldung={ok:true, text:'📧 Fast geschafft! Wir haben dir eine Bestätigungs-E-Mail geschickt. Klicke auf den Link darin, dann kannst du dich anmelden.'};
+  state.authTab='login'; render();
+}
+async function pwVergessen(){
+  const email=document.getElementById('a_email')?document.getElementById('a_email').value.trim():'';
+  if(!email){ state.authMeldung={text:'Gib oben deine E-Mail ein und klicke dann auf „Passwort vergessen".'}; return render(); }
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo: location.origin+location.pathname});
+  state.authMeldung=error?{text:'Fehler: '+error.message}:{ok:true,text:'📧 E-Mail zum Zurücksetzen ist unterwegs.'};
+  render();
+}
+async function nachLogin(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user) return;
+  state.user=user;
+  const {data:profil}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  state.profil=profil||{name:'',rolle:'pruefling',soll_min:600};
+  state.rolle=state.profil.rolle;
+  state.xp=state.profil.xp||0; state.besteStreak=state.profil.beste_streak||0;
+  state.lernzeitSek=state.profil.lernzeit_sek||0;
+  // Fortschritt laden
+  const {data:fs}=await sb.from('fortschritt').select('*').eq('user_id',user.id);
+  state.gelernt={}; state.fehlerkiste=new Set();
+  (fs||[]).forEach(r=>{ state.gelernt[r.frage_idx]={richtig:r.richtig,versuche:r.versuche,fehlversuche:r.fehlversuche}; if(!r.richtig) state.fehlerkiste.add(r.frage_idx); });
+  const {count:simsG}=await sb.from('simulationen').select('*',{count:'exact',head:true}).eq('user_id',user.id);
+  const {count:simsB}=await sb.from('simulationen').select('*',{count:'exact',head:true}).eq('user_id',user.id).eq('bestanden',true);
+  state.simsGesamt=simsG||0; state.simsBestanden=simsB||0;
+  if(!state.region) state.region='weser-ems';
+  state.view='dashboard'; render();
+}
+async function logout(){ stopSprich(); stopTimer(); await sb.auth.signOut();
+  state.user=null; state.profil=null; state.rolle=null; state.view='rolle'; state.gelernt={}; state.fehlerkiste=new Set(); state.xp=0; render(); }
+function rolleWechseln(){ logout(); }
+
+/* ---- Cloud-Speicherung ---- */
+async function speichereFortschritt(idx){
+  if(!state.user) return;
+  const e=state.gelernt[idx]; const fr=FRAGEN[idx];
+  await sb.from('fortschritt').upsert({user_id:state.user.id, frage_idx:idx, gebiet:fr.g,
+    richtig:e.richtig, versuche:e.versuche, fehlversuche:e.fehlversuche, updated_at:new Date().toISOString()});
+  speichereStats();
+}
+let _statsTimer=null;
+function speichereStats(){
+  if(!state.user) return;
+  clearTimeout(_statsTimer);
+  _statsTimer=setTimeout(async ()=>{
+    await sb.from('profiles').update({xp:state.xp, beste_streak:state.besteStreak, lernzeit_sek:state.lernzeitSek}).eq('id',state.user.id);
+  }, 1500);
+}
+async function speichereSimulation(p){
+  if(!state.user) return;
+  await sb.from('simulationen').insert({user_id:state.user.id, richtig:p.ergebnis.richtigGesamt,
+    gesamt:p.reihe.length, bestanden:p.bestanden, pro_gebiet:p.ergebnis.proGebiet});
+  speichereStats();
+}
+setInterval(()=>{ if(state.user && (state.view==='lernsitzung'||state.view==='pruefung')) speichereStats(); }, 60000);
+
+/* ---- Fußzeile mit Pflichtseiten ---- */
+function fusszeile(){
+  return `<div style="text-align:center;margin-top:30px;font-size:.78rem;color:var(--grau)">
+    <a href="#" onclick="go('pruefungsinfo');return false" style="color:var(--grau)">So läuft die Prüfung</a> ·
+    <a href="kurs.html" style="color:var(--grau)">Präsenzkurs</a> ·
+    <a href="#" onclick="go('impressum');return false" style="color:var(--grau)">Impressum</a> ·
+    <a href="#" onclick="go('datenschutz');return false" style="color:var(--grau)">Datenschutz</a>
+    ${state.user?` · <a href="#" onclick="logout();return false" style="color:var(--grau)">Abmelden</a>`:''}
+  </div>`;
+}
+/* ===================== SO LÄUFT DIE PRÜFUNG ===================== */
+function viewPruefungsinfo(){
+  const r=regeln();
+  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
+  <h1>So läuft die Prüfung</h1>
+  <p class="lead">Ablauf und Bestehensgrenze für den Bezirk Weser-Ems – zusammengefasst aus der offiziellen Prüfungsordnung.</p>
+
+  <div class="karte" style="border-left:6px solid var(--akzent);margin-bottom:14px">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:linear-gradient(120deg,var(--akzent),var(--akzent2))">🎯</span>
+      <div><h3 style="margin:0">Bestehensgrenze</h3>
+      <span class="zahlen">Beide Bedingungen müssen erfüllt sein</span></div></div>
+    <table class="gebiete" style="margin-top:6px">
+      <tbody>
+        <tr><td>Richtige Antworten insgesamt</td><td class="zahl"><b>mind. ${r.bestehenGesamt}</b> von ${r.fragenGesamt}</td></tr>
+        <tr><td>Richtige Antworten je Sachgebiet</td><td class="zahl"><b>mind. ${r.bestehenProGebiet}</b> von ${r.fragenProGebiet}</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.86rem;color:var(--grau);margin-top:8px">Wird eine der beiden Bedingungen nicht erfüllt, gilt der theoretische Teil als nicht bestanden – dann folgt auch keine praktische Prüfung mehr.</p>
+  </div>
+
+  <h2>📝 Theoretischer Teil</h2>
+  <div class="karte" style="font-size:.93rem;line-height:1.75;margin-bottom:14px">
+    <p>Es gibt mehrere Prüfungsbögen mit jeweils <strong>${r.fragenGesamt} Fragen</strong> aus den sechs Sachgebieten. Vor Beginn vergewissert sich der Prüfungsausschuss, dass alle Teilnehmer den Fragebogen lesen und verstehen können.</p>
+    <p>Nach dem Austeilen trägst du deine Personaldaten auf dem Deckblatt ein. Prüfungsort und -datum stehen bereits auf dem Bogen.</p>
+    <p>Für die Beantwortung hast du <strong>bis zu ${r.zeitMinuten} Minuten</strong>. Ausgewertet wird anschließend mit Schablonen; die Punktzahl wird protokolliert, aber nicht öffentlich bekannt gegeben.</p>
+    <p style="font-size:.86rem;color:var(--grau)">In Ausnahmefällen kann die Prüfungskommission einen Nachteilsausgleich gewähren.</p>
+  </div>
+
+  <h2>🎣 Praktischer Teil</h2>
+  <div class="karte" style="font-size:.93rem;line-height:1.75;margin-bottom:14px">
+    <p>Du stellst gebrauchsfertige Angelgeräte nach Vorgabe des Prüfungsausschusses zusammen und zeigst, dass du sie sicher handhabst – auch im tier- und naturschutzrechtlichen Sinne.</p>
+    <p>Das <strong>tierschutzgerechte Behandeln, Töten und Schlachten</strong> von Fischen wird mündlich abgefragt. Über das Bestehen dieses Teils entscheidet der Vorsitzende.</p>
+    <p>Die Geräte stellt der ausrichtende Fischereiverein bzw. dein Ausbilder bereit.</p>
+  </div>
+
+  <h2>🔁 Wiederholung</h2>
+  <div class="karte" style="font-size:.93rem;line-height:1.75;margin-bottom:14px">
+    <p>Wer im theoretischen oder praktischen Teil durchfällt, zahlt beim Verein, bei dem wiederholt wird, eine reduzierte Prüfungsgebühr. Liegt die Wiederholung mehr als 12 Monate zurück, ist ein kompletter Lehrgang erneut zu besuchen.</p>
+  </div>
+
+  <div class="karte" style="border-left:6px solid var(--gruen)">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:var(--gruen)">📝</span>
+      <div><h3 style="margin:0">Übe unter echten Bedingungen</h3>
+      <span class="zahlen">${r.fragenGesamt} Fragen · ${r.zeitMinuten} Min · gleiche Bestehensgrenze</span></div></div>
+    ${state.user
+      ? `<button class="btn gross" onclick="startPruefung()">Prüfung jetzt simulieren</button>`
+      : `<button class="btn gross" onclick="go('rolle')">Kostenlos starten</button>`}
+  </div>
+
+  <p style="font-size:.78rem;color:var(--grau);margin-top:14px">Quelle: Durchführungsbestimmungen zur Fischerprüfung (Stand 3/2026), Angelfischerverband im Landesfischereiverband Weser-Ems e.V. – sinngemäß zusammengefasst. Verbindlich ist immer die Originalfassung des Verbands.</p>
+  ${fusszeile()}`;
+}
+
+function viewImpressum(){
+  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
+  <h1>Impressum</h1>
+  <div class="karte" style="font-size:.92rem;line-height:1.8">
+    <p><strong>Angaben gemäß § 5 DDG</strong></p>
+    <p>Mark Schwarze<br>Alter Postweg 80<br>26607 Aurich<br>Deutschland</p>
+    <p><strong>Kontakt:</strong><br>E-Mail: bwt.schwarze@gmail.com</p>
+    <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong><br>Mark Schwarze, Anschrift wie oben</p>
+    <p style="font-size:.8rem;color:var(--grau)">Plattform der EU-Kommission zur Online-Streitbeilegung: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.
+    Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </div>
+  ${fusszeile()}`;
+}
+function viewDatenschutz(){
+  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
+  <h1>Datenschutzerklärung</h1>
+  <div class="karte" style="font-size:.9rem;line-height:1.7">
+    <p><strong>1. Verantwortlicher</strong><br>Mark Schwarze, Alter Postweg 80, 26607 Aurich, E-Mail: bwt.schwarze@gmail.com</p>
+    <p><strong>2. Welche Daten wir verarbeiten</strong><br>
+    Bei der Registrierung: Name, E-Mail-Adresse und Passwort (verschlüsselt gespeichert). Während der Nutzung: dein Lernfortschritt (beantwortete Fragen, Ergebnisse von Prüfungssimulationen, Lernzeit) sowie – falls du einem Kurs beigetreten bist – die Zuordnung zu deinem Ausbilder. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Lernplattform).</p>
+    <p><strong>3. Wer deine Daten sieht</strong><br>
+    Dein Ausbilder sieht deinen Lernstand, deine Lernzeit und deine Simulationsergebnisse, wenn du seinem Kurs per Kurs-Code beigetreten bist. Andere Nutzer sehen deine Daten nicht.</p>
+    <p><strong>4. Hosting &amp; Auftragsverarbeiter</strong><br>
+    Die Website wird über GitHub Pages (GitHub B.V./GitHub Inc.) ausgeliefert; dabei fallen technisch notwendige Server-Logs (z.B. IP-Adresse) an. Konten und Lerndaten werden bei Supabase gespeichert – Serverstandort Frankfurt am Main (EU). E-Mails (Registrierungs-Bestätigung, Passwort zurücksetzen) werden über Supabase versendet.</p>
+    <p><strong>5. Cookies &amp; lokale Speicherung</strong><br>
+    AngelUp verwendet keine Werbe- oder Tracking-Cookies. Für die Anmeldung wird eine Sitzung lokal in deinem Browser gespeichert (technisch notwendig).</p>
+    <p><strong>6. Externe Links</strong><br>
+    Die Praxis-Videos verlinken auf YouTube. Erst wenn du einen Link anklickst, gelten die Datenschutzbestimmungen von YouTube/Google.</p>
+    <p><strong>7. Deine Rechte</strong><br>
+    Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO) sowie ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Zur Löschung deines Kontos genügt eine E-Mail an bwt.schwarze@gmail.com.</p>
+    <p style="font-size:.78rem;color:var(--grau)">Stand: Juli 2026</p>
+  </div>
+  ${fusszeile()}`;
+}
+
+/* =========================== PRÜFLING – DASHBOARD =========================== */
+function viewDashboard(){
+  const lvl=level();
+  const r=regeln();
+  const fehlerAnzahl=state.fehlerkiste.size;
+  const gebietsKarten=GEBIETE.map(g=>{
+    const fp=gebietFortschritt(g.id);
+    return `<div class="karte gebiet-karte">
+      <div class="gebiet-kopf"><span class="gebiet-icon" style="background:${g.farbe}">${g.icon}</span>
+        <div><h3>${g.name}</h3><span class="zahlen">${fp.beantwortet}/${fp.gesamt} geübt${fp.beantwortet?` · ${fp.richtig} richtig`:''}</span></div></div>
+      <div class="fortschritt"><span style="width:${fp.pct}%;background:${g.farbe}"></span></div>
+      <button class="btn ghost" style="width:100%" onclick="startLernen(${g.id})">Lernen</button>
+    </div>`;
+  }).join('');
+  const abzeichen=[
+    {sym:"🐟", name:"Erste Frage", holt:Object.keys(state.gelernt).length>0},
+    {sym:"🔥", name:"5er-Serie", holt:state.besteStreak>=5},
+    {sym:"⭐", name:"Level 2 erreicht", holt:lvl>=1},
+    {sym:"📝", name:"Erste Simulation", holt:state.simsGesamt>0},
+    {sym:"🏆", name:"Prüfung bestanden", holt:state.simsBestanden>0}
+  ].map(a=>`<span class="ab ${a.holt?'holt':'grau'}">${a.sym} ${a.name}</span>`).join('');
+  return `
+  <h1>Moin! 👋</h1>
+  <p class="lead">Weiter geht's – jede Frage bringt dich näher an deinen Angelschein.</p>
+
+  <div class="statusleiste">
+    <div class="stat"><span class="sym">🏅</span><div><div class="wert">${LEVELS[lvl]}</div><div class="label">Level ${lvl+1}</div>
+      <div class="xp-balken"><span style="width:${Math.round(xpImLevel()/XP_PRO_LEVEL*100)}%"></span></div></div></div>
+    <div class="stat"><span class="sym">⭐</span><div><div class="wert">${state.xp} XP</div><div class="label">gesammelt</div></div></div>
+    <div class="stat"><span class="sym">🔥</span><div><div class="wert">${state.streak}</div><div class="label">Serie (Rekord: ${state.besteStreak})</div></div></div>
+    <div class="stat"><span class="sym">📝</span><div><div class="wert">${state.simsBestanden}/${state.simsGesamt}</div><div class="label">Simulationen bestanden</div></div></div>
+    <div class="stat"><span class="sym">⏱️</span><div><div class="wert">${lernzeitFormat(state.lernzeitSek)}</div><div class="label">Lernzeit</div></div></div>
+  </div>
+
+  <div class="karte" style="border-left:6px solid var(--akzent);margin-bottom:14px">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:linear-gradient(120deg,var(--akzent),var(--akzent2))">📝</span>
+      <div><h3 style="margin:0">Prüfungssimulation</h3>
+      <span class="zahlen">${r.fragenGesamt} Fragen · ${r.zeitMinuten} Min · bestanden ab ${r.bestehenGesamt} richtigen + mind. ${r.bestehenProGebiet} je Sachgebiet</span></div></div>
+    <button class="btn gross" onclick="startPruefung()">Prüfung jetzt simulieren</button>
+    <button class="btn ghost" style="width:100%;margin-top:8px" onclick="go('pruefungsinfo')">ℹ️ So läuft die Prüfung ab</button>
+  </div>
+
+  ${fehlerAnzahl?`
+  <div class="karte" style="border-left:6px solid var(--rot);margin-bottom:14px">
+    <div class="gebiet-kopf"><span class="gebiet-icon" style="background:var(--rot)">🧰</span>
+      <div><h3 style="margin:0">Deine Fehlerkiste</h3>
+      <span class="zahlen">${fehlerAnzahl} Frage${fehlerAnzahl===1?'':'n'} warten auf Revanche – mit Erklärungen & Eselsbrücken</span></div></div>
+    <button class="btn gruen gross" onclick="startFehlerkiste()">Fehler jetzt ausbügeln</button>
+  </div>`:''}
+
+  <h2>📚 Nach Sachgebiet lernen</h2>
+  <div class="karten">${gebietsKarten}</div>
+
+  <h2>🎬 Videokurs & Praxis</h2>
+  <p class="lead" style="margin-bottom:10px">Unser eigener Videokurs führt dich Modul für Modul durch alle sechs Sachgebiete. Dazu Knoten, Montagen &amp; Co. für die Praxisprüfung.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn gruen" href="lernen.html">Zum Videokurs</a>
+    <button class="btn blau" onclick="go('videos')">Praxis-Videos</button>
+  </div>
+
+  <h2>🎓 Lehrgang &amp; Prüfung</h2>
+  <p class="lead" style="margin-bottom:10px">Du brauchst noch den Pflichtlehrgang und den Prüfungstermin? Wir machen beides in Aurich.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn blau" href="kurs.html">Lehrgang ansehen</a>
+    <a class="btn ghost" href="index.html?start=web">Zur Website</a>
+  </div>
+
+  <h2>🏅 Deine Abzeichen</h2>
+  <div class="abzeichen">${abzeichen}</div>`;
+}
+
+/* =========================== LERNMODUS =========================== */
+function machePerms(reihe){
+  const perms={}; reihe.forEach(idx=>perms[idx]=mische([0,1,2])); return perms;
+}
+function startLernen(gid){
+  stopSprich();
+  const idxs=FRAGEN.map((f,i)=>({f,i})).filter(o=>o.f.g===gid).map(o=>o.i);
+  const reihe=mische(idxs);
+  state.lernSitzung={titel:GEBIETE.find(g=>g.id===gid).name, farbe:GEBIETE.find(g=>g.id===gid).farbe,
+    icon:GEBIETE.find(g=>g.id===gid).icon, reihe, perms:machePerms(reihe), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0, hilfeAn:false};
+  state.view='lernsitzung'; render(); autoVorlesen();
+}
+function startFehlerkiste(){
+  stopSprich();
+  const idxs=mische([...state.fehlerkiste]);
+  if(!idxs.length) return;
+  state.lernSitzung={titel:"Fehlerkiste", farbe:"var(--rot)", icon:"🧰",
+    reihe:idxs, perms:machePerms(idxs), pos:0, gewaehlt:null, aufgedeckt:false, richtige:0, hilfeAn:false};
+  state.view='lernsitzung'; render(); autoVorlesen();
+}
+function autoVorlesen(){
+  if(state.vorlesen && state.lernSitzung){
+    const idx=state.lernSitzung.reihe[state.lernSitzung.pos];
+    frageVorlesen(FRAGEN[idx], aktivePerm(idx));
+  }
+}
+// Wikimedia-Commons-Fischbilder (Special:FilePath liefert stabile Redirect-URL auf upload.wikimedia.org)
+// Attribution und Lizenz siehe Objekt pro Fisch – Lizenz-Text wird unter jedem Bild angezeigt.
+const FISCHBILDER = {
+  karpfen:            { file:"Common_carp.jpg",                                autor:"USFWS",                       lizenz:"Public Domain" },
+  hecht:              { file:"Esox_lucius1.jpg",                                autor:"Timothy Knepp (USFWS)",       lizenz:"Public Domain" },
+  zander:             { file:"Sander_lucioperca_1.jpg",                         autor:"eLNuko",                      lizenz:"Public Domain" },
+  bachforelle:        { file:"Salmo_trutta.jpg",                                autor:"Eric Engbretson / USFWS",     lizenz:"Public Domain" },
+  bachsaibling:       { file:"Salvelinus fontinalis.jpg",                       autor:"Eric Engbretson",             lizenz:"Public Domain" },
+  regenbogenforelle:  { file:"Oncorhynchus_mykiss.jpg",                         autor:"Eric Engbretson / USFWS",     lizenz:"Public Domain" },
+  aal:                { file:"Anguilla_anguilla.jpg",                           autor:"GerardM",                     lizenz:"CC BY-SA 3.0" },
+  barsch:             { file:"Perca_fluviatilis_1.jpg",                         autor:"Fishjagercz",                 lizenz:"CC BY-SA 4.0" },
+  wels:               { file:"Silurus_glanis1.jpg",                             autor:"Wikimedia Commons",           lizenz:"Public Domain" },
+  schleie:            { file:"Tinca_tinca_Prague_Vltava_3.jpg",                 autor:"Karelj",                      lizenz:"Public Domain" },
+  rotauge:            { file:"Rutilus_rutilus_Prague_Vltava_2.jpg",             autor:"Karelj",                      lizenz:"Public Domain" },
+  rotfeder:           { file:"Scardinius erythropthalmus 2009 G1.jpg",          autor:"George Chernilevsky",         lizenz:"Public Domain" },
+  brassen:            { file:"Abramis_brama_Prague_Vltava_1.jpg",               autor:"Karelj",                      lizenz:"Public Domain" },
+  karausche:          { file:"Carassius_carassius_Prague_Vltava_1.jpg",         autor:"Karelj",                      lizenz:"Public Domain" },
+  barbe:              { file:"Barbus barbus in Losse - DE.jpg",                 autor:"Bernd Sauerwein",             lizenz:"CC BY-SA 3.0" },
+  dorsch:             { file:"Gadus_morhua_Cod-2b-Atlanterhavsparken-Norway.JPG", autor:"Hans-Petter Fjeld",         lizenz:"CC BY-SA 2.5" },
+  hornhecht:          { file:"Belone_belone.jpg",                               autor:"Wikimedia Commons",           lizenz:"Public Domain" }
+};
+function bildHTML(fr){
+  if(!fr.bild) return '';
+  const b = FISCHBILDER[fr.bild];
+  if(!b) return '';
+  const fileEnc = encodeURIComponent(b.file);
+  const src = `https://commons.wikimedia.org/wiki/Special:FilePath/${fileEnc}?width=700`;
+  const quelle = `https://commons.wikimedia.org/wiki/File:${fileEnc}`;
+  return `<figure class="fischfig">
+    <img class="fischbild" src="${src}" alt="Foto: ${fr.bild}" onerror="this.style.display='none';this.nextElementSibling.textContent='Bild konnte nicht geladen werden'">
+    <figcaption>Bild: <a href="${quelle}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${b.autor} · ${b.lizenz}</figcaption>
+  </figure>`;
+}
+function viewLernSitzung(){
+  const s=state.lernSitzung; const idx=s.reihe[s.pos]; const fr=FRAGEN[idx];
+  const pct=Math.round(s.pos/s.reihe.length*100);
+  const eintrag=state.gelernt[idx];
+  const oftFalsch=eintrag&&eintrag.fehlversuche>=2;
+  const bruecke=ESELSBRUECKEN[fr.f];
+  const perm=s.perms[idx];
+  const antwortenHtml=perm.map((orig,i)=>{
+    let cls='antwort';
+    if(s.aufgedeckt){ if(orig===fr.r) cls+=' richtig'; else if(orig===s.gewaehlt) cls+=' falsch'; }
+    else if(orig===s.gewaehlt) cls+=' gewaehlt';
+    return `<button class="${cls}" onclick="lernWaehle(${orig})" ${s.aufgedeckt?'disabled':''}>
+      <span class="buchstabe">${['A','B','C'][i]}</span><span>${fr.a[orig]}</span></button>`;
+  }).join('');
+  let unten='';
+  if(s.aufgedeckt){
+    const richtig=s.gewaehlt===fr.r;
+    unten=`<div class="erklaerung ${richtig?'gut':'schlecht'}">
+      <div class="titel">${richtig?'✅ Richtig! +10 XP':'❌ Leider falsch. Die richtige Antwort ist '+['A','B','C'][perm.indexOf(fr.r)]+':'}</div>
+      ${richtig?'':`<div style="font-weight:650;margin-bottom:5px">„${fr.a[fr.r]}“</div>`}
+      <div>${fr.e}</div>
+    </div>`;
+    if(!richtig && oftFalsch && bruecke){
+      unten+=`<div class="eselsbruecke"><div class="titel">🫏 Eselsbrücke – damit es sitzt:</div>${bruecke}</div>`;
+    }
+  } else if(s.hilfeAn){
+    // Erklärung auf Wunsch VOR der Beantwortung – falls die Frage selbst unklar ist
+    unten=`<div class="hilfebox"><div class="titel">💡 Erklärung zur Frage:</div><div>${fr.e}</div></div>`;
+  }
+  const hilfeLink = !s.aufgedeckt
+    ? `<button class="hilfe-link" onclick="lernHilfeToggle()">${s.hilfeAn?'Erklärung ausblenden':'❓ Frage nicht klar? Erklärung anzeigen'}</button>`
+    : '';
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
+  <div class="quizbox">
+    <div class="quiz-kopf">
+      <span class="badge" style="background:${s.farbe};color:#fff">${s.icon} ${s.titel}</span>
+      <span class="badge">Frage ${s.pos+1} / ${s.reihe.length}</span>
+      <span class="badge">🔥 ${state.streak}</span>
+    </div>
+    <div class="progressbalken"><span style="width:${pct}%"></span></div>
+    <div class="frage-zeile">
+      <div class="frage">${fr.f}</div>
+      <button class="sprecher ${state.vorlesen?'an':''}" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
+    </div>
+    ${bildHTML(fr)}
+    ${hilfeLink}
+    ${antwortenHtml}
+    ${unten}
+    <div class="quiz-fuss">
+      <label style="font-size:.8rem;color:var(--grau);display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" ${state.vorlesen?'checked':''} onchange="vorlesenToggle(this.checked)"> automatisch vorlesen
+      </label>
+      ${s.aufgedeckt
+        ? `<button class="btn" onclick="lernWeiter()">${s.pos+1<s.reihe.length?'Nächste Frage →':'Fertig ✓'}</button>`
+        : `<button class="btn" onclick="lernPruefen()" ${s.gewaehlt===null?'disabled':''}>Antwort prüfen</button>`}
+    </div>
+  </div>`;
+}
+function vorlesenKlick(idx){ frageVorlesen(FRAGEN[idx], aktivePerm(idx)); }
+function vorlesenToggle(an){ state.vorlesen=an; if(an) autoVorlesen(); else stopSprich(); }
+function lernWaehle(i){ if(state.lernSitzung.aufgedeckt) return; state.lernSitzung.gewaehlt=i; render(); }
+function lernHilfeToggle(){ const s=state.lernSitzung; s.hilfeAn=!s.hilfeAn; render(); }
+function lernPruefen(){
+  const s=state.lernSitzung; if(s.gewaehlt===null) return;
+  s.aufgedeckt=true;
+  const idx=s.reihe[s.pos]; const fr=FRAGEN[idx];
+  const richtig=s.gewaehlt===fr.r;
+  const alt=state.gelernt[idx]||{versuche:0,fehlversuche:0,richtig:false};
+  state.gelernt[idx]={richtig, versuche:alt.versuche+1, fehlversuche:alt.fehlversuche+(richtig?0:1)};
+  if(richtig){
+    s.richtige++; state.xp+=10; state.streak++;
+    state.besteStreak=Math.max(state.besteStreak,state.streak);
+    state.fehlerkiste.delete(idx);
+  } else {
+    state.xp+=2; state.streak=0; state.fehlerkiste.add(idx);
+  }
+  speichereFortschritt(idx);
+  if(state.vorlesen){
+    const e=richtig?"Richtig! ":"Leider falsch. Die richtige Antwort ist: "+fr.a[fr.r]+". ";
+    sprich(e+fr.e);
+  }
+  render();
+}
+function lernWeiter(){
+  const s=state.lernSitzung;
+  stopSprich();
+  if(s.pos+1<s.reihe.length){ s.pos++; s.gewaehlt=null; s.aufgedeckt=false; s.hilfeAn=false; render(); autoVorlesen(); }
+  else { state.view='dashboard'; state.lernSitzung=null; render(); }
+}
+
+/* =========================== PRÜFUNG =========================== */
+function startPruefung(){
+  stopSprich();
+  const r=regeln();
+  let auswahl=[];
+  GEBIETE.forEach(g=>{
+    const idxs=FRAGEN.map((f,i)=>({f,i})).filter(o=>o.f.g===g.id).map(o=>o.i);
+    auswahl=auswahl.concat(mische(idxs).slice(0,r.fragenProGebiet));
+  });
+  const reihe=mische(auswahl);
+  state.pruefung={reihe, perms:machePerms(reihe), antworten:{}, pos:0, restSek:r.zeitMinuten*60, abgegeben:false, zeitAus:false};
+  state.view='pruefung'; render(); startTimer();
+}
+function startTimer(){
+  stopTimer();
+  state.timerId=setInterval(()=>{
+    const p=state.pruefung; if(!p||p.abgegeben) return stopTimer();
+    p.restSek--;
+    const el=$('#timer');
+    if(el){ el.textContent=formatZeit(p.restSek); if(p.restSek<=300) el.parentElement.classList.add('knapp'); }
+    if(p.restSek<=0){ stopTimer(); pruefungAbgeben(true); }
+  },1000);
+}
+function stopTimer(){ if(state.timerId){ clearInterval(state.timerId); state.timerId=null; } }
+function formatZeit(s){ const m=Math.floor(s/60), r=s%60; return `${m}:${String(r).padStart(2,'0')}`; }
+/* Bestehensgrenze eines laufenden/abgegebenen Prüfungssatzes – skaliert auf die tatsächliche Fragenzahl */
+function schwellen(reihe){
+  const r=regeln();
+  const proGebiet={};
+  reihe.forEach(i=>proGebiet[FRAGEN[i].g]=(proGebiet[FRAGEN[i].g]||0)+1);
+  const gebietSchwelle={};
+  Object.keys(proGebiet).forEach(gid=>{
+    gebietSchwelle[gid]=Math.round(r.bestehenProGebiet/r.fragenProGebiet*proGebiet[gid]);
+  });
+  const werte=Object.values(gebietSchwelle);
+  return {
+    gesamt: Math.round(r.bestehenGesamt/r.fragenGesamt*reihe.length),
+    proGebiet: gebietSchwelle,
+    // nur sinnvoll anzuzeigen, wenn der Satz mehrere Sachgebiete umfasst und die Grenze überall gleich ist
+    jeGebietEinheitlich: werte.length>1 && werte.every(v=>v===werte[0]) ? werte[0] : null
+  };
+}
+
+function viewPruefung(){
+  const p=state.pruefung; const idx=p.reihe[p.pos]; const fr=FRAGEN[idx];
+  const g=GEBIETE.find(x=>x.id===fr.g);
+  const gewaehlt=p.antworten[idx];
+  const beantwortet=Object.keys(p.antworten).length;
+  const pct=Math.round(beantwortet/p.reihe.length*100);
+  const sw=schwellen(p.reihe);
+  const perm=p.perms[idx];
+  const antwortenHtml=perm.map((orig,i)=>`<button class="antwort${gewaehlt===orig?' gewaehlt':''}" onclick="pruefWaehle(${idx},${orig})">
+    <span class="buchstabe">${['A','B','C'][i]}</span><span>${fr.a[orig]}</span></button>`).join('');
+  return `
+  <div class="quizbox">
+    <div class="quiz-kopf">
+      <span class="badge">${g.icon} ${g.kurz}</span>
+      <span class="badge">Frage ${p.pos+1} / ${p.reihe.length}</span>
+      <span class="badge timer">⏱ <span id="timer">${formatZeit(p.restSek)}</span></span>
+    </div>
+    <div class="progressbalken"><span style="width:${pct}%"></span></div>
+    <div class="bestehen-leiste">🎯 Bestehensgrenze: <b>${sw.gesamt} von ${p.reihe.length}</b> richtig${sw.jeGebietEinheitlich?` · und mind. <b>${sw.jeGebietEinheitlich}</b> je Sachgebiet`:''}</div>
+    <div class="frage-zeile">
+      <div class="frage">${fr.f}</div>
+      <button class="sprecher" title="Frage vorlesen" onclick="vorlesenKlick(${idx})">🔊</button>
+    </div>
+    ${bildHTML(fr)}
+    ${antwortenHtml}
+    <div class="quiz-fuss">
+      <button class="btn ghost" onclick="pruefBlaettern(-1)" ${p.pos===0?'disabled':''}>← Zurück</button>
+      ${p.pos+1<p.reihe.length
+        ? `<button class="btn" onclick="pruefBlaettern(1)">Weiter →</button>`
+        : `<button class="btn gruen" onclick="pruefungAbgeben(false)">Prüfung abgeben ✓</button>`}
+    </div>
+    <div style="text-align:center;margin-top:14px;font-size:.82rem;color:var(--grau)">
+      ${beantwortet} von ${p.reihe.length} beantwortet
+      ${beantwortet===p.reihe.length&&p.pos+1<p.reihe.length?` · <button class="zurueck" style="display:inline;margin:0" onclick="pruefungAbgeben(false)">jetzt abgeben</button>`:''}
+    </div>
+  </div>`;
+}
+function pruefWaehle(idx,i){ state.pruefung.antworten[idx]=i; render(); }
+function pruefBlaettern(d){ const p=state.pruefung; p.pos=Math.max(0,Math.min(p.reihe.length-1,p.pos+d)); render(); }
+function pruefungAbgeben(zeitAus){
+  const p=state.pruefung; p.abgegeben=true; p.zeitAus=zeitAus; stopTimer(); stopSprich();
+  let richtigGesamt=0; const proGebiet={};
+  GEBIETE.forEach(g=>proGebiet[g.id]={richtig:0,gesamt:0});
+  p.reihe.forEach(idx=>{
+    const fr=FRAGEN[idx]; proGebiet[fr.g].gesamt++;
+    const ok=p.antworten[idx]===fr.r;
+    if(ok){ richtigGesamt++; proGebiet[fr.g].richtig++; }
+    else state.fehlerkiste.add(idx);
+    const alt=state.gelernt[idx]||{versuche:0,fehlversuche:0,richtig:false};
+    state.gelernt[idx]={richtig:ok, versuche:alt.versuche+1, fehlversuche:alt.fehlversuche+(ok?0:1)};
+  });
+  p.ergebnis={richtigGesamt, proGebiet};
+  state.simsGesamt++;
+  const sw=schwellen(p.reihe);
+  let alleOk=true;
+  GEBIETE.forEach(g=>{
+    const pg=p.ergebnis.proGebiet[g.id];
+    if(pg.gesamt>0 && pg.richtig<(sw.proGebiet[g.id]||0)) alleOk=false;
+  });
+  p.bestanden = richtigGesamt>=sw.gesamt && alleOk;
+  if(p.bestanden){ state.simsBestanden++; state.xp+=50; }
+  else state.xp+=15;
+  // Cloud: Simulation + kompletten Fragen-Fortschritt speichern
+  speichereSimulation(p);
+  if(state.user){
+    const rows=p.reihe.map(idx=>{ const e=state.gelernt[idx]; const fr=FRAGEN[idx];
+      return {user_id:state.user.id, frage_idx:idx, gebiet:fr.g, richtig:e.richtig, versuche:e.versuche, fehlversuche:e.fehlversuche, updated_at:new Date().toISOString()}; });
+    sb.from('fortschritt').upsert(rows).then(()=>{});
+  }
+  state.view='ergebnis'; render();
+  if(p.bestanden) konfetti();
+}
+function viewErgebnis(){
+  const p=state.pruefung; const e=p.ergebnis;
+  const gesamtFragen=p.reihe.length;
+  const pct=Math.round(e.richtigGesamt/gesamtFragen*100);
+  const sw=schwellen(p.reihe);
+  const schwelleGesamt=sw.gesamt;
+  const gebietZeilen=GEBIETE.map(g=>{
+    const pg=e.proGebiet[g.id];
+    const noetig=sw.proGebiet[g.id]||0;
+    const ok=!pg.gesamt||pg.richtig>=noetig;
+    return `<tr><td>${g.icon} ${g.kurz}</td><td class="zahl">${pg.richtig} / ${pg.gesamt}</td>
+      <td class="zahl" style="color:var(--grau);font-weight:600">nötig: ${noetig}</td>
+      <td style="text-align:right"><span class="pill ${ok?'ok':'no'}">${ok?'bestanden':'zu wenig'}</span></td></tr>`;
+  }).join('');
+  const falsche=p.reihe.filter(idx=>p.antworten[idx]!==FRAGEN[idx].r);
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zum Dashboard</button>
+  <div class="quizbox" style="text-align:center">
+    <h1 style="margin-bottom:0">Dein Ergebnis</h1>
+    <div class="ergebnis-kreis" style="--pct:${pct}%">
+      <div class="zahl"><b>${e.richtigGesamt}/${gesamtFragen}</b>${pct}%</div>
+    </div>
+    <div class="status-gross ${p.bestanden?'bestanden':'durchgefallen'}">
+      ${p.bestanden?'🎉 Bestanden!':'Noch nicht bestanden'}
+    </div>
+    <p class="lead">${p.zeitAus?'⏱ Die Zeit war abgelaufen. ':''}Bestehensgrenze: mind. <b>${schwelleGesamt} von ${gesamtFragen}</b> richtig <em>und</em>${sw.jeGebietEinheitlich?` mind. <b>${sw.jeGebietEinheitlich}</b> richtig in jedem Sachgebiet.`:' genug richtige in jedem Sachgebiet.'}
+    ${p.bestanden?' Stark – weiter so! +50 XP':' Kopf hoch: Deine Fehler warten in der Fehlerkiste mit Erklärungen auf dich. +15 XP'}</p>
+    <table class="gebiete">
+      <thead><tr><th>Sachgebiet</th><th class="zahl">Richtig</th><th class="zahl">Grenze</th><th style="text-align:right">Status</th></tr></thead>
+      <tbody>${gebietZeilen}</tbody>
+    </table>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+      ${falsche.length?`<button class="btn gruen" onclick="startFehlerkiste()">🧰 Fehler üben (${falsche.length})</button>`:''}
+      <button class="btn" onclick="startPruefung()">Neue Simulation</button>
+      <button class="btn ghost" onclick="go('pruefungsinfo')">ℹ️ Prüfungsablauf</button>
+      <button class="btn ghost" onclick="go('dashboard')">Dashboard</button>
+    </div>
+  </div>
+  ${falsche.length?`
+  <h2>Deine falschen Antworten – mit Erklärung</h2>
+  ${falsche.map(idx=>{ const fr=FRAGEN[idx]; const g=GEBIETE.find(x=>x.id===fr.g);
+    const deine=p.antworten[idx];
+    return `<div class="karte" style="margin-bottom:10px">
+      <div style="font-size:.76rem;color:var(--grau);margin-bottom:3px">${g.icon} ${g.kurz}</div>
+      <div style="font-weight:700;margin-bottom:7px">${fr.f}</div>
+      ${bildHTML(fr)}
+      ${deine!==undefined?`<div style="font-size:.85rem;color:var(--rot-dkl);margin-bottom:4px">✗ Deine Antwort: „${fr.a[deine]}“</div>`:`<div style="font-size:.85rem;color:var(--grau);margin-bottom:4px">– nicht beantwortet –</div>`}
+      <div style="font-size:.85rem;color:var(--gruen-dkl);font-weight:650;margin-bottom:6px">✓ Richtig: „${fr.a[fr.r]}“</div>
+      <div class="erklaerung schlecht" style="margin-top:4px">${fr.e}</div>
+      ${ESELSBRUECKEN[fr.f]?`<div class="eselsbruecke"><div class="titel">🫏 Eselsbrücke:</div>${ESELSBRUECKEN[fr.f]}</div>`:''}
+    </div>`; }).join('')}
+  `:''}`;
+}
+
+/* =========================== VIDEOS =========================== */
+function viewVideos(){
+  const karten=VIDEOS.map(v=>`
+    <div class="karte video-karte">
+      <span class="thumb">${v.icon}</span>
+      <div style="flex:1"><h3>${v.titel}</h3><p>${v.text}</p></div>
+      <a class="extern" href="${v.url}" target="_blank" rel="noopener">Ansehen ↗</a>
+    </div>`).join('');
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
+  <h1>🎬 Praxis-Videos</h1>
+  <p class="lead">Handverlesene Themen für die Praxisprüfung und den Start am Wasser. Die Links öffnen aktuelle Lernvideos auf YouTube.</p>
+  <div style="display:grid;gap:12px">${karten}</div>
+  <div class="hinweis blau">Tipp: Übe Knoten mit einer dickeren Schnur (z.B. Paketschnur) – da sieht man jeden Schritt besser.</div>`;
+}
+
+/* =========================== AUSBILDER (echte Kursdaten) =========================== */
+async function ladeKursDaten(){
+  if(!state.user) return;
+  const {data:kurse}=await sb.from('kurse').select('*').eq('ausbilder_id',state.user.id);
+  const kurs=(kurse&&kurse[0])||null;
+  const code=kurs?kurs.code:null;
+  let mitglieder=[];
+  if(code){
+    const {data:profs}=await sb.from('profiles').select('*').eq('kurs_code',code).neq('id',state.user.id);
+    const ids=(profs||[]).map(p=>p.id);
+    let fs=[], sims=[];
+    if(ids.length){
+      const r1=await sb.from('fortschritt').select('*').in('user_id',ids); fs=r1.data||[];
+      const r2=await sb.from('simulationen').select('user_id,bestanden').in('user_id',ids); sims=r2.data||[];
+    }
+    mitglieder=(profs||[]).map(p=>{
+      const meine=fs.filter(f=>f.user_id===p.id);
+      const gebiete={};
+      GEBIETE.forEach(g=>{
+        const gf=meine.filter(f=>f.gebiet===g.id);
+        const fragenImGebiet=FRAGEN.filter(fr=>fr.g===g.id).length||1;
+        gebiete[g.id]=Math.round(gf.filter(f=>f.richtig).length/fragenImGebiet*100);
+      });
+      return {id:p.id, name:p.name||'(ohne Namen)', gebiete,
+        lernzeitMin:Math.round((p.lernzeit_sek||0)/60), sollMin:p.soll_min||600,
+        sim:sims.filter(s=>s.user_id===p.id).length,
+        bestanden:sims.filter(s=>s.user_id===p.id&&s.bestanden).length,
+        fortschritt:meine};
+    });
+  }
+  // Meist-verfehlte Fragen im Kurs
+  const fehlerMap={};
+  mitglieder.forEach(m=>m.fortschritt.forEach(f=>{ if(f.fehlversuche>0) fehlerMap[f.frage_idx]=(fehlerMap[f.frage_idx]||0)+f.fehlversuche; }));
+  const topFehler=Object.entries(fehlerMap).sort((a,b)=>b[1]-a[1]).slice(0,5)
+    .map(([idx,anz])=>({idx:+idx, anz}));
+  state.kursDaten={code, kursName:kurs?kurs.name:'', mitglieder, topFehler};
+  render();
+}
+function kursSchnitt(gid){
+  const m=state.kursDaten.mitglieder;
+  if(!m.length) return 0;
+  return Math.round(m.reduce((a,p)=>a+p.gebiete[gid],0)/m.length);
+}
+function heatFarbe(v){ return v>=75?'var(--gruen)':v>=50?'#e8a317':'var(--rot)'; }
+function viewAusbilder(){
+  if(!state.kursDaten){ ladeKursDaten();
+    return `<h1>Ausbilder-Cockpit 👨‍🏫</h1><p class="lead">Lade Kursdaten…</p>`; }
+  const kd=state.kursDaten;
+  const zeilen=kd.mitglieder.map((p,i)=>{
+    const schnitt=Math.round(Object.values(p.gebiete).reduce((a,b)=>a+b,0)/6);
+    const zeitPct=Math.min(100,Math.round(p.lernzeitMin/(p.sollMin||1)*100));
+    return `<tr class="klick" onclick="zeigeSchueler(${i})">
+      <td><strong>${p.name}</strong></td>
+      <td><span class="mini-balken"><span style="width:${schnitt}%;background:${heatFarbe(schnitt)}"></span></span>${schnitt}%</td>
+      <td><span class="mini-balken"><span style="width:${zeitPct}%;background:${heatFarbe(zeitPct)}"></span></span>${lernzeitFormat(p.lernzeitMin*60)} / ${lernzeitFormat(p.sollMin*60)}</td>
+      <td>${p.sim}× (${p.bestanden} bestanden)</td></tr>`;
+  }).join('');
+  const heat=GEBIETE.map(g=>{ const v=kursSchnitt(g.id);
+    return `<div class="zelle" style="background:${heatFarbe(v)}">${v}%<small>${g.kurz}</small></div>`; }).join('');
+  const schwaechstes=GEBIETE.reduce((min,g)=>kursSchnitt(g.id)<kursSchnitt(min.id)?g:min,GEBIETE[0]);
+  const topFehler=kd.topFehler.length? kd.topFehler.map(t=>{
+    const fr=FRAGEN[t.idx]; const g=GEBIETE.find(x=>x.id===fr.g);
+    return `<div class="fehlerfrage"><span>${g.icon} ${fr.f}</span><b>${t.anz}× falsch</b></div>`; }).join('')
+    : `<p style="font-size:.88rem;color:var(--grau);margin:0">Noch keine Fehler-Daten – sobald deine Prüflinge üben, siehst du hier, wo es hakt.</p>`;
+  return `
+  <h1>Ausbilder-Cockpit 👨‍🏫</h1>
+  <p class="lead">${kd.mitglieder.length?`${kd.mitglieder.length} Prüfling${kd.mitglieder.length===1?'':'e'} in deinem Kurs.`:'Noch keine Prüflinge – teile deinen Kurs-Code!'}</p>
+
+  <div class="karte" style="margin-bottom:18px;border-left:6px solid var(--welle)">
+    <h3 style="margin:0 0 4px">🔑 Dein Kurs-Code</h3>
+    <p style="margin:0 0 10px;font-size:.87rem;color:var(--grau)">Prüflinge geben diesen Code bei der Registrierung ein und erscheinen dann automatisch hier:</p>
+    <span class="code-box">${kd.code||'–'}</span>
+  </div>
+
+  ${kd.mitglieder.length?`
+  <div class="karte" style="border-left:6px solid var(--rot);margin-bottom:18px">
+    <h3 style="margin:0 0 4px">💡 Empfehlung für die nächste Kursstunde</h3>
+    <p style="margin:0;font-size:.9rem;color:var(--grau)">Dein Kurs ist am schwächsten in
+    <strong style="color:var(--rot-dkl)">${schwaechstes.icon} ${schwaechstes.name} (${kursSchnitt(schwaechstes.id)}%)</strong>.
+    Unten die meist-verfehlten Fragen – ideal zum gemeinsamen Wiederholen.</p>
+  </div>
+  <h2>Kurs-Schnitt nach Sachgebiet</h2>
+  <div class="heat">${heat}</div>
+  <h2>Meist-verfehlte Fragen im Kurs</h2>
+  <div class="karte">${topFehler}</div>
+  <h2>Meine Prüflinge <span style="font-size:.75rem;color:var(--grau);font-weight:400">(antippen für Details)</span></h2>
+  <table class="prueflinge">
+    <thead><tr><th>Name</th><th>Lernstand</th><th>Lernzeit (Ist/Soll)</th><th>Simulationen</th></tr></thead>
+    <tbody>${zeilen}</tbody>
+  </table>`:''}
+
+  <h2>📋 Lehrplan & Prüfungsvorgaben</h2>
+  <button class="btn blau" onclick="go('lehrplan')">Lehrplan öffnen</button>
+  <div style="margin-top:10px"><button class="btn ghost" onclick="state.kursDaten=null;render()">🔄 Daten aktualisieren</button></div>`;
+}
+let schuelerIdx=0;
+function zeigeSchueler(i){ schuelerIdx=i; state.view='schueler'; render(); }
+let _sollTimer=null;
+function sollAendern(i,wert){
+  const p=state.kursDaten.mitglieder[i];
+  p.sollMin=+wert;
+  const el=document.getElementById('sollAnzeige');
+  if(el) el.textContent=lernzeitFormat(wert*60);
+  clearTimeout(_sollTimer);
+  _sollTimer=setTimeout(async ()=>{ await sb.from('profiles').update({soll_min:p.sollMin}).eq('id',p.id); }, 800);
+}
+function viewSchueler(){
+  const p=state.kursDaten.mitglieder[schuelerIdx];
+  if(!p) return viewAusbilder();
+  const zeilen=GEBIETE.map(g=>{
+    const v=p.gebiete[g.id];
+    return `<tr><td>${g.icon} ${g.name}</td>
+      <td class="zahl"><span class="mini-balken"><span style="width:${v}%;background:${heatFarbe(v)}"></span></span>${v}%</td>
+      <td style="text-align:right"><span class="pill ${v>=60?'ok':'no'}">${v>=75?'sicher':v>=50?'wackelig':'kritisch'}</span></td></tr>`;
+  }).join('');
+  const schwach=GEBIETE.filter(g=>p.gebiete[g.id]<60).map(g=>g.name);
+  const zeitPct=Math.min(100,Math.round(p.lernzeitMin/p.sollMin*100));
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück zum Cockpit</button>
+  <h1>${p.name}</h1>
+  <p class="lead">${p.sim} Simulation${p.sim===1?'':'en'} · ${p.bestanden} bestanden</p>
+
+  <div class="karte" style="margin-bottom:14px;border-left:6px solid var(--akzent)">
+    <h3 style="margin:0 0 4px">⏱️ Lernzeit</h3>
+    <p style="margin:0 0 8px;font-size:.9rem;color:var(--grau)">
+      <strong>${lernzeitFormat(p.lernzeitMin*60)}</strong> von <strong>${lernzeitFormat(p.sollMin*60)}</strong> Ziel-Lernzeit (${zeitPct}%)</p>
+    <div class="fortschritt" style="height:10px"><span style="width:${zeitPct}%;background:${heatFarbe(zeitPct)}"></span></div>
+    <label style="font-size:.85rem;color:var(--grau);display:block;margin-top:10px">
+      Individuelles Lernzeit-Ziel für ${p.name.split(' ')[0]} anpassen:
+      <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+        <input type="range" min="120" max="1800" step="30" value="${p.sollMin}" style="flex:1"
+          oninput="sollAendern(${schuelerIdx}, this.value)">
+        <span id="sollAnzeige" style="font-weight:800;color:var(--wasser);min-width:80px">${lernzeitFormat(p.sollMin*60)}</span>
+      </div>
+    </label>
+  </div>
+  ${schwach.length?`<div class="hinweis"><strong>Wiederholen mit ${p.name.split(' ')[0]}:</strong> ${schwach.join(', ')}</div>`
+    :`<div class="hinweis blau"><strong>Stark:</strong> Keine kritischen Bereiche – prüfungsbereit!</div>`}
+  <table class="gebiete" style="background:#fff;border-radius:var(--radius);box-shadow:var(--schatten);padding:8px">
+    <thead><tr><th>Sachgebiet</th><th class="zahl">Lernstand</th><th style="text-align:right">Einschätzung</th></tr></thead>
+    <tbody>${zeilen}</tbody>
+  </table>`;
+}
+function viewLehrplan(){
+  const r=regeln();
+  const fakten=[["Sachgebiete","6"],["Empf. Umfang","ca. 2 Doppelstunden je Sachgebiet"],
+    ["Praxis","mind. 1 Doppelstunde Gerätekunde"],["Mindestalter","Lehrgang ab 13 Jahren"],
+    ["Theorieprüfung",`${r.fragenGesamt} Fragen, ${r.zeitMinuten} Minuten`],
+    ["Bestehen",`≥ ${r.bestehenGesamt} gesamt UND ≥ ${r.bestehenProGebiet} je Sachgebiet`],
+    ["Praxisprüfung","Angelgeräte zusammenstellen & handhaben"]]
+    .map(([k,v])=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--linie);font-size:.9rem">
+      <b style="min-width:140px;color:var(--wasser)">${k}</b><span>${v}</span></div>`).join('');
+  const gebiete=GEBIETE.map((g,i)=>`<div class="karte" style="margin-bottom:10px">
+    <h3 style="margin:0 0 3px;color:${g.farbe}">${i+1}. ${g.icon} ${g.name}</h3>
+    <p style="margin:0;font-size:.85rem;color:var(--grau)">Sachgebiet der theoretischen Prüfung · empfohlen ca. 2 Doppelstunden.</p></div>`).join('');
+  return `
+  <button class="zurueck" onclick="go('dashboard')">← Zurück</button>
+  <h1>Lehrplan & Prüfungsvorgaben</h1>
+  <div class="karte" style="margin-bottom:18px">${fakten}</div>
+  <h2>Die 6 Sachgebiete</h2>
+  ${gebiete}
+  <div class="hinweis">Quelle: Ausbildungs- und Prüfungsordnung des Angelfischerverbands im Landesfischereiverband Weser-Ems e.V., Stand März 2026.</div>`;
+}
+
+/* =========================== NAV & START =========================== */
+function go(v){ stopSprich(); stopTimer(); state.view=v; render(); }
+lernzeitStart();
+/* Start: bestehende Sitzung prüfen, sonst Regionsauswahl */
+(async function init(){
+  render(); // sofort etwas zeigen (Region)
+  if(!sb) return;
+  const {data:{session}}=await sb.auth.getSession();
+  if(session){ await nachLogin(); }
+  sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_IN'&&!state.user){ nachLogin(); } });
+})();
+/* PWA: Service Worker registrieren (nur über https bzw. localhost aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

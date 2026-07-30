@@ -1,132 +1,150 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Datenschutzerklärung – AngelUp</title>
-<meta name="description" content="Datenschutzerklärung für die Website angelup.de und die AngelUp App.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="description" content="Datenschutzerklärung von AngelUp – Lern-App, Videokurs und Lehrgangsanmeldung.">
+<title>Datenschutz – AngelUp</title>
+<link rel="canonical" href="https://angelup.de/datenschutz.html">
+<meta name="robots" content="index,follow">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
 <style>
-  :root{--blau:#20689B;--dunkel:#0A3050;--grau:#5b6b7a;--rand:#dfe6ed}
-  *{box-sizing:border-box}
-  body{margin:0;font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#16232e;background:#f4f7fa}
-  header{background:linear-gradient(160deg,var(--blau),var(--dunkel));color:#fff;padding:34px 20px}
-  header div{max-width:760px;margin:0 auto}
-  header h1{margin:0;font-size:1.7rem}
-  header p{margin:6px 0 0;opacity:.85;font-size:.95rem}
-  main{max-width:760px;margin:0 auto;padding:24px 20px 60px}
-  section{background:#fff;border:1px solid var(--rand);border-radius:12px;padding:20px 22px;margin-bottom:14px}
-  h2{font-size:1.05rem;margin:0 0 8px;color:var(--dunkel)}
-  a{color:var(--blau)}
-  table{border-collapse:collapse;width:100%;font-size:.92rem;margin-top:8px}
-  td,th{border:1px solid var(--rand);padding:7px 9px;text-align:left;vertical-align:top}
-  th{background:#eef3f8}
-  footer{max-width:760px;margin:0 auto;padding:0 20px 50px;font-size:.85rem;color:var(--grau)}
+  .recht{padding:34px 0 70px}
+  .recht h1{font-size:clamp(1.9rem,4.5vw,2.7rem);font-weight:900;letter-spacing:-.02em;margin:0 0 8px}
+  .recht .karte{padding:26px 26px 22px}
+  .recht h2{font-size:1.02rem;font-weight:800;color:var(--tuerkis);margin:26px 0 8px;letter-spacing:.01em}
+  .recht h2:first-of-type{margin-top:4px}
+  .recht p{margin:0 0 12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  .recht p strong{color:var(--text);font-weight:700}
+  .recht a{color:var(--tuerkis);text-decoration:none;border-bottom:1px solid rgba(46,230,197,.35)}
+  .recht a:hover{border-bottom-color:var(--tuerkis)}
+  @media(max-width:600px){ .recht .karte{padding:20px 17px 18px} }
 </style>
 </head>
 <body>
-<header><div>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Videokurs</a>
+      <a class="btn t" href="kurs.html">Lehrgang</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main class="wrap-schmal recht">
+  <span class="etikett grau">Rechtliches</span>
   <h1>Datenschutzerklärung</h1>
-  <p>Gültig für die Website angelup.de und die AngelUp App für iOS und Android</p>
-</div></header>
-<main>
+  <p class="lead" style="margin-bottom:22px">Kurz gesagt: Wir sammeln nur, was für Lernen, Anmeldung und Prüfung nötig ist. Kein Tracking, keine Werbenetzwerke.</p>
 
-<section>
-  <h2>1. Verantwortlicher</h2>
-  <p>Mark Schwarze<br>Alter Postweg 80<br>26607 Aurich<br>Deutschland<br>
-  E-Mail: <a href="mailto:bwt.schwarze@gmail.com">bwt.schwarze@gmail.com</a></p>
-  <p>Ein Datenschutzbeauftragter ist nicht bestellt, da die gesetzlichen Voraussetzungen dafür nicht vorliegen.</p>
-</section>
+  <div class="karte">
+    <h2>1. Verantwortlicher</h2>
+    <p>Mark Schwarze, Alter Postweg 80, 26607 Aurich, E-Mail:
+    <a href="mailto:bwt.schwarze@gmail.com">bwt.schwarze@gmail.com</a></p>
 
-<section>
-  <h2>2. Nutzung ohne Konto</h2>
-  <p>AngelUp lässt sich vollständig ohne Konto und ohne Internetverbindung nutzen. Lernen,
-  Fehlerkiste, Prüfungssimulation und Fortschritt laufen in diesem Fall ausschließlich auf
-  deinem Gerät. Es werden dabei keine personenbezogenen Daten an uns übertragen.</p>
-</section>
+    <h2>2. Nutzung der Lern-App</h2>
+    <p>Bei der Registrierung verarbeiten wir Name, E-Mail-Adresse und Passwort (nur verschlüsselt gespeichert).
+    Während der Nutzung kommen dein Lernfortschritt (beantwortete Fragen, Ergebnisse der Prüfungssimulationen,
+    Lernzeit) sowie – falls du einem Kurs beigetreten bist – die Zuordnung zu deinem Ausbilder hinzu.
+    Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Lernplattform).</p>
 
-<section>
-  <h2>3. Welche Daten wir verarbeiten, wenn du ein Konto anlegst</h2>
-  <table>
-    <tr><th>Daten</th><th>Zweck</th><th>Rechtsgrundlage</th></tr>
-    <tr><td>Name, E-Mail-Adresse, Passwort (nur als Hash gespeichert)</td><td>Konto anlegen und anmelden</td><td>Art. 6 Abs. 1 lit. b DSGVO (Vertrag)</td></tr>
-    <tr><td>Lernfortschritt: beantwortete Fragen, richtig/falsch, Fehlerkiste, Lernzeit, XP, Serie</td><td>Fortschritt geräteübergreifend sichern</td><td>Art. 6 Abs. 1 lit. b DSGVO</td></tr>
-    <tr><td>Ergebnisse der Prüfungssimulationen</td><td>Auswertung und Verlauf anzeigen</td><td>Art. 6 Abs. 1 lit. b DSGVO</td></tr>
-    <tr><td>Kurs-Code und Zuordnung zum Ausbilder</td><td>Kursteilnahme</td><td>Art. 6 Abs. 1 lit. b DSGVO</td></tr>
-    <tr><td>Laufzeit eines gebuchten Abos</td><td>Freischaltung der Vollversion</td><td>Art. 6 Abs. 1 lit. b DSGVO</td></tr>
-  </table>
-  <p>Wir erheben keine Standortdaten, greifen nicht auf Kontakte, Fotos, Kamera oder Mikrofon zu
-  und erstellen keine Werbeprofile.</p>
-</section>
+    <h2>3. Anmeldung zum Lehrgang und zur Prüfung</h2>
+    <p>Wenn du dich über das Anmeldeformular für einen Lehrgang oder einen Prüfungstermin anmeldest,
+    verarbeiten wir die dort angegebenen Daten: Vor- und Nachname, Geburtsdatum und Geburtsort, Anschrift,
+    Telefonnummer und E-Mail-Adresse, die gewählte Leistungsvariante, deine Erklärungen zu Versagungsgründen
+    und gesundheitlicher Eignung, bei Minderjährigen zusätzlich die Kontaktdaten und die Einwilligung
+    der erziehungsberechtigten Person, bei Wiederholern Datum und Ort der letzten Prüfung sowie eine
+    freiwillige Bemerkung.</p>
+    <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Durchführung des Ausbildungsvertrags) und,
+    soweit die Daten zur Anmeldung bei der prüfenden Stelle benötigt werden, Art. 6 Abs. 1 lit. c DSGVO
+    (rechtliche Verpflichtung). Ohne diese Angaben ist eine Anmeldung zur Fischerprüfung nicht möglich.</p>
+    <p>Wir geben die zur Prüfungsanmeldung erforderlichen Daten an die zuständige prüfende Stelle weiter.
+    Teilnahme- und Zahlungsunterlagen bewahren wir aufgrund handels- und steuerrechtlicher Pflichten
+    (§ 147 AO, § 257 HGB) bis zu zehn Jahre auf. Daten, für die keine Aufbewahrungspflicht besteht,
+    löschen wir spätestens zwölf Monate nach dem Prüfungstermin.</p>
 
-<section>
-  <h2>4. Wer deine Daten sehen kann</h2>
-  <p>Wenn du mit einem Kurs-Code dem Kurs eines Ausbilders beigetreten bist, sieht dieser Ausbilder
-  deinen Namen, deinen Lernstand, deine Lernzeit und die Ergebnisse deiner Prüfungssimulationen.
-  Er kann diese Daten nur lesen, nicht verändern. Deine Fehlerkiste ist davon ausgenommen und
-  bleibt privat. Andere Nutzerinnen und Nutzer sehen deine Daten nicht.</p>
-  <p>Ohne Kurs-Code sieht niemand außer dir deine Daten.</p>
-</section>
+    <h2>4. Zahlungsabwicklung</h2>
+    <p>Die Kursgebühr wird per Überweisung auf das im Anmeldevorgang genannte Konto gezahlt.
+    Kontobewegungen verarbeitet die kontoführende Bank; wir sehen nur Betrag, Absender und
+    Verwendungszweck (deine Anmeldenummer). Ein Zahlungsdienstleister mit Zugriff auf deine
+    Zahlungsdaten ist nicht eingebunden.</p>
 
-<section>
-  <h2>5. Auftragsverarbeiter und Dienste</h2>
-  <table>
-    <tr><th>Dienst</th><th>Zweck</th><th>Ort</th></tr>
-    <tr><td>Supabase (Supabase Inc.)</td><td>Konten, Lerndaten, Versand der Bestätigungs- und Passwort-E-Mails</td><td>Serverstandort Frankfurt am Main (EU)</td></tr>
-    <tr><td>GitHub Pages (GitHub B.V. / GitHub Inc.)</td><td>Auslieferung der Website angelup.de; dabei fallen technisch notwendige Server-Logs an, unter anderem die IP-Adresse</td><td>EU / USA</td></tr>
-    <tr><td>RevenueCat (RevenueCat Inc.)</td><td>Verwaltung des In-App-Abos in der App; verarbeitet wird eine pseudonyme Nutzerkennung und der Kaufstatus</td><td>USA</td></tr>
-    <tr><td>Apple App Store / Google Play</td><td>Abwicklung und Abrechnung des In-App-Kaufs. Zahlungsdaten verarbeitet ausschließlich der jeweilige Store, wir erhalten sie nicht.</td><td>gemäß Angaben des Stores</td></tr>
-    <tr><td>Stripe (Stripe Payments Europe Ltd.)</td><td>Zahlungsabwicklung bei Buchung über die Website</td><td>EU</td></tr>
-  </table>
-  <p>Bei Übermittlungen in die USA stützen wir uns auf die Standardvertragsklauseln der
-  EU-Kommission bzw. auf das EU-US Data Privacy Framework, soweit der Anbieter dort zertifiziert ist.</p>
-</section>
+    <h2>5. Wer deine Daten sieht</h2>
+    <p>Dein Ausbilder sieht deinen Lernstand, deine Lernzeit und deine Simulationsergebnisse, wenn du
+    seinem Kurs per Kurs-Code beigetreten bist. Andere Nutzer sehen deine Daten nicht.
+    Anmeldedaten sehen ausschließlich der Verantwortliche und – im erforderlichen Umfang – die
+    prüfende Stelle.</p>
 
-<section>
-  <h2>6. Speicherung auf deinem Gerät</h2>
-  <p>Die App und die Website speichern deinen Lernstand lokal, damit sie offline funktionieren.
-  Dein Anmelde-Token wird in der App im gesicherten Systemspeicher abgelegt (iOS Keychain,
-  Android Keystore), auf der Website in der lokalen Browserspeicherung. Werbe- oder
-  Tracking-Cookies setzen wir nicht.</p>
-</section>
+    <h2>6. Hosting und Auftragsverarbeiter</h2>
+    <p>Die Website wird über GitHub Pages (GitHub B.V. / GitHub Inc.) ausgeliefert; dabei fallen technisch
+    notwendige Server-Logs an, unter anderem die IP-Adresse. Konten, Lerndaten, Anmeldungen und Kursvideos
+    werden bei Supabase gespeichert – Serverstandort Frankfurt am Main (EU). Bestätigungs- und
+    Systemmails versenden wir über den E-Mail-Dienst von Google (Google Ireland Limited).
+    Mit allen genannten Dienstleistern bestehen Verträge zur Auftragsverarbeitung nach Art. 28 DSGVO.</p>
 
-<section>
-  <h2>7. Speicherdauer</h2>
-  <p>Kontodaten und Lernfortschritt speichern wir, solange dein Konto besteht. Nach der Löschung
-  des Kontos werden alle zugehörigen Daten unmittelbar und vollständig entfernt. Rechnungsdaten
-  bewahren wir gemäß § 147 AO und § 257 HGB bis zu zehn Jahre auf.</p>
-</section>
+    <h2>7. Videokurs</h2>
+    <p>Die Videos des Online-Kurses liegen auf unserem eigenen geschützten Speicher bei Supabase.
+    Sie werden nur über zeitlich befristete, personenbezogen erzeugte Links ausgeliefert.
+    Wir speichern dazu, welche Lektionen du abgeschlossen hast, um deinen Fortschritt anzuzeigen.
+    Eine Einbindung von YouTube, Vimeo oder vergleichbaren Diensten findet im Kursbereich nicht statt.</p>
 
-<section>
-  <h2>8. Konto löschen</h2>
-  <p>Du kannst dein Konto jederzeit selbst löschen: in der App unter Einstellungen → Konto löschen.
-  Damit werden Profil, Lernstand, Fehlerkiste und Simulationsergebnisse endgültig entfernt.
-  Alternativ genügt eine formlose E-Mail an
-  <a href="mailto:bwt.schwarze@gmail.com">bwt.schwarze@gmail.com</a>.</p>
-</section>
+    <h2>8. Cookies und lokale Speicherung</h2>
+    <p>AngelUp verwendet keine Werbe- oder Tracking-Cookies und bindet keine Analysedienste ein.
+    Für die Anmeldung wird eine Sitzung lokal in deinem Browser gespeichert, ebenso dein Lernfortschritt
+    im Videokurs. Beides ist technisch notwendig und lässt sich über die Browsereinstellungen löschen.</p>
 
-<section>
-  <h2>9. Externe Links</h2>
-  <p>Die Praxis-Videos verweisen auf YouTube. Erst wenn du einen solchen Link anklickst, gelten
-  die Datenschutzbestimmungen von YouTube bzw. Google.</p>
-</section>
+    <h2>9. Externe Links</h2>
+    <p>Die Praxis-Videos in der Lern-App verlinken auf YouTube. Erst wenn du einen solchen Link anklickst,
+    gelten die Datenschutzbestimmungen von YouTube/Google.</p>
 
-<section>
-  <h2>10. Deine Rechte</h2>
-  <p>Du hast das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17),
-  Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch
-  (Art. 21). Außerdem steht dir ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu,
-  für uns zuständig ist die Landesbeauftragte für den Datenschutz Niedersachsen.</p>
-</section>
+    <h2>10. Deine Rechte</h2>
+    <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung,
+    Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO) sowie ein Beschwerderecht bei einer
+    Datenschutz-Aufsichtsbehörde. Zuständig ist die Landesbeauftragte für den Datenschutz Niedersachsen.
+    Zur Löschung deines Kontos genügt eine E-Mail an
+    <a href="mailto:bwt.schwarze@gmail.com">bwt.schwarze@gmail.com</a>.</p>
 
-<section>
-  <h2>11. Kinder</h2>
-  <p>AngelUp richtet sich an Personen, die eine Fischerprüfung ablegen möchten. Für Nutzer unter
-  16 Jahren ist für die Anlage eines Kontos die Einwilligung der Erziehungsberechtigten nötig.</p>
-</section>
-
+    <p class="klein" style="margin-top:22px;color:var(--text-3)">Stand: Juli 2026</p>
+  </div>
 </main>
-<footer>
-  Stand: Juli 2026 · <a href="/impressum.html">Impressum</a> · <a href="/">Zurück zu AngelUp</a>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
 </footer>
+
+<script>
+const nav = document.getElementById('nav'), burger = document.getElementById('burger'), navLinks = document.getElementById('navLinks');
+burger.addEventListener('click', () => {
+  const a = navLinks.classList.toggle('auf');
+  burger.setAttribute('aria-expanded', a ? 'true' : 'false');
+  burger.textContent = a ? '✕' : '☰';
+});
+addEventListener('scroll', () => nav.classList.toggle('fest', scrollY > 12), {passive:true});
+</script>
 </body>
 </html>

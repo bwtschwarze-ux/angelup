@@ -3,140 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#06304d">
-<meta name="description" content="Vorbereitungslehrgang zur Fischerprüfung – Kurs und Prüfung vor Ort, nur Prüfung oder online lernen. Jetzt Platz sichern.">
-<title>Angelschein-Kurs – AngelUp</title>
+<meta name="theme-color" content="#050c13">
+<meta name="description" content="Vorbereitungslehrgang zur Fischerprüfung in Aurich – Kurs und Prüfung vor Ort, nur Prüfung oder online lernen. Jetzt Platz sichern.">
+<title>Lehrgang &amp; Prüfung anmelden – AngelUp</title>
+<link rel="canonical" href="https://angelup.de/kurs.html">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
 <style>
-  :root{
-    --tiefsee:#06304d; --wasser:#0b4f79; --welle:#1179ae; --hell:#e8f4fb;
-    --akzent:#ffb43a; --akzent2:#ff8c42;
-    --gruen:#19b47a; --gruen-dkl:#0e8a5c; --rot:#e85454;
-    --karte:#ffffff; --text:#12293a; --grau:#5d7286; --linie:#dbe7ef;
-    --radius:18px; --radius-s:12px;
-    --schatten:0 4px 20px rgba(6,48,77,.10);
-    --schatten-hover:0 8px 28px rgba(6,48,77,.18);
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:linear-gradient(175deg,var(--hell) 0%,#f4fafd 40%,#eef6fb 100%);
-    color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
-  header.top{background:linear-gradient(120deg,var(--tiefsee) 0%,var(--wasser) 60%,var(--welle) 100%);
-    color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
-    position:sticky;top:0;z-index:40;box-shadow:0 2px 14px rgba(6,48,77,.35)}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.12rem;text-decoration:none;color:#fff}
-  .logo .up{color:var(--akzent)}
-  header.top a.zurapp{color:#fff;font-size:.8rem;text-decoration:none;background:rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.22);padding:6px 13px;border-radius:20px;white-space:nowrap}
-  main{max-width:920px;margin:0 auto;padding:22px 16px 90px}
-  h1{font-size:1.85rem;margin:.2em 0 .3em;font-weight:800;line-height:1.25}
-  h2{font-size:1.25rem;margin:1.6em 0 .6em;font-weight:750}
-  h3{font-size:1.02rem;margin:0 0 4px;font-weight:750}
-  p.lead{color:var(--grau);margin-top:0;font-size:1rem}
-  .karte{background:var(--karte);border-radius:var(--radius);padding:20px;box-shadow:var(--schatten);
-    border:1px solid rgba(219,231,239,.7)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    background:linear-gradient(120deg,var(--akzent),var(--akzent2));
-    color:#3a2200;border:none;border-radius:13px;padding:13px 22px;font-size:.98rem;font-weight:750;
-    cursor:pointer;transition:.15s;box-shadow:0 3px 12px rgba(255,140,66,.35);text-decoration:none}
-  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,140,66,.45)}
-  .btn.gross{width:100%;padding:16px;font-size:1.05rem}
-  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
-  .hinweis{background:#fff7e8;border:1px solid #f2ddab;border-radius:var(--radius-s);padding:12px 16px;
-    font-size:.86rem;color:#7d5c12;margin:16px 0}
-  .hinweis.blau{background:#e9f4fb;border-color:#bcdcf0;color:#155a86}
-  .hinweis.rot{background:#fdeceb;border-color:#f3c2bf;color:#a3322c}
+/* Nur für die Kursseite – der Rest kommt aus stil.css */
+main{max-width:960px;margin:0 auto;padding:34px 20px 90px}
+main h2{font-size:clamp(1.4rem,2.8vw,2rem);margin:0 0 8px}
+main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
 
-  /* Held */
-  .held{text-align:center;padding:30px 8px 6px}
-  .held .tag{display:inline-block;background:var(--gruen);color:#fff;font-size:.72rem;font-weight:800;
-    letter-spacing:.6px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:12px}
-  .held .unter{color:var(--grau);max-width:600px;margin:0 auto}
+/* Eckdaten */
+.eck{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin:26px 0}
+.eck .feld{background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border:1px solid var(--linie);border-radius:var(--r-s);padding:15px 16px}
+.eck .feld .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--text-3);
+  font-weight:800;margin-bottom:5px}
+.eck .feld .w{font-weight:700;font-size:.95rem;overflow-wrap:anywhere;hyphens:auto;line-height:1.45}
+.eck .feld .w .frei{color:var(--gruen)}
+.eck .feld .w .voll{color:var(--rot)}
 
-  /* Eckdaten */
-  .eck{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0}
-  .eck .feld{background:#fff;border:1px solid var(--linie);border-radius:var(--radius-s);padding:13px 15px}
-  .eck .feld .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.7px;color:var(--grau);
-    font-weight:700;margin-bottom:3px}
-  .eck .feld .w{font-weight:700;font-size:.97rem;overflow-wrap:anywhere;hyphens:auto}
-  .eck .feld .w.frei{color:var(--gruen-dkl)}
-  .eck .feld .w.voll{color:var(--rot)}
+/* Variantenkarten */
+.varianten{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:16px;margin-top:20px}
+.vk{
+  background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1.5px solid var(--linie);border-radius:var(--r);padding:24px 22px;
+  cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s;
+  position:relative;display:flex;flex-direction:column
+}
+.vk:hover{transform:translateY(-4px);border-color:var(--linie-2);box-shadow:var(--glanz-hoch)}
+.vk.gewaehlt{border-color:var(--tuerkis);box-shadow:0 0 0 4px rgba(46,230,197,.14),var(--glanz)}
+.vk h3{font-size:1.08rem;margin:0 0 4px}
+.vk .empf{position:absolute;top:-13px;right:22px;font-size:.7rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;background:linear-gradient(120deg,var(--gold),var(--gold-2));color:#251200;
+  padding:5px 14px;border-radius:100px;box-shadow:0 8px 22px -8px rgba(255,148,48,.9)}
+.vk .kurz{color:var(--text-2);font-size:.88rem;margin:0 0 12px}
+.vk .lang{font-size:.86rem;color:var(--text-3);line-height:1.6;margin:0 0 18px;flex:1}
+.vk .preis{font-size:1.85rem;font-weight:800;letter-spacing:-.04em;line-height:1.1}
+.vk .preis small{font-size:.76rem;font-weight:600;color:var(--text-3);display:block;margin-top:5px;letter-spacing:0}
+.vk .waehlen{margin-top:16px;text-align:center;font-weight:700;font-size:.92rem;
+  border:1.5px solid var(--linie-2);color:var(--text);border-radius:12px;padding:11px;transition:.2s}
+.vk:hover .waehlen{border-color:var(--tuerkis)}
+.vk.gewaehlt .waehlen{background:linear-gradient(120deg,var(--tuerkis),var(--tuerkis-2));
+  color:#03211c;border-color:transparent;box-shadow:var(--glow-t)}
 
-  /* Varianten */
-  .varianten{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:6px}
-  .vk{background:#fff;border:2px solid var(--linie);border-radius:var(--radius);padding:18px;
-    cursor:pointer;transition:.16s;position:relative;display:flex;flex-direction:column}
-  .vk:hover{transform:translateY(-3px);box-shadow:var(--schatten-hover)}
-  .vk.gewaehlt{border-color:var(--welle);box-shadow:0 0 0 4px rgba(17,121,174,.13)}
-  .vk .empf{position:absolute;top:-11px;left:16px;background:var(--akzent);color:#3a2200;
-    font-size:.68rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
-    padding:3px 10px;border-radius:20px}
-  .vk .kurz{color:var(--grau);font-size:.87rem;margin:6px 0 10px}
-  .vk .lang{font-size:.83rem;color:var(--grau);line-height:1.5;margin:0 0 14px;flex:1}
-  .vk .preis{font-size:1.5rem;font-weight:800;color:var(--tiefsee)}
-  .vk .preis small{font-size:.78rem;font-weight:600;color:var(--grau);display:block;margin-top:2px}
-  .vk .waehlen{margin-top:12px;text-align:center;font-weight:750;font-size:.9rem;
-    border:2px solid var(--welle);color:var(--wasser);border-radius:11px;padding:9px}
-  .vk.gewaehlt .waehlen{background:var(--welle);color:#fff}
-  .vk.bald{opacity:.6}
-  .vk.bald .waehlen{border-color:var(--linie);color:var(--grau)}
+/* Zusammenfassung */
+.summe{
+  background:linear-gradient(140deg,rgba(46,230,197,.13),rgba(255,148,48,.07) 60%,rgba(255,255,255,.03));
+  border:1px solid var(--linie-2);border-radius:var(--r);padding:22px 24px;margin:26px 0
+}
+.summe .z{display:flex;justify-content:space-between;gap:14px;font-size:.93rem;padding:5px 0;color:var(--text-2)}
+.summe .z b{font-weight:700;color:var(--text);text-align:right}
+.summe .gesamt{border-top:1px solid var(--linie-2);margin-top:11px;padding-top:13px;font-size:1.2rem;font-weight:800}
+.summe .gesamt b{font-size:1.5rem;letter-spacing:-.03em}
 
-  /* Formular */
-  form{margin-top:8px}
-  fieldset{border:none;padding:0;margin:0 0 22px}
-  legend{font-size:.74rem;text-transform:uppercase;letter-spacing:.9px;color:var(--grau);
-    font-weight:800;padding:0;margin-bottom:12px}
-  .zeile{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .zeile.drei{grid-template-columns:.7fr 1.3fr 1fr}
-  @media(max-width:620px){.zeile,.zeile.drei{grid-template-columns:1fr}}
-  label.f{display:block;margin-bottom:12px}
-  label.f span{display:block;font-size:.8rem;font-weight:650;color:var(--grau);margin-bottom:4px}
-  label.f span .pf{color:var(--rot)}
-  input[type=text],input[type=email],input[type=tel],input[type=date],textarea,select{
-    width:100%;border:1.5px solid var(--linie);border-radius:11px;padding:11px 13px;font-size:.97rem;
-    font-family:inherit;background:#fff;color:var(--text);transition:.14s}
-  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--welle);
-    box-shadow:0 0 0 3px rgba(17,121,174,.13)}
-  input.fehlerhaft{border-color:var(--rot);background:#fdf6f5}
-  textarea{min-height:80px;resize:vertical}
-  .check{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px;font-size:.88rem;line-height:1.5}
-  .check input{margin:2px 0 0;width:19px;height:19px;flex:0 0 19px;accent-color:var(--welle)}
-  .check.pflicht{background:#f7fbfe;border:1px solid var(--linie);border-radius:11px;padding:12px 14px}
-  .honig{position:absolute;left:-9999px}
-  .klapp{display:none}
-  .klapp.an{display:block}
+/* Erfolg */
+#erfolg{display:none}
+.erfolg-kopf{text-align:center;padding:6px 0 22px}
+.erfolg-kopf .haken{width:70px;height:70px;border-radius:50%;
+  background:linear-gradient(140deg,var(--tuerkis),var(--tuerkis-2));color:#03211c;
+  display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;
+  margin:0 auto 16px;box-shadow:0 14px 40px -12px rgba(46,230,197,.8)}
+.zahltab{width:100%;border-collapse:collapse;font-size:.93rem;margin-top:8px}
+.zahltab td{padding:11px 0;border-bottom:1px solid var(--linie);vertical-align:top}
+.zahltab td:first-child{color:var(--text-3);width:40%;padding-right:14px}
+.zahltab td:last-child{font-weight:700;word-break:break-word}
+.kopieren{background:none;border:none;color:var(--tuerkis);font-size:.78rem;font-weight:700;
+  cursor:pointer;text-decoration:underline;padding:0;margin-left:9px;font-family:inherit}
 
-  /* Zusammenfassung */
-  .summe{background:var(--tiefsee);color:#fff;border-radius:var(--radius);padding:18px 20px;margin:20px 0}
-  .summe .z{display:flex;justify-content:space-between;gap:14px;font-size:.9rem;padding:4px 0}
-  .summe .z b{font-weight:700}
-  .summe .gesamt{border-top:1px solid rgba(255,255,255,.22);margin-top:9px;padding-top:11px;
-    font-size:1.15rem;font-weight:800}
-
-  /* Erfolg */
-  #erfolg{display:none}
-  .erfolg-kopf{text-align:center;padding:8px 0 18px}
-  .erfolg-kopf .haken{width:64px;height:64px;border-radius:50%;background:var(--gruen);color:#fff;
-    display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 14px}
-  .zahltab{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:6px}
-  .zahltab td{padding:7px 0;border-bottom:1px solid var(--linie);vertical-align:top}
-  .zahltab td:first-child{color:var(--grau);width:42%;padding-right:12px}
-  .zahltab td:last-child{font-weight:700;word-break:break-word}
-  .kopieren{background:none;border:none;color:var(--wasser);font-size:.78rem;font-weight:700;
-    cursor:pointer;text-decoration:underline;padding:0;margin-left:8px}
-
-  footer{text-align:center;font-size:.78rem;color:var(--grau);padding:24px 16px 40px;line-height:1.8}
-  footer a{color:var(--wasser)}
-  .lade{text-align:center;color:var(--grau);padding:40px 0}
+.lade{text-align:center;color:var(--text-3);padding:44px 0;grid-column:1/-1}
+.held{text-align:center;padding:8px 0 4px}
+.held h1{font-size:clamp(1.9rem,4.6vw,3rem);margin:16px 0 12px}
+.held .unter{color:var(--text-2);max-width:620px;margin:0 auto;font-size:clamp(1rem,1.6vw,1.13rem)}
 </style>
 </head>
 <body>
 
-<header class="top">
-  <a class="logo" href="/">Angel<span class="up">Up</span></a>
-  <a class="zurapp" href="/">Zur Lern-App</a>
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Videokurs</a>
+      <a class="btn t" href="#anmeldung">Zur Anmeldung</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
 </header>
 
 <main>
@@ -144,7 +113,7 @@
 <!-- ============ Kursvorstellung ============ -->
 <section id="oben">
   <div class="held">
-    <span class="tag" id="tagPlaetze">Anmeldung offen</span>
+    <span class="etikett" id="tagPlaetze"><span class="punkt"></span>Anmeldung offen</span>
     <h1 id="titel">Vorbereitungslehrgang Fischerprüfung</h1>
     <p class="unter" id="untertitel">Kompaktlehrgang mit anschließender staatlich anerkannter Fischerprüfung.</p>
   </div>
@@ -153,7 +122,7 @@
 
   <div class="karte">
     <h3>Was dich erwartet</h3>
-    <p style="margin:8px 0 0;color:var(--grau);font-size:.93rem">
+    <p style="margin:10px 0 0;color:var(--text-2);font-size:.95rem;line-height:1.7">
       Wir gehen alle sechs Sachgebiete der Fischerprüfung durch: Fischkunde und Fischhege, Gewässerkunde
       und Fischhege, Natur-, Tier- und Umweltschutz, Gerätekunde, das Fischereirecht und die Praxis am Gerät.
       Dazu kommt der praktische Teil mit dem Zusammenstellen und Handhaben eines gebrauchsfertigen
@@ -173,7 +142,7 @@
 <!-- ============ Varianten ============ -->
 <section id="varianten-block">
   <h2>Wie willst du deinen Schein machen?</h2>
-  <p class="lead">Vier Wege, ein Ziel. Wähle aus, was zu dir passt – der Preis passt sich unten automatisch an.</p>
+  <p class="lead">Ein Ziel, mehrere Wege. Wähle aus, was zu dir passt – der Preis unten passt sich automatisch an.</p>
   <div class="varianten" id="varianten"><div class="lade">Kursdaten werden geladen …</div></div>
 </section>
 
@@ -183,7 +152,7 @@
   <p class="lead">Alle Angaben brauchen wir für die Anmeldung deiner Prüfung beim Verband.
      Wir geben sie ausschließlich dafür weiter.</p>
 
-  <div class="karte">
+  <div class="karte" style="margin-top:20px">
   <form id="formular" novalidate autocomplete="on">
 
     <input type="text" name="website" id="website" class="honig" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -227,7 +196,7 @@
       <label class="f"><span>E-Mail <span class="pf">*</span></span>
         <input type="email" id="email" name="email" autocomplete="email" required>
       </label>
-      <p style="margin:-6px 0 0;font-size:.8rem;color:var(--grau)">
+      <p style="margin:-6px 0 0;font-size:.82rem;color:var(--text-3)">
         An diese Adresse geht die Bestätigung mit den Zahlungsdaten.</p>
     </fieldset>
 
@@ -263,7 +232,7 @@
           <label class="f"><span>Wo abgelegt</span>
             <input type="text" id="wiederholer_ort" placeholder="z. B. Dunum"></label>
         </div>
-        <p style="margin:-4px 0 0;font-size:.8rem;color:var(--grau)">
+        <p style="margin:-4px 0 0;font-size:.82rem;color:var(--text-3)">
           Liegt die letzte Prüfung weniger als 12 Monate zurück, zahlst du nur die
           ermäßigte Prüfungsgebühr. Danach ist der komplette Lehrgang erneut nötig.</p>
       </div>
@@ -299,8 +268,8 @@
 
     <div id="fehler" class="hinweis rot" style="display:none"></div>
 
-    <button type="submit" class="btn gross" id="absenden">Platz verbindlich anmelden</button>
-    <p style="margin:12px 0 0;font-size:.79rem;color:var(--grau);text-align:center">
+    <button type="submit" class="btn voll gross" id="absenden">Platz verbindlich anmelden</button>
+    <p style="margin:14px 0 0;font-size:.82rem;color:var(--text-3);text-align:center">
       Nach dem Absenden bekommst du sofort eine Bestätigung per E-Mail mit den Zahlungsdaten.
       Dein Platz ist ab dann für dich reserviert.</p>
   </form>
@@ -312,7 +281,7 @@
   <div class="karte">
     <div class="erfolg-kopf">
       <div class="haken">✓</div>
-      <h2 style="margin:0 0 6px">Dein Platz ist reserviert</h2>
+      <h2 style="margin:0 0 8px">Dein Platz ist reserviert</h2>
       <p class="lead" id="erfolgText" style="margin:0"></p>
     </div>
 
@@ -321,18 +290,22 @@
 
     <div class="hinweis" id="mailHinweis" style="display:none"></div>
 
-    <p style="font-size:.88rem;color:var(--grau);margin-top:18px">
+    <p style="font-size:.9rem;color:var(--text-2);margin-top:20px">
       Bewahre die Referenz gut auf – sie ist gleichzeitig dein Verwendungszweck.
       Wenn du magst, kannst du sofort mit dem Lernen anfangen.</p>
-    <a class="btn gross" href="/" style="margin-top:6px">Jetzt schon lernen mit AngelUp</a>
+    <a class="btn voll gross" href="app.html" style="margin-top:8px">Jetzt schon lernen mit AngelUp</a>
   </div>
 </section>
 
 </main>
 
-<footer>
-  <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a><br>
-  Mark Schwarze, Alter Postweg 80, 26607 Aurich
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -343,7 +316,9 @@ const API = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/anmeldung';
 /* Öffentlicher (client-safer) Supabase-Publishable-Key – identisch mit dem der Lern-App */
 const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
 const API_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
-const SLUG = new URLSearchParams(location.search).get('kurs') || 'august-2026';
+const P = new URLSearchParams(location.search);
+const SLUG = P.get('kurs') || 'august-2026';
+const VORWAHL = P.get('variante');
 
 let daten = null, gewaehlt = null;
 
@@ -353,6 +328,15 @@ const dat = (s) => s ? new Date(s+'T12:00:00').toLocaleDateString('de-DE',
   {weekday:'short', day:'2-digit', month:'long', year:'numeric'}) : '';
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Navigation */
+const nav = $('nav'), burger = $('burger'), navLinks = $('navLinks');
+burger.addEventListener('click', () => {
+  const a = navLinks.classList.toggle('auf');
+  burger.setAttribute('aria-expanded', a ? 'true' : 'false');
+  burger.textContent = a ? '✕' : '☰';
+});
+addEventListener('scroll', () => nav.classList.toggle('fest', scrollY > 12), {passive:true});
 
 /* ================================================================
    Kursdaten laden
@@ -397,9 +381,11 @@ function zeichnen(){
   $('eckdaten').innerHTML = felder.map(f =>
     `<div class="feld"><div class="k">${esc(f[0])}</div><div class="w">${f[1]}</div></div>`).join('');
 
-  $('tagPlaetze').textContent = !l.anmeldung_offen ? 'Anmeldung geschlossen'
+  const tag = $('tagPlaetze');
+  const tagText = !l.anmeldung_offen ? 'Anmeldung geschlossen'
     : frei > 0 ? (frei <= 5 ? 'Nur noch ' + frei + ' Plätze' : 'Anmeldung offen') : 'Warteliste';
-  if(frei === 0) $('tagPlaetze').style.background = 'var(--akzent2)';
+  tag.innerHTML = '<span class="punkt"></span>' + esc(tagText);
+  if(frei === 0 || !l.anmeldung_offen) tag.classList.add('gold');
 
   if(l.hinweis_html){
     const h = document.createElement('div');
@@ -428,7 +414,10 @@ function zeichnen(){
     `<option value="${esc(v.variante)}">${esc(v.titel)}${v.preis_cent>0?' – '+euro(v.preis_cent):''}</option>`).join('');
   $('variante').addEventListener('change', e => waehlen(e.target.value, true));
 
-  if(daten.varianten.length) waehlen(daten.varianten[0].variante, true);
+  if(daten.varianten.length){
+    const vor = daten.varianten.find(v => v.variante === VORWAHL);
+    waehlen((vor || daten.varianten[0]).variante, true);
+  }
 
   if(!l.anmeldung_offen){
     $('absenden').disabled = true;
@@ -460,7 +449,7 @@ function summeZeichnen(){
   $('summe').innerHTML = `
     <div class="z"><span>Variante</span><b>${esc(gewaehlt.titel)}</b></div>
     <div class="z gesamt"><span>Zu zahlen</span><b>${betrag>0?euro(betrag):'auf Anfrage'}</b></div>
-    ${wdh ? `<div class="z"><span>Wiederholer</span><b>ggf. ${euro(gewaehlt.preis_wiederholer_cent)}</b></div><p style="margin:8px 0 0;font-size:12.5px;color:#5b6b7a;line-height:1.5">Den ermäßigten Wiederholer-Preis bestätigen wir erst nach Prüfung deines letzten Prüfungsnachweises. Bitte erst nach unserer Mail überweisen.</p>` : ''}`;
+    ${wdh ? `<div class="z"><span>Wiederholer</span><b>ggf. ${euro(gewaehlt.preis_wiederholer_cent)}</b></div><p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">Den ermäßigten Wiederholer-Preis bestätigen wir erst nach Prüfung deines letzten Prüfungsnachweises. Bitte erst nach unserer Mail überweisen.</p>` : ''}`;
 }
 
 /* ================================================================
@@ -572,7 +561,6 @@ $('formular').addEventListener('submit', async (ev) => {
    Erfolgsansicht
    ================================================================ */
 function fertig(a){
-  const l = daten.lehrgang;
   $('oben').style.display = 'none';
   $('varianten-block').style.display = 'none';
   $('anmeldung').style.display = 'none';
