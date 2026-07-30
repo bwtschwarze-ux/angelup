@@ -1,5 +1,6 @@
-const CACHE = 'angelup-v13';
-const DATEIEN = ['./', './index.html', './kurs.html', './impressum.html', './datenschutz.html',
+const CACHE = 'angelup-v14';
+const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
+  './stil.css', './impressum.html', './datenschutz.html',
   './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(DATEIEN)).then(() => self.skipWaiting()));
@@ -17,5 +18,5 @@ self.addEventListener('fetch', e => {
       caches.open(CACHE).then(c => c.put(e.request, kopie));
     }
     return netz;
-  }).catch(() => caches.match('./index.html'))));
+  }).catch(() => caches.match('./app.html').then(r => r || caches.match('./index.html')))));
 });
