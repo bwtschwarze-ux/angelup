@@ -332,7 +332,7 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
 /* Navigation */
 const nav = $('nav'), burger = $('burger'), navLinks = $('navLinks');
 burger.addEventListener('click', () => {
-  const a = navLinks.classList.toggle('auf');
+  const a = navLinks.classList.toggle('offen');
   burger.setAttribute('aria-expanded', a ? 'true' : 'false');
   burger.textContent = a ? '✕' : '☰';
 });

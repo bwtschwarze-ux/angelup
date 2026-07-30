@@ -195,7 +195,7 @@ section{padding:clamp(56px,8vw,110px) 0;position:relative}
   .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;
     align-items:stretch;gap:3px;padding:14px 18px 20px;background:rgba(5,12,19,.98);
     border-bottom:1px solid var(--linie)}
-  .nav-links.auf{display:flex}
+  .nav-links.offen{display:flex}
   .nav-links .btn{margin:8px 0 0}
   .burger{display:block}
 }
@@ -403,6 +403,7 @@ legend{font-size:.75rem;text-transform:uppercase;letter-spacing:.11em;color:var(
 /* ---------------- Animation beim Scrollen ---------------- */
 .auf{opacity:0;transform:translateY(26px);transition:opacity .75s cubic-bezier(.2,.8,.2,1),transform .75s cubic-bezier(.2,.8,.2,1)}
 .auf.da{opacity:1;transform:none}
+@media(scripting:none){.auf{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){
   .auf{opacity:1;transform:none;transition:none}
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}

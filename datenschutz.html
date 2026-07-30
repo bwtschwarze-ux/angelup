@@ -140,7 +140,7 @@
 <script>
 const nav = document.getElementById('nav'), burger = document.getElementById('burger'), navLinks = document.getElementById('navLinks');
 burger.addEventListener('click', () => {
-  const a = navLinks.classList.toggle('auf');
+  const a = navLinks.classList.toggle('offen');
   burger.setAttribute('aria-expanded', a ? 'true' : 'false');
   burger.textContent = a ? '✕' : '☰';
 });

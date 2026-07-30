@@ -452,16 +452,20 @@ var nav = document.getElementById('nav');
 var burger = document.getElementById('burger');
 var navLinks = document.getElementById('navLinks');
 burger.addEventListener('click', function(){
-  var auf = navLinks.classList.toggle('auf');
+  var auf = navLinks.classList.toggle('offen');
   burger.setAttribute('aria-expanded', auf ? 'true' : 'false');
   burger.textContent = auf ? '✕' : '☰';
 });
 navLinks.addEventListener('click', function(e){
-  if(e.target.tagName === 'A'){ navLinks.classList.remove('auf'); burger.textContent = '☰'; }
+  if(e.target.tagName === 'A'){ navLinks.classList.remove('offen'); burger.textContent = '☰'; }
 });
 addEventListener('scroll', function(){ nav.classList.toggle('fest', scrollY > 12); }, {passive:true});
 
 /* ---------- Einblenden beim Scrollen ---------- */
+if(!('IntersectionObserver' in window)){
+  document.querySelectorAll('.auf').forEach(function(el){ el.classList.add('da'); });
+  document.querySelectorAll('[data-zahl]').forEach(function(el){ el.textContent = el.dataset.zahl; });
+} else {
 var beo = new IntersectionObserver(function(list){
   list.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('da'); beo.unobserve(e.target); } });
 }, {threshold:.1, rootMargin:'0px 0px -50px'});
@@ -483,6 +487,7 @@ var zbeo = new IntersectionObserver(function(list){
   });
 }, {threshold:.6});
 document.querySelectorAll('[data-zahl]').forEach(function(el){ zbeo.observe(el); });
+}
 
 /* ---------- Videomodule ---------- */
 var MODULE = [
