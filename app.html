@@ -64,6 +64,7 @@
   .chip button{background:transparent;border:none;color:var(--grau);cursor:pointer;font-size:.74rem;
     text-decoration:underline;padding:0}
   .chip button:hover{color:var(--wasser)}
+  .held .zur-website{position:absolute;top:14px;left:16px;z-index:3}
   .zur-website{font-size:.74rem;color:var(--grau);text-decoration:none;border:1px solid var(--linie);
     background:var(--glas);padding:4px 11px;border-radius:20px;white-space:nowrap;transition:.15s}
   .zur-website:hover{color:var(--wasser);border-color:var(--linie-2);background:var(--glas-2)}
@@ -102,7 +103,8 @@
   .fischschwarm{position:absolute;inset:0;pointer-events:none;opacity:.1;z-index:-1}
   .region-karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:20px}
   .region{position:relative;text-align:left}
-  .region h3{margin:0 0 3px;font-size:1.03rem}
+  .region h3{margin:0 0 3px;font-size:1.03rem;padding-right:96px}
+  @media(max-width:380px){.region h3{padding-right:0;margin-top:20px}}
   .region p{margin:0;font-size:.82rem;color:var(--grau)}
   .region .bald{position:absolute;top:12px;right:12px;font-size:.68rem;font-weight:800;letter-spacing:.5px;
     background:var(--glas-2);border:1px solid var(--linie);color:var(--grau);padding:3px 9px;border-radius:20px;text-transform:uppercase}
@@ -743,9 +745,9 @@ function konfetti(){
 const LOGO_SVG = `<svg viewBox="0 0 64 64" fill="none"><path d="M8 32c8-12 22-18 34-14l12-8-3 14 3 14-12-8c-12 4-26-2-34-14z" transform="translate(0 6)" fill="#ffb43a"/><circle cx="20" cy="34" r="3" fill="#050c13"/><path d="M46 10l6 10-12 1z" fill="#ffb43a" opacity=".85"/></svg>`;
 const FISCH_DEKO = `<svg class="fisch-deko" viewBox="0 0 240 110" fill="none">
  <path d="M20 55C50 20 110 8 150 30l40-22-8 40 8 40-40-22c-40 22-100 10-130-25z" fill="url(#g1)"/>
- <circle cx="60" cy="52" r="6" fill="#06304d"/><circle cx="62" cy="50" r="2" fill="#fff"/>
- <path d="M95 38c14-6 34-6 48 0M95 70c14 6 34 6 48 0" stroke="#06304d" stroke-opacity=".25" stroke-width="3" stroke-linecap="round"/>
- <defs><linearGradient id="g1" x1="20" y1="20" x2="200" y2="90"><stop stop-color="#1179ae"/><stop offset="1" stop-color="#19b47a"/></linearGradient></defs></svg>`;
+ <circle cx="60" cy="52" r="6" fill="#050c13"/><circle cx="62" cy="50" r="2" fill="#fff"/>
+ <path d="M95 38c14-6 34-6 48 0M95 70c14 6 34 6 48 0" stroke="#050c13" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>
+ <defs><linearGradient id="g1" x1="20" y1="20" x2="200" y2="90"><stop stop-color="#2ee6c5"/><stop offset="1" stop-color="#12b8a0"/></linearGradient></defs></svg>`;
 
 /* =========================== RENDER =========================== */
 const $=s=>document.querySelector(s);
@@ -796,6 +798,7 @@ function viewRegion(){
     return `<div class="karte region gesperrt"><span class="bald">Bald</span><h3>📍 ${r.name}</h3><p>${r.traeger}</p></div>`;
   }).join('');
   return `<div class="held">
+    <a class="zur-website" href="index.html">← Website</a>
     ${FISCH_DEKO}
     <h1>Angel<span style="color:var(--akzent2)">Up</span> 🎣</h1>
     <p class="unter">Deine moderne Vorbereitung auf die Fischerprüfung – lernen mit Spaß, üben wie in der echten Prüfung, bestehen mit Sicherheit.</p>
@@ -846,6 +849,7 @@ function viewAuth(){
     <p style="font-size:.72rem;color:var(--grau);margin-top:10px">Mit der Registrierung akzeptierst du die <a href="#" onclick="go('datenschutz');return false" style="color:var(--wasser)">Datenschutzerklärung</a>. Du bekommst eine Bestätigungs-E-Mail.</p>`;
   }
   return `<div class="held">
+    <a class="zur-website" href="index.html">← Website</a>
     ${FISCH_DEKO}
     <h1>Angel<span style="color:var(--akzent2)">Up</span> 🎣</h1>
     <p class="unter">Melde dich an, um deinen Lernfortschritt zu speichern – auf jedem Gerät.</p>
