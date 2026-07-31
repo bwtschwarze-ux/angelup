@@ -115,7 +115,7 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
   <div class="held">
     <span class="etikett" id="tagPlaetze"><span class="punkt"></span>Anmeldung offen</span>
     <h1 id="titel">Vorbereitungslehrgang Fischerprüfung</h1>
-    <p class="unter" id="untertitel">Kompaktlehrgang mit anschließender staatlich anerkannter Fischerprüfung.</p>
+    <p class="unter" id="untertitel">Ein durchgehender Lehrgang über alle Termine – mit anschließender Fischerprüfung des Landesfischereiverbands Weser-Ems.</p>
   </div>
 
   <div class="eck" id="eckdaten"></div>
@@ -123,10 +123,10 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
   <div class="karte">
     <h3>Was dich erwartet</h3>
     <p style="margin:10px 0 0;color:var(--text-2);font-size:.95rem;line-height:1.7">
-      Wir gehen alle sechs Sachgebiete der Fischerprüfung durch: Fischkunde und Fischhege, Gewässerkunde
-      und Fischhege, Natur-, Tier- und Umweltschutz, Gerätekunde, das Fischereirecht und die Praxis am Gerät.
-      Dazu kommt der praktische Teil mit dem Zusammenstellen und Handhaben eines gebrauchsfertigen
-      Angelgeräts sowie dem tierschutzgerechten Behandeln, Betäuben und Töten des Fangs.
+      Wir gehen alle sechs Sachgebiete der Fischerprüfung durch: allgemeine Fischkunde, spezielle
+      Fischkunde, Gewässerkunde, Fischfang und Gerätekunde, Natur-, Tier- und Umweltschutz sowie
+      das Fischereirecht. Dazu kommt der praktische Teil mit dem Zusammenstellen und Handhaben eines
+      gebrauchsfertigen Angelgeräts sowie dem tierschutzgerechten Behandeln, Betäuben und Töten des Fangs.
       Die Prüfung selbst besteht aus 60 Fragen in 60 Minuten. Bestanden hat, wer mindestens 45 Fragen
       richtig beantwortet und dabei in jedem Sachgebiet mindestens 6 Richtige hat.
     </p>
@@ -142,7 +142,9 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
 <!-- ============ Varianten ============ -->
 <section id="varianten-block">
   <h2>Wie willst du deinen Schein machen?</h2>
-  <p class="lead">Ein Ziel, mehrere Wege. Wähle aus, was zu dir passt – der Preis unten passt sich automatisch an.</p>
+  <p class="lead">Ein Ziel, mehrere Wege. Wähle aus, was zu dir passt – der Preis unten passt sich automatisch an.
+     In allen Kurspaketen ist die Prüfungsgebühr bereits enthalten. Wer den Lehrgang woanders oder online
+     gemacht hat und nur zur Prüfung kommt, zahlt 70,00 €.</p>
   <div class="varianten" id="varianten"><div class="lade">Kursdaten werden geladen …</div></div>
 </section>
 
@@ -366,8 +368,8 @@ function zeichnen(){
   const ort = [l.ort_name, l.ort_strasse, [l.ort_plz, l.ort_stadt].filter(Boolean).join(' ')]
               .filter(Boolean).join('<br>');
   const felder = [
-    ['Kurstermin', l.beginn ? dat(l.beginn) + (l.ende && l.ende !== l.beginn ? '<br>bis ' + dat(l.ende) : '') : ''],
-    ['Zeiten', l.zeiten_text],
+    ['Lehrgang (ein Kurs)', l.beginn ? dat(l.beginn) + (l.ende && l.ende !== l.beginn ? '<br>bis ' + dat(l.ende) : '') : ''],
+    ['Termine', l.zeiten_text],
     ['Prüfung', l.pruefung_am ? dat(l.pruefung_am) + (l.pruefung_zeit ? '<br>' + l.pruefung_zeit : '') : ''],
     ['Ort', ort],
     ['Veranstalter', l.veranstalter],
