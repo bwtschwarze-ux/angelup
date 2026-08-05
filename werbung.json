@@ -1,0 +1,8 @@
+{
+  "_hinweis": "Dieser Inhalt erscheint als Werbebanner in der App 'Gemeinsam Angeln'. Aendere Titel/Text/CTA/URL, speichere und pushe diese Datei - die App zeigt es automatisch beim naechsten Start. 'aktiv': false blendet den Banner komplett aus.",
+  "aktiv": true,
+  "titel": "Angelschein machen mit AngelUp",
+  "text": "Online auf die Fischerprüfung lernen – für Aal, Karpfen & Co.",
+  "cta": "Jetzt Kurs ansehen",
+  "url": "https://angelup.de/kurs.html"
+}
