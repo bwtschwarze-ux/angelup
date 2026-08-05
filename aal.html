@@ -265,7 +265,7 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
     <button type="submit" class="btn gross" id="absenden" style="width:100%;margin-top:8px">Kostenpflichtig anmelden</button>
     <p class="klein" style="color:var(--text-3);margin-top:12px">
       Mit dem Absenden meldest du dich verbindlich an. Die Zahlung läuft per Überweisung,
-      die Daten bekommst du direkt im Anschluss angezeigt und per E-Mail.</p>
+      die Bankdaten und deine Referenz bekommst du direkt im Anschluss auf dieser Seite angezeigt.</p>
   </form>
 
   <div id="erfolg">
@@ -285,6 +285,11 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
       <tr><td>Verwendungszweck</td><td><span id="eRef"></span><button class="kopieren" type="button" id="refKopie">kopieren</button></td></tr>
     </table>
     <div class="hinweis" id="eHinweis"></div>
+    <div class="hinweis" style="text-align:center">
+      <p style="margin:0 0 14px">Schick uns zum Schluss noch die kurze Bestätigung – dann liegt deine
+        Anmeldung direkt in unserem Postfach und wir melden uns bei dir.</p>
+      <a class="btn" id="eMailLink" href="#" style="display:inline-block">Anmeldung per E-Mail bestätigen</a>
+    </div>
     <div class="hinweis">Fragen? Schreib uns an <b>bwt.schwarze@gmail.com</b> oder komm im Laden vorbei:
       Zur Kiepe, Alter Postweg 80, 26607 Aurich.</div>
   </div>
@@ -430,6 +435,23 @@ $('formular').addEventListener('submit', async e => {
     $('eHinweis').innerHTML = gewaehlt.art.indexOf('Vor Ort') === 0
       ? 'Du kommst am 14.08. zu uns: <b>Zur Kiepe, Alter Postweg 80, 26607 Aurich</b>. Los geht es um 19:00 Uhr, sei ein paar Minuten vorher da.'
       : 'Den Link zum TikTok Live und alle Infos schicken wir dir vor dem Kurs per E-Mail. Aufzeichnung und Skript kommen im Anschluss.';
+    const zeilen = [
+      'Anmeldung AAL TOTAL am 14.08.2026',
+      '',
+      'Referenz: ' + ref,
+      'Variante: ' + gewaehlt.art + ' – ' + gewaehlt.titel,
+      'Betrag: ' + eur(gewaehlt.preis),
+      'Name: ' + daten.name,
+      'E-Mail: ' + daten.email
+    ];
+    if(daten.telefon) zeilen.push('Telefon: ' + daten.telefon);
+    if(daten.tiktok_name) zeilen.push('TikTok-Name: ' + daten.tiktok_name);
+    if(gewaehlt.versand) zeilen.push('Anschrift: ' + daten.strasse + ', ' + daten.plz + ' ' + daten.wohnort);
+    if(daten.bemerkung) zeilen.push('Anmerkung: ' + daten.bemerkung);
+    $('eMailLink').href = 'mailto:bwt.schwarze@gmail.com'
+      + '?subject=' + encodeURIComponent('Aalkurs ' + ref)
+      + '&body=' + encodeURIComponent(zeilen.join('\n'));
+
     $('formular').style.display = 'none';
     $('summe').style.display = 'none';
     $('varianten-block').style.display = 'none';
