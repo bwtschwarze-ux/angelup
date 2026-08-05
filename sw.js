@@ -1,6 +1,6 @@
-const CACHE = 'angelup-v24';
+const CACHE = 'angelup-v25';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
-  './live.html', './kursinhalt.js', './stil.css', './impressum.html', './datenschutz.html',
+  './live.html', './aal.html', './kursinhalt.js', './stil.css', './impressum.html', './datenschutz.html',
   './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(DATEIEN)).then(() => self.skipWaiting()));

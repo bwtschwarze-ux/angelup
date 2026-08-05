@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="description" content="AAL TOTAL – Dein Weg zum Aal. Aalkurs am 14.08.2026 ab 19 Uhr, live auf TikTok oder vor Ort in Aurich. 3,5 Stunden vom Ei bis in den Räucherofen. Aufzeichnung und Skript inklusive.">
+<title>AAL TOTAL – Aalkurs am 14.08. · AngelUp</title>
+<link rel="canonical" href="https://angelup.de/aal.html">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:960px;margin:0 auto;padding:34px 20px 90px}
+main h2{font-size:clamp(1.4rem,2.8vw,2rem);margin:0 0 8px}
+main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
+
+/* Held */
+.held{text-align:center;padding:10px 0 4px}
+.held h1{font-size:clamp(2.1rem,6vw,3.6rem);margin:16px 0 6px;letter-spacing:-.035em;
+  background:linear-gradient(112deg,var(--gold) 8%,#ffe6a5 42%,var(--gold-2) 92%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.held .unter{color:var(--text-2);max-width:640px;margin:0 auto;font-size:clamp(1rem,1.7vw,1.16rem)}
+.held .sub{font-size:clamp(.95rem,2vw,1.2rem);font-weight:800;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text);margin:0 0 16px}
+.etikett.gold{border-color:rgba(255,194,71,.4);color:var(--gold)}
+.etikett.gold .punkt{background:var(--gold);box-shadow:0 0 0 4px rgba(255,194,71,.18)}
+
+/* Eckdaten */
+.eck{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin:30px 0 0}
+.eck .feld{background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border:1px solid var(--linie);border-radius:var(--r-s);padding:15px 16px}
+.eck .feld .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--text-3);
+  font-weight:800;margin-bottom:5px}
+.eck .feld .w{font-weight:700;font-size:.95rem;line-height:1.45;overflow-wrap:anywhere}
+
+/* Ablauf */
+.ablauf{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:22px}
+.ab{background:linear-gradient(165deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  border:1px solid var(--linie);border-radius:var(--r-s);padding:20px 20px}
+.ab .n{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.ab h3{font-size:1.02rem;margin:0 0 6px}
+.ab p{font-size:.88rem;color:var(--text-2);margin:0;line-height:1.6}
+
+/* Paket */
+.paket{background:linear-gradient(140deg,rgba(255,194,71,.14),rgba(255,148,48,.06) 60%,rgba(255,255,255,.03));
+  border:1px solid rgba(255,194,71,.28);border-radius:var(--r);padding:24px 24px;margin-top:20px}
+.paket ul{margin:12px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:9px}
+.paket li{background:rgba(255,255,255,.07);border:1px solid var(--linie);border-radius:100px;
+  padding:8px 15px;font-size:.86rem;font-weight:600}
+
+/* Variantenkarten */
+.varianten{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:22px}
+.vk{background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1.5px solid var(--linie);border-radius:var(--r);padding:24px 22px;cursor:pointer;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s;
+  position:relative;display:flex;flex-direction:column}
+.vk:hover{transform:translateY(-4px);border-color:var(--linie-2);box-shadow:var(--glanz-hoch)}
+.vk.gewaehlt{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,194,71,.14),var(--glanz)}
+.vk .art{font-size:.68rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px}
+.vk h3{font-size:1.05rem;margin:0 0 6px}
+.vk .lang{font-size:.86rem;color:var(--text-3);line-height:1.6;margin:0 0 18px;flex:1}
+.vk .preis{font-size:1.85rem;font-weight:800;letter-spacing:-.04em;line-height:1.1}
+.vk .preis small{font-size:.75rem;font-weight:600;color:var(--text-3);display:block;margin-top:5px;letter-spacing:0}
+.vk .empf{position:absolute;top:-13px;right:20px;font-size:.68rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;background:linear-gradient(120deg,var(--gold),var(--gold-2));color:#251200;
+  padding:5px 14px;border-radius:100px;box-shadow:0 8px 22px -8px rgba(255,148,48,.9)}
+.vk .waehlen{margin-top:16px;text-align:center;font-weight:700;font-size:.92rem;
+  border:1.5px solid var(--linie-2);color:var(--text);border-radius:12px;padding:11px;transition:.2s}
+.vk:hover .waehlen{border-color:var(--gold)}
+.vk.gewaehlt .waehlen{background:linear-gradient(120deg,var(--gold),var(--gold-2));
+  color:#251200;border-color:transparent;box-shadow:var(--glow-g)}
+
+/* Summe */
+.summe{background:linear-gradient(140deg,rgba(255,194,71,.13),rgba(46,230,197,.06) 65%,rgba(255,255,255,.03));
+  border:1px solid var(--linie-2);border-radius:var(--r);padding:22px 24px;margin:26px 0}
+.summe .z{display:flex;justify-content:space-between;gap:14px;font-size:.93rem;padding:5px 0;color:var(--text-2)}
+.summe .z b{font-weight:700;color:var(--text);text-align:right}
+.summe .gesamt{border-top:1px solid var(--linie-2);margin-top:11px;padding-top:13px;font-size:1.2rem;font-weight:800}
+.summe .gesamt b{font-size:1.5rem;letter-spacing:-.03em}
+
+/* Formular */
+.reihe{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.f{margin-bottom:14px}
+.f label{display:block;font-size:.78rem;font-weight:700;color:var(--text-2);margin-bottom:6px}
+.f input,.f textarea{width:100%;background:rgba(255,255,255,.045);border:1.5px solid var(--linie);
+  border-radius:12px;padding:12px 14px;color:var(--text);font-family:inherit;font-size:.95rem;transition:.2s}
+.f input:focus,.f textarea:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.07)}
+.f input.fehler,.f textarea.fehler{border-color:var(--rot)}
+.f textarea{min-height:88px;resize:vertical}
+.check{display:flex;gap:11px;align-items:flex-start;font-size:.86rem;color:var(--text-2);
+  line-height:1.55;margin:14px 0}
+.check input{margin-top:2px;width:19px;height:19px;flex:0 0 auto;accent-color:var(--gold)}
+.meldung{display:none;border-radius:12px;padding:13px 16px;font-size:.9rem;font-weight:600;margin:14px 0}
+.meldung.zeig{display:block}
+.meldung.schlecht{background:rgba(255,107,107,.13);border:1px solid rgba(255,107,107,.35);color:#ffbcbc}
+#versandBlock{display:none}
+
+/* Erfolg */
+#erfolg{display:none}
+.erfolg-kopf{text-align:center;padding:6px 0 22px}
+.erfolg-kopf .haken{width:70px;height:70px;border-radius:50%;
+  background:linear-gradient(140deg,var(--gold),var(--gold-2));color:#251200;
+  display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;
+  margin:0 auto 16px;box-shadow:0 14px 40px -12px rgba(255,148,48,.8)}
+.zahltab{width:100%;border-collapse:collapse;font-size:.93rem;margin-top:8px}
+.zahltab td{padding:11px 0;border-bottom:1px solid var(--linie);vertical-align:top}
+.zahltab td:first-child{color:var(--text-3);width:40%;padding-right:14px}
+.zahltab td:last-child{font-weight:700;word-break:break-word}
+.kopieren{background:none;border:none;color:var(--gold);font-size:.78rem;font-weight:700;
+  cursor:pointer;text-decoration:underline;padding:0;margin-left:9px;font-family:inherit}
+.hinweis{background:rgba(255,255,255,.045);border:1px solid var(--linie);border-left:3px solid var(--gold);
+  border-radius:var(--r-s);padding:16px 18px;font-size:.9rem;color:var(--text-2);line-height:1.65;margin-top:18px}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="kurs.html">Angelschein</a>
+      <a class="btn t" href="#anmeldung">Kursplatz sichern</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+
+<section id="oben">
+  <div class="held">
+    <span class="etikett gold"><span class="punkt"></span>Der Aalkurs · TikTok Live und vor Ort</span>
+    <h1>AAL TOTAL</h1>
+    <p class="sub">Dein Weg zum Aal</p>
+    <p class="unter">Dreieinhalb Stunden live – vom Ei bis in den Räucherofen. Freitag, 14.08.2026 ab 19 Uhr.
+       Sei live auf TikTok dabei oder komm zu uns in den Laden nach Aurich.</p>
+  </div>
+
+  <div class="eck">
+    <div class="feld"><div class="k">Termin</div><div class="w">Freitag, 14.08.2026<br>ab 19:00 Uhr</div></div>
+    <div class="feld"><div class="k">Dauer</div><div class="w">3,5 Stunden live</div></div>
+    <div class="feld"><div class="k">Wo</div><div class="w">TikTok Live<br>oder vor Ort in Aurich</div></div>
+    <div class="feld"><div class="k">Inklusive</div><div class="w">Aufzeichnung und Skript</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Vom Ei bis in den Räucherofen</h2>
+  <p class="lead">Der Aal ist der geheimnisvollste Fisch, den wir hier haben – und der, bei dem
+     die meisten Angler raten statt zu wissen. In diesem Abend gehen wir seinen ganzen Weg durch:
+     wo er herkommt, wie du ihn findest, womit du ihn fängst und was danach in der Küche passiert.</p>
+
+  <div class="ablauf">
+    <div class="ab">
+      <div class="n">Teil 1</div>
+      <h3>Der Fisch</h3>
+      <p>Lebenszyklus vom Ei bis zum Blankaal, Wanderung, Gelbaal und Blankaal unterscheiden,
+         Bestand und Schonvorschriften – damit du weißt, was du da vor dir hast.</p>
+    </div>
+    <div class="ab">
+      <div class="n">Teil 2</div>
+      <h3>Der Platz</h3>
+      <p>Gewässer lesen: Kanal, Tief, See und Fluss. Wo der Aal tagsüber steht, wann er zieht,
+         welche Rolle Wind, Wetter und Mond wirklich spielen.</p>
+    </div>
+    <div class="ab">
+      <div class="n">Teil 3</div>
+      <h3>Montage und Köder</h3>
+      <p>Grundmontage, Posenmontage, Vorfach und Haken. Wurm, Fischfetzen und Co. – wir bauen
+         die Montagen live auf und du siehst genau, warum welcher Knoten wohin gehört.</p>
+    </div>
+    <div class="ab">
+      <div class="n">Teil 4</div>
+      <h3>Nacht, Drill und Handling</h3>
+      <p>Ausrüstung für die Nacht, Bissanzeige mit Knicklicht, sauberer Anhieb, Drill und
+         waidgerechtes Versorgen des Fangs.</p>
+    </div>
+    <div class="ab">
+      <div class="n">Teil 5</div>
+      <h3>Räuchern</h3>
+      <p>Vom Salzen und Lake ansetzen über das Trocknen bis zum Garen und Räuchern.
+         Temperaturen, Zeiten, Späne – so wird der Aal goldgelb statt trocken.</p>
+    </div>
+    <div class="ab">
+      <div class="n">Danach</div>
+      <h3>Fragen und Aufzeichnung</h3>
+      <p>Am Ende beantworten wir deine Fragen. Aufzeichnung und Skript bekommst du danach
+         per E-Mail – du kannst also in Ruhe nochmal nachschauen.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Das Aal-Paket</h2>
+  <p class="lead">Wenn du direkt loslegen willst, nimm das Aal-Paket dazu. Da ist alles drin,
+     was du für den Abend am Wasser brauchst – abgestimmt auf genau die Montagen aus dem Kurs.</p>
+  <div class="paket">
+    <b style="font-size:1.05rem">Im Aal-Paket enthalten</b>
+    <ul>
+      <li>Posen</li><li>Haken</li><li>Montagen</li><li>Wirbel</li><li>Knicklichter</li>
+    </ul>
+    <p class="klein" style="margin:14px 0 0;color:var(--text-2)">Beim TikTok-Live-Paket ist der Versand
+       bereits im Preis enthalten. Vor Ort bekommst du das Paket am Kursabend in die Hand.</p>
+  </div>
+</section>
+
+<section id="varianten-block">
+  <h2>Wie willst du dabei sein?</h2>
+  <p class="lead">Vier Möglichkeiten – zwei online, zwei bei uns im Laden. Wähle aus,
+     der Preis passt sich automatisch an.</p>
+  <div class="varianten" id="varianten"></div>
+</section>
+
+<section id="anmeldung">
+  <h2>Kursplatz sichern</h2>
+  <p class="lead">Kurz ausfüllen, abschicken, überweisen – danach bekommst du von uns
+     den Zugang beziehungsweise die Bestätigung für den Abend.</p>
+
+  <div class="summe" id="summe"></div>
+
+  <form id="formular" novalidate>
+    <div class="reihe">
+      <div class="f"><label for="name">Vor- und Nachname *</label><input id="name" name="name" autocomplete="name"></div>
+      <div class="f"><label for="email">E-Mail *</label><input id="email" name="email" type="email" autocomplete="email"></div>
+    </div>
+    <div class="reihe">
+      <div class="f"><label for="telefon">Telefon (optional)</label><input id="telefon" name="telefon" autocomplete="tel"></div>
+      <div class="f"><label for="tiktok_name">Dein TikTok-Name (bei TikTok Live)</label><input id="tiktok_name" name="tiktok_name"></div>
+    </div>
+
+    <div id="versandBlock">
+      <p class="klein" style="color:var(--text-3);margin:4px 0 10px">Für den Versand des Aal-Pakets brauchen wir deine Anschrift.</p>
+      <div class="f"><label for="strasse">Straße und Hausnummer *</label><input id="strasse" name="strasse" autocomplete="street-address"></div>
+      <div class="reihe">
+        <div class="f"><label for="plz">PLZ *</label><input id="plz" name="plz" inputmode="numeric" autocomplete="postal-code"></div>
+        <div class="f"><label for="wohnort">Wohnort *</label><input id="wohnort" name="wohnort" autocomplete="address-level2"></div>
+      </div>
+    </div>
+
+    <div class="f"><label for="bemerkung">Frage oder Anmerkung (optional)</label><textarea id="bemerkung" name="bemerkung"></textarea></div>
+
+    <label class="check"><input type="checkbox" id="datenschutz_ok">
+      <span>Ich bin einverstanden, dass meine Angaben zur Abwicklung des Kurses gespeichert und
+      verwendet werden. Die <a href="datenschutz.html">Datenschutzerklärung</a> habe ich gelesen. *</span></label>
+
+    <div class="meldung schlecht" id="fehlerBox"></div>
+
+    <button type="submit" class="btn gross" id="absenden" style="width:100%;margin-top:8px">Kostenpflichtig anmelden</button>
+    <p class="klein" style="color:var(--text-3);margin-top:12px">
+      Mit dem Absenden meldest du dich verbindlich an. Die Zahlung läuft per Überweisung,
+      die Daten bekommst du direkt im Anschluss angezeigt und per E-Mail.</p>
+  </form>
+
+  <div id="erfolg">
+    <div class="erfolg-kopf">
+      <div class="haken">✓</div>
+      <h2 style="margin:0 0 8px">Anmeldung ist da</h2>
+      <p class="lead" style="margin:0">Jetzt fehlt nur noch die Überweisung. Bitte nutze
+         genau den Verwendungszweck unten, dann können wir dich sofort zuordnen.</p>
+    </div>
+    <table class="zahltab">
+      <tr><td>Kurs</td><td id="eKurs"></td></tr>
+      <tr><td>Termin</td><td>Freitag, 14.08.2026 ab 19:00 Uhr</td></tr>
+      <tr><td>Betrag</td><td id="eBetrag"></td></tr>
+      <tr><td>Empfänger</td><td>Mark Schwarze</td></tr>
+      <tr><td>IBAN</td><td><span id="eIban">DE66 5001 0517 6000 3634 26</span><button class="kopieren" type="button" data-kopie="DE66500105176000363426">kopieren</button></td></tr>
+      <tr><td>BIC</td><td>INGDDEFFXXX (ING)</td></tr>
+      <tr><td>Verwendungszweck</td><td><span id="eRef"></span><button class="kopieren" type="button" id="refKopie">kopieren</button></td></tr>
+    </table>
+    <div class="hinweis" id="eHinweis"></div>
+    <div class="hinweis">Fragen? Schreib uns an <b>bwt.schwarze@gmail.com</b> oder komm im Laden vorbei:
+      Zur Kiepe, Alter Postweg 80, 26607 Aurich.</div>
+  </div>
+</section>
+
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SB_URL = 'https://vqjpwhqpcybpblgtjuxw.supabase.co';
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur = c => (c/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €';
+
+/* Burger */
+(function(){
+  const b = $('burger'), n = $('navLinks');
+  if(!b || !n) return;
+  b.addEventListener('click', () => {
+    const auf = n.classList.toggle('offen');
+    b.setAttribute('aria-expanded', auf ? 'true' : 'false');
+    b.textContent = auf ? '✕' : '☰';
+  });
+  n.addEventListener('click', e => {
+    if(e.target.tagName === 'A'){ n.classList.remove('offen'); b.textContent = '☰'; b.setAttribute('aria-expanded','false'); }
+  });
+})();
+addEventListener('scroll', () => $('nav').classList.toggle('fest', scrollY > 12));
+
+/* Varianten */
+const VARIANTEN = [
+  { id:'tiktok_kurs',  art:'TikTok Live', titel:'Nur Kurs', preis:1900, versand:false,
+    text:'Du bist live auf TikTok dabei, kannst im Chat fragen und bekommst danach Aufzeichnung und Skript per E-Mail.' },
+  { id:'tiktok_paket', art:'TikTok Live', titel:'Aal-Paket', preis:3400, versand:true, empf:'Beliebt',
+    text:'Alles aus „Nur Kurs“ plus das komplette Aal-Paket mit Posen, Haken, Montagen, Wirbeln und Knicklichtern – Versand inklusive.' },
+  { id:'vorort_kurs',  art:'Vor Ort in Aurich', titel:'Kursabend', preis:2900, versand:false,
+    text:'Du sitzt bei uns im Laden, baust die Montagen direkt mit und stellst deine Fragen persönlich. Getränke sind inklusive.' },
+  { id:'vorort_paket', art:'Vor Ort in Aurich', titel:'Kursabend + Aal-Paket', preis:3900, versand:false,
+    text:'Der Abend vor Ort inklusive Getränke, dazu das Aal-Paket – du nimmst es am selben Abend mit nach Hause.' }
+];
+let gewaehlt = VARIANTEN[1];
+
+function variantenZeichnen(){
+  $('varianten').innerHTML = VARIANTEN.map(v => `
+    <div class="vk ${v.id === gewaehlt.id ? 'gewaehlt' : ''}" data-id="${v.id}" role="button" tabindex="0">
+      ${v.empf ? `<span class="empf">${esc(v.empf)}</span>` : ''}
+      <div class="art">${esc(v.art)}</div>
+      <h3>${esc(v.titel)}</h3>
+      <p class="lang">${esc(v.text)}</p>
+      <div class="preis">${eur(v.preis)}<small>${v.versand ? 'inkl. Versand' : (v.art.indexOf('Vor Ort') === 0 ? 'inkl. Getränke' : 'einmalig')}</small></div>
+      <div class="waehlen">${v.id === gewaehlt.id ? 'Ausgewählt' : 'Auswählen'}</div>
+    </div>`).join('');
+  [...document.querySelectorAll('.vk')].forEach(k => {
+    const w = () => { gewaehlt = VARIANTEN.find(x => x.id === k.dataset.id); variantenZeichnen(); summeZeichnen(); };
+    k.addEventListener('click', w);
+    k.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); w(); } });
+  });
+}
+
+function summeZeichnen(){
+  $('summe').innerHTML =
+    `<div class="z"><span>Kurs</span><b>AAL TOTAL – ${esc(gewaehlt.art)}</b></div>` +
+    `<div class="z"><span>Variante</span><b>${esc(gewaehlt.titel)}</b></div>` +
+    `<div class="z"><span>Termin</span><b>Fr, 14.08.2026 · ab 19 Uhr</b></div>` +
+    `<div class="z gesamt"><span>Gesamt</span><b>${eur(gewaehlt.preis)}</b></div>`;
+  $('versandBlock').style.display = gewaehlt.versand ? 'block' : 'none';
+}
+
+variantenZeichnen();
+summeZeichnen();
+
+/* Referenz */
+function referenz(){
+  const z = new Uint32Array(1);
+  (crypto && crypto.getRandomValues) ? crypto.getRandomValues(z) : (z[0] = Math.floor(Math.random()*1e9));
+  return 'AAL-2608-' + String(z[0] % 10000).padStart(4,'0');
+}
+
+/* Absenden */
+$('formular').addEventListener('submit', async e => {
+  e.preventDefault();
+  const box = $('fehlerBox'); box.classList.remove('zeig');
+  [...document.querySelectorAll('.fehler')].forEach(el => el.classList.remove('fehler'));
+
+  const w = id => ($(id).value || '').trim();
+  const pflicht = ['name','email'].concat(gewaehlt.versand ? ['strasse','plz','wohnort'] : []);
+  const fehlt = pflicht.filter(id => { const leer = !w(id); if(leer) $(id).classList.add('fehler'); return leer; });
+  const mail = w('email');
+  const mailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail);
+  if(!mailOk && mail) $('email').classList.add('fehler');
+  const dsOk = $('datenschutz_ok').checked;
+
+  if(fehlt.length || !mailOk || !dsOk){
+    box.textContent = fehlt.length ? 'Bitte fülle die markierten Pflichtfelder aus.'
+      : !mailOk ? 'Bitte prüfe deine E-Mail-Adresse.'
+      : 'Bitte bestätige die Datenschutzerklärung.';
+    box.classList.add('zeig');
+    box.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  const btn = $('absenden');
+  btn.disabled = true; btn.textContent = 'Wird gesendet …';
+  const ref = referenz();
+  const daten = {
+    referenz: ref,
+    variante: gewaehlt.id,
+    betrag_cent: gewaehlt.preis,
+    name: w('name'),
+    email: mail,
+    telefon: w('telefon') || null,
+    tiktok_name: w('tiktok_name') || null,
+    strasse: gewaehlt.versand ? w('strasse') : null,
+    plz: gewaehlt.versand ? w('plz') : null,
+    wohnort: gewaehlt.versand ? w('wohnort') : null,
+    bemerkung: w('bemerkung') || null,
+    datenschutz_ok: true
+  };
+
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/aal_anmeldung', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+                 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify(daten)
+    });
+    if(!r.ok) throw new Error('Status ' + r.status);
+
+    $('eKurs').textContent = 'AAL TOTAL · ' + gewaehlt.art + ' · ' + gewaehlt.titel;
+    $('eBetrag').textContent = eur(gewaehlt.preis);
+    $('eRef').textContent = ref;
+    $('refKopie').dataset.kopie = ref;
+    $('eHinweis').innerHTML = gewaehlt.art.indexOf('Vor Ort') === 0
+      ? 'Du kommst am 14.08. zu uns: <b>Zur Kiepe, Alter Postweg 80, 26607 Aurich</b>. Los geht es um 19:00 Uhr, sei ein paar Minuten vorher da.'
+      : 'Den Link zum TikTok Live und alle Infos schicken wir dir vor dem Kurs per E-Mail. Aufzeichnung und Skript kommen im Anschluss.';
+    $('formular').style.display = 'none';
+    $('summe').style.display = 'none';
+    $('varianten-block').style.display = 'none';
+    $('erfolg').style.display = 'block';
+    $('erfolg').scrollIntoView({behavior:'smooth', block:'start'});
+  } catch(err){
+    btn.disabled = false; btn.textContent = 'Kostenpflichtig anmelden';
+    box.innerHTML = 'Das hat leider nicht geklappt. Bitte versuch es nochmal oder schreib uns an <b>bwt.schwarze@gmail.com</b>.';
+    box.classList.add('zeig');
+  }
+});
+
+/* Kopieren */
+document.addEventListener('click', e => {
+  const b = e.target.closest('.kopieren');
+  if(!b) return;
+  const t = b.dataset.kopie || '';
+  navigator.clipboard && navigator.clipboard.writeText(t).then(() => {
+    const alt = b.textContent; b.textContent = 'kopiert';
+    setTimeout(() => { b.textContent = alt; }, 1600);
+  }).catch(() => {});
+});
+
+/* Service Worker */
+if('serviceWorker' in navigator){
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>

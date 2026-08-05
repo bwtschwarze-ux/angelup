@@ -64,6 +64,7 @@
       <a href="#lehrgang">Lehrgang</a>
       <a href="#preise">Preise</a>
       <a href="#fragen">Fragen</a>
+      <a href="aal.html">Aalkurs</a>
       <a class="btn t" href="kurs.html">Platz sichern</a>
     </nav>
     <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
@@ -340,7 +341,35 @@
       <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09)"><span>Praxistag mit unserem Gerät</span><b>20,00 €</b></div>
       <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09)"><span>Prüfungstag inklusive Prüfungsgebühr</span><b>70,00 €</b></div>
       <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0 0"><span><b>Alle drei zusammen</b></span><b>160,00 €</b></div>
-      <p class="klein" style="margin:14px 0 0">Der Präsenzlehrgang vor Ort kostet mehr als der Online-Kurs, weil dort fünf Termine Unterricht, Raum und Betreuung drinstecken.</p>
+      <p class="klein" style="margin:14px 0 0">Beide Kurspakete kosten 160,00 € – egal ob du die Theorie online lernst oder komplett zu uns nach Aurich kommst. Du entscheidest also nach deinem Alltag, nicht nach dem Preis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =============== Aalkurs =============== -->
+<section id="aalkurs" style="padding-top:0">
+  <div class="wrap">
+    <div class="karte auf" style="background:linear-gradient(140deg,rgba(255,194,71,.14),rgba(255,148,48,.06) 55%,rgba(255,255,255,.03));border-color:rgba(255,194,71,.28)">
+      <div class="gitter g-2" style="align-items:center;gap:30px">
+        <div>
+          <span class="etikett gold" style="margin-bottom:12px"><span class="punkt"></span>Neu · Freitag, 14.08.2026 ab 19 Uhr</span>
+          <h2 style="margin:0 0 10px;font-size:clamp(1.5rem,3.2vw,2.1rem)">AAL TOTAL – dein Weg zum Aal</h2>
+          <p class="lead" style="margin:0 0 18px">Dreieinhalb Stunden live: vom Ei bis in den Räucherofen.
+             Lebensweise, Gewässer lesen, Montagen, Nachtangeln und Räuchern. Sei live auf TikTok dabei
+             oder komm zu uns in den Laden nach Aurich. Aufzeichnung und Skript bekommst du dazu.</p>
+          <div class="btn-reihe">
+            <a class="btn" href="aal.html">Kursplatz sichern</a>
+            <a class="btn geist" href="aal.html#varianten-block">Preise ansehen</a>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09)"><span>TikTok Live · nur Kurs</span><b>19,00 €</b></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09)"><span>TikTok Live · mit Aal-Paket</span><b>34,00 €</b></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09)"><span>Vor Ort · inkl. Getränke</span><b>29,00 €</b></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0"><span>Vor Ort · mit Aal-Paket</span><b>39,00 €</b></div>
+          <p class="klein" style="margin:12px 0 0">Im Aal-Paket: Posen, Haken, Montagen, Wirbel und Knicklichter. Beim TikTok-Paket ist der Versand enthalten.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -612,14 +641,15 @@ fetch(API + '?lehrgang=august-2026', {headers: API_HEADERS})
     if(!l) return;
     var ges = l.plaetze || 12;
     var frei = (typeof l.plaetze_frei === 'number') ? l.plaetze_frei : null;
-    document.getElementById('faktPlaetze').textContent = ges;
     if(frei === null) return;
-    document.getElementById('platzText').textContent = frei + ' von ' + ges + ' frei';
+    document.getElementById('platzText').textContent = frei > 0
+      ? 'noch ' + frei + ' frei'
+      : 'ausgebucht';
     document.getElementById('heroPlatz').textContent = frei > 0
-      ? 'Lehrgang August 2026 · noch ' + frei + ' von ' + ges + ' Plätzen frei'
+      ? 'Lehrgang August 2026 · noch ' + frei + (frei === 1 ? ' Platz frei' : ' Plätze frei')
       : 'Lehrgang August 2026 · ausgebucht';
     document.getElementById('ctaPlatz').textContent = frei > 0
-      ? 'Noch ' + frei + ' Plätze frei'
+      ? 'Noch ' + frei + (frei === 1 ? ' Platz frei' : ' Plätze frei')
       : 'Aktuell ausgebucht – Warteliste möglich';
   })
   .catch(function(){ tarifeZeichnen([]); });

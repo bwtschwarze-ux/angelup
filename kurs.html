@@ -103,6 +103,7 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
       <a href="app.html">Fragen üben</a>
       <a href="lernen.html">Online-Kurs</a>
       <a href="live.html">Livekurs</a>
+      <a href="aal.html">Aalkurs</a>
       <a class="btn t" href="#anmeldung">Zur Anmeldung</a>
     </nav>
     <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
@@ -147,8 +148,8 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
      Entweder du machst den Lehrgang komplett bei uns vor Ort, oder du lernst die Theorie online
      bei uns und kommst nur zum Praxistag und zur Prüfung, oder du hast deinen Lehrgang schon
      woanders gemacht und meldest dich nur zum Prüfungstag an. In beiden Kurspaketen ist die
-     Prüfungsgebühr enthalten. Die Bausteine einzeln: Online-Kurs 70,00 €, Praxistag 20,00 €,
-     Prüfungstag mit Prüfungsgebühr 70,00 €. Wähle unten aus, der Preis passt sich automatisch an.</p>
+     Prüfungsgebühr enthalten – beide kosten 160,00 €. Die Bausteine einzeln: Online-Kurs 70,00 €,
+     Praxistag 20,00 €, Prüfungstag mit Prüfungsgebühr 70,00 €. Wähle unten aus, der Preis passt sich automatisch an.</p>
   <div class="varianten" id="varianten"><div class="lade">Kursdaten werden geladen …</div></div>
 </section>
 
@@ -382,14 +383,14 @@ function zeichnen(){
 
   const frei = l.plaetze_frei;
   felder.push(['Freie Plätze',
-    `<span class="${frei>0?'frei':'voll'}">${frei>0 ? frei + ' von ' + l.plaetze : 'ausgebucht'}</span>`]);
+    `<span class="${frei>0?'frei':'voll'}">${frei>0 ? 'noch ' + frei + (frei===1?' Platz frei':' Plätze frei') : 'ausgebucht'}</span>`]);
 
   $('eckdaten').innerHTML = felder.map(f =>
     `<div class="feld"><div class="k">${esc(f[0])}</div><div class="w">${f[1]}</div></div>`).join('');
 
   const tag = $('tagPlaetze');
   const tagText = !l.anmeldung_offen ? 'Anmeldung geschlossen'
-    : frei > 0 ? (frei <= 5 ? 'Nur noch ' + frei + ' Plätze' : 'Anmeldung offen') : 'Warteliste';
+    : frei > 0 ? (frei <= 5 ? 'Nur noch ' + frei + (frei===1?' Platz':' Plätze') : 'Anmeldung offen') : 'Warteliste';
   tag.innerHTML = '<span class="punkt"></span>' + esc(tagText);
   if(frei === 0 || !l.anmeldung_offen) tag.classList.add('gold');
 
