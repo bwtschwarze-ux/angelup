@@ -212,9 +212,11 @@ async function laden(){
   const zielL = document.getElementById('rasterLehrgang');
   const zielS = document.getElementById('rasterSpezial');
   try {
-    const [rk, rv] = await Promise.all([
+    const [rk, rv, rl, rlv] = await Promise.all([
       fetch(SB_URL + '/rest/v1/kursangebot?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF }),
-      fetch(SB_URL + '/rest/v1/kursangebot_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF })
+      fetch(SB_URL + '/rest/v1/kursangebot_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF }),
+      fetch(SB_URL + '/rest/v1/lehrgang_oeffentlich?select=id,slug', { headers: KOPF }),
+      fetch(SB_URL + '/rest/v1/lehrgang_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF })
     ]);
     if (!rk.ok) throw new Error('kursangebot ' + rk.status);
     const kurse = await rk.json();
@@ -222,6 +224,21 @@ async function laden(){
 
     const proKurs = {};
     varianten.forEach(v => { (proKurs[v.kurs_slug] = proKurs[v.kurs_slug] || []).push(v); });
+
+    // Lehrgangspreise kommen aus der Lehrgangstabelle - so steht der Preis nur an einer Stelle
+    if (rl.ok && rlv.ok) {
+      const slugVonId = {};
+      (await rl.json()).forEach(l => { slugVonId[l.id] = l.slug; });
+      (await rlv.json()).forEach(v => {
+        const s = slugVonId[v.lehrgang_id];
+        if (!s) return;
+        (proKurs[s] = proKurs[s] || []).push({
+          kurs_slug: s, variante: v.variante, titel: v.titel,
+          zusatz: v.kurztext || null, preis_cent: v.preis_cent,
+          versand: false, sortierung: v.sortierung, aktiv: true
+        });
+      });
+    }
 
     const bau = (liste, el, leer) => {
       el.innerHTML = liste.length
