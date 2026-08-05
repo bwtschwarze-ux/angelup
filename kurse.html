@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="description" content="Alle Kurse der Angelschule Ostfriesland auf einen Blick: Vorbereitungslehrgang zur Fischerprüfung, reine Prüfungstermine sowie Spezialkurse zu Aal, Raubfisch, Karpfen und Waller.">
+<title>Alle Kurse im Überblick – AngelUp</title>
+<link rel="canonical" href="https://angelup.de/kurse.html">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:1180px;margin:0 auto;padding:34px 22px 90px}
+main section{padding:0;margin-bottom:clamp(40px,6vw,72px)}
+main h2{font-size:clamp(1.4rem,2.8vw,2rem);margin:0 0 6px}
+.abschnitt-kopf{margin-bottom:22px}
+.abschnitt-kopf p{color:var(--text-2);margin:0;font-size:.98rem;line-height:1.65;max-width:720px}
+
+/* Produktraster */
+.raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:18px}
+.pk{
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  background:linear-gradient(165deg,rgba(255,255,255,.062),rgba(255,255,255,.022));
+  border:1px solid var(--linie);border-radius:var(--r);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
+  text-decoration:none;color:inherit;
+}
+.pk:hover{transform:translateY(-5px);border-color:var(--linie-2);box-shadow:var(--glanz-hoch);color:inherit}
+.pk .band{height:5px;width:100%;background:var(--kf,var(--tuerkis))}
+.pk .inhalt{padding:22px 22px 0;flex:1;display:flex;flex-direction:column}
+.pk .kopf{display:flex;align-items:flex-start;gap:13px;margin-bottom:12px}
+.pk .sym{
+  width:50px;height:50px;flex:0 0 50px;border-radius:15px;display:grid;place-items:center;font-size:1.5rem;
+  background:color-mix(in srgb, var(--kf,#2ee6c5) 18%, transparent);
+  border:1px solid color-mix(in srgb, var(--kf,#2ee6c5) 34%, transparent);
+}
+.pk h3{margin:0 0 3px;font-size:1.14rem;letter-spacing:-.02em;line-height:1.25}
+.pk .badge{
+  font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--kf,var(--tuerkis));display:block;margin-bottom:4px
+}
+.pk .unter{color:var(--text-2);font-size:.9rem;line-height:1.55;margin:0 0 14px}
+.pk .fakten{display:flex;flex-direction:column;gap:7px;margin:0 0 16px;padding:0;list-style:none}
+.pk .fakten li{display:flex;gap:9px;align-items:flex-start;font-size:.86rem;color:var(--text-2);line-height:1.5}
+.pk .fakten li span:first-child{flex:0 0 17px;opacity:.85}
+.pk .fuss-teil{margin-top:auto;padding:16px 22px 22px;border-top:1px solid var(--linie);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.pk .preis{font-size:1.32rem;font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.pk .preis small{display:block;font-size:.72rem;font-weight:600;color:var(--text-3);letter-spacing:0;margin-top:2px}
+.pk .cta{
+  font-size:.9rem;font-weight:700;padding:11px 18px;border-radius:12px;white-space:nowrap;
+  background:linear-gradient(120deg,var(--gold),var(--gold-2));color:#251200;box-shadow:var(--glow-g)
+}
+.pk .cta.merken{background:transparent;color:var(--text);border:1.5px solid var(--linie-2);box-shadow:none}
+.pk .ecke{
+  position:absolute;top:16px;right:16px;font-size:.68rem;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;padding:5px 11px;border-radius:100px;
+  background:rgba(53,208,127,.14);border:1px solid rgba(53,208,127,.3);color:var(--gruen)
+}
+.pk .ecke.wartet{background:var(--glas);border-color:var(--linie);color:var(--text-3)}
+
+.laedt{text-align:center;color:var(--text-3);padding:48px 0;font-size:.95rem}
+.fehler{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.28);border-radius:var(--r-s);
+  padding:16px 18px;color:var(--rot);font-size:.92rem}
+.hilfe{background:linear-gradient(140deg,rgba(46,230,197,.11),rgba(255,255,255,.03));
+  border:1px solid var(--linie-2);border-radius:var(--r);padding:26px}
+.hilfe h3{margin:0 0 8px}
+.hilfe p{color:var(--text-2);font-size:.94rem;line-height:1.7;margin:0 0 16px}
+@media(max-width:560px){ .pk .fuss-teil{flex-direction:column;align-items:stretch}
+  .pk .cta{text-align:center} }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="videokurse.html">Videokurse</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a class="btn t" href="player.html">Meine Kurse</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <section style="margin-bottom:clamp(30px,4vw,48px)">
+    <span class="etikett"><span class="punkt"></span>Angelschule Ostfriesland</span>
+    <h1 style="margin:16px 0 10px;font-size:clamp(2rem,4.6vw,3.1rem);letter-spacing:-.035em">Alle Kurse auf einen Blick</h1>
+    <p class="lead" style="max-width:760px">Vom Vorbereitungslehrgang für die Fischerprüfung bis zu den Spezialkursen am Wasser –
+    such dir aus, was zu dir passt. Kurse mit festem Termin kannst du direkt buchen, bei den übrigen trägst du dich
+    unverbindlich in die Vormerkliste ein und erfährst als Erster, wenn der Termin steht.</p>
+  </section>
+
+  <section id="lehrgang">
+    <div class="abschnitt-kopf">
+      <h2>🎓 Fischereischein &amp; Prüfung</h2>
+      <p>Der komplette Weg zum Fischereischein: Lehrgang mit Praxistag und anschließender Prüfung des
+      Landesfischereiverbands Weser-Ems – oder nur der Prüfungstermin, wenn du den Lehrgang schon hinter dir hast.</p>
+    </div>
+    <div class="raster" id="rasterLehrgang"><div class="laedt">Kurse werden geladen …</div></div>
+  </section>
+
+  <section id="spezial">
+    <div class="abschnitt-kopf">
+      <h2>🎣 Spezialkurse</h2>
+      <p>Kurse für eine bestimmte Fischart – online im Livestream oder vor Ort bei uns. Kein Fischereischein nötig,
+      jeder kann mitmachen.</p>
+    </div>
+    <div class="raster" id="rasterSpezial"><div class="laedt">Kurse werden geladen …</div></div>
+  </section>
+
+  <section>
+    <div class="hilfe">
+      <h3>Du weißt nicht, was für dich passt?</h3>
+      <p>Kurzer Wegweiser: Wer noch keinen Fischereischein hat, braucht den <strong>Vorbereitungslehrgang</strong> –
+      dort sind Kurs, Praxistag und Prüfungsgebühr enthalten. Wer den Lehrgang bereits woanders besucht hat oder
+      wiederholen muss, bucht <strong>nur die Prüfung</strong>. Die <strong>Spezialkurse</strong> sind Zusatzwissen für
+      eine Fischart und setzen keinen Schein voraus. Ruf einfach an oder schreib uns.</p>
+      <div class="btn-reihe">
+        <a class="btn t" href="mailto:bwt.schwarze@gmail.com?subject=Frage%20zu%20den%20Kursen">Frage per E-Mail</a>
+        <a class="btn geist" href="app.html">Erst mal kostenlos Fragen üben</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Öffentlicher (client-safer) Supabase-Publishable-Key – identisch mit dem der Lern-App */
+const SB_URL = 'https://vqjpwhqpcybpblgtjuxw.supabase.co';
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+const KOPF   = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+
+const SYMBOL = { 'august-2026':'🎓', 'oktober-2026':'🎓', 'pruefung-september-2026':'📋',
+                 aal:'🐍', raubfisch:'🐊', karpfen:'🐟', waller:'🐋' };
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function euro(cent){ return (cent/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+
+/* Nur mobil aufklappbares Menü – gleiche Mechanik wie auf den anderen Seiten */
+const burger = document.getElementById('burger');
+if (burger) burger.addEventListener('click', () => {
+  const l = document.getElementById('navLinks');
+  const auf = l.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', auf ? 'true' : 'false');
+});
+
+function preisBlock(kurs, varianten){
+  const mit = varianten.filter(v => v.preis_cent != null);
+  if (!mit.length) return '<div class="preis">Preis folgt<small>steht rechtzeitig vor dem Kurs fest</small></div>';
+  const min = Math.min.apply(null, mit.map(v => v.preis_cent));
+  const alleGleich = mit.every(v => v.preis_cent === min);
+  return '<div class="preis">' + (alleGleich ? '' : 'ab ') + euro(min) +
+         '<small>' + (mit.length > 1 ? mit.length + ' Varianten zur Auswahl' : 'ein Paket') + '</small></div>';
+}
+
+function karte(kurs, varianten){
+  const merken  = kurs.modus === 'vormerken';
+  const ziel    = kurs.ziel_url || (merken ? 'vormerken.html?k=' + encodeURIComponent(kurs.slug) : 'kurs.html?kurs=' + encodeURIComponent(kurs.slug));
+  const sym     = SYMBOL[kurs.slug] || (kurs.art === 'lehrgang' ? '🎓' : '🎣');
+  const fakten  = [];
+  if (kurs.termin_text) fakten.push(['📅', kurs.termin_text]);
+  if (kurs.ort_text)    fakten.push(['📍', kurs.ort_text]);
+  if (kurs.paket_inhalt) fakten.push(['📦', kurs.paket_inhalt]);
+
+  return '<a class="pk" style="--kf:' + esc(kurs.farbe || '#2ee6c5') + '" href="' + esc(ziel) + '">' +
+    '<div class="band"></div>' +
+    '<div class="ecke' + (merken ? ' wartet' : '') + '">' + (merken ? 'Termin folgt' : 'Anmeldung offen') + '</div>' +
+    '<div class="inhalt">' +
+      '<div class="kopf"><span class="sym">' + sym + '</span>' +
+        '<div>' + (kurs.badge ? '<span class="badge">' + esc(kurs.badge) + '</span>' : '') +
+        '<h3>' + esc(kurs.titel) + '</h3></div></div>' +
+      (kurs.untertitel ? '<p class="unter">' + esc(kurs.untertitel) + '</p>' : '') +
+      (fakten.length ? '<ul class="fakten">' + fakten.map(f =>
+        '<li><span>' + f[0] + '</span><span>' + esc(f[1]) + '</span></li>').join('') + '</ul>' : '') +
+    '</div>' +
+    '<div class="fuss-teil">' + preisBlock(kurs, varianten) +
+      '<span class="cta' + (merken ? ' merken' : '') + '">' + (merken ? 'Vormerken' : 'Jetzt anmelden') + '</span>' +
+    '</div></a>';
+}
+
+async function laden(){
+  const zielL = document.getElementById('rasterLehrgang');
+  const zielS = document.getElementById('rasterSpezial');
+  try {
+    const [rk, rv] = await Promise.all([
+      fetch(SB_URL + '/rest/v1/kursangebot?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF }),
+      fetch(SB_URL + '/rest/v1/kursangebot_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF })
+    ]);
+    if (!rk.ok) throw new Error('kursangebot ' + rk.status);
+    const kurse = await rk.json();
+    const varianten = rv.ok ? await rv.json() : [];
+
+    const proKurs = {};
+    varianten.forEach(v => { (proKurs[v.kurs_slug] = proKurs[v.kurs_slug] || []).push(v); });
+
+    const bau = (liste, el, leer) => {
+      el.innerHTML = liste.length
+        ? liste.map(k => karte(k, proKurs[k.slug] || [])).join('')
+        : '<p class="klein">' + leer + '</p>';
+    };
+    bau(kurse.filter(k => k.art === 'lehrgang'), zielL, 'Zurzeit ist kein Lehrgangstermin ausgeschrieben.');
+    bau(kurse.filter(k => k.art !== 'lehrgang'), zielS, 'Zurzeit ist kein Spezialkurs ausgeschrieben.');
+  } catch (e) {
+    const txt = '<div class="fehler">Die Kursliste ließ sich gerade nicht laden. Bitte lade die Seite neu – ' +
+                'oder schreib uns an <a href="mailto:bwt.schwarze@gmail.com">bwt.schwarze@gmail.com</a>.</div>';
+    zielL.innerHTML = txt; zielS.innerHTML = '';
+  }
+}
+laden();
+</script>
+</body>
+</html>

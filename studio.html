@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="robots" content="noindex, nofollow">
+<title>Studio – Videokurse verwalten | AngelUp</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:1180px;margin:0 auto;padding:30px 20px 90px}
+
+/* ---------- Anmeldung ---------- */
+.anmeldebox{max-width:440px;margin:60px auto;padding:30px 26px;
+  background:linear-gradient(165deg,rgba(255,255,255,.062),rgba(255,255,255,.022));
+  border:1px solid var(--linie);border-radius:var(--r)}
+.anmeldebox h1{margin:0 0 6px;font-size:1.5rem;letter-spacing:-.03em}
+.anmeldebox p{color:var(--text-2);font-size:.93rem;line-height:1.6;margin:0 0 20px}
+
+/* ---------- Felder ---------- */
+.feld{margin-bottom:14px}
+.feld label{display:block;font-size:.82rem;font-weight:600;color:var(--text-2);margin-bottom:6px;letter-spacing:.01em}
+.feld input[type=text],.feld input[type=email],.feld input[type=password],
+.feld input[type=number],.feld select,.feld textarea{
+  width:100%;box-sizing:border-box;padding:11px 13px;font:inherit;font-size:.95rem;
+  color:var(--text);background:rgba(255,255,255,.045);
+  border:1px solid var(--linie);border-radius:var(--r-s);outline:none;transition:border-color .2s,background .2s}
+.feld input:focus,.feld select:focus,.feld textarea:focus{border-color:var(--tuerkis);background:rgba(255,255,255,.07)}
+.feld textarea{min-height:78px;resize:vertical;line-height:1.55}
+.feld select option{background:#0b1620;color:var(--text)}
+.feld-reihe{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.haken{display:flex;gap:9px;align-items:flex-start;font-size:.9rem;color:var(--text-2);cursor:pointer;margin-bottom:12px;line-height:1.5}
+.haken input{margin-top:2px;width:17px;height:17px;flex:0 0 17px;accent-color:var(--tuerkis)}
+
+/* ---------- Reiter ---------- */
+.reiter{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;padding-bottom:14px;border-bottom:1px solid var(--linie)}
+.reiter button{padding:9px 17px;font:inherit;font-size:.92rem;font-weight:600;cursor:pointer;
+  color:var(--text-2);background:rgba(255,255,255,.04);border:1px solid var(--linie);
+  border-radius:999px;transition:.2s}
+.reiter button:hover{color:var(--text);border-color:var(--linie-2)}
+.reiter button.an{color:#04121a;background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-2));border-color:transparent}
+.blatt{display:none}
+.blatt.an{display:block}
+
+/* ---------- Kacheln ---------- */
+.zeile{background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid var(--linie);border-radius:var(--r-s);padding:18px;margin-bottom:14px}
+.zeile-kopf{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.zeile-kopf .sym{width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:grid;place-items:center;font-size:1.2rem;
+  background:color-mix(in srgb,var(--kf,#2ee6c5) 18%,transparent);
+  border:1px solid color-mix(in srgb,var(--kf,#2ee6c5) 34%,transparent)}
+.zeile-kopf h3{margin:0;font-size:1.03rem;letter-spacing:-.02em}
+.zeile-kopf .weg{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.zeile .meta{font-size:.82rem;color:var(--text-3);margin-top:3px}
+.klapp{margin-top:16px;padding-top:16px;border-top:1px solid var(--linie);display:none}
+.klapp.auf{display:block}
+
+.stand{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;
+  font-size:.74rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.stand.gruen{background:rgba(53,208,127,.16);color:#6ee7a8;border:1px solid rgba(53,208,127,.32)}
+.stand.gelb{background:rgba(255,194,71,.16);color:var(--gold);border:1px solid rgba(255,194,71,.32)}
+.stand.grau{background:rgba(255,255,255,.07);color:var(--text-3);border:1px solid var(--linie)}
+.stand.rot{background:rgba(255,107,107,.15);color:var(--rot);border:1px solid rgba(255,107,107,.3)}
+
+.btn.klein{padding:7px 14px;font-size:.85rem}
+.btn.gefahr{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.34);color:#ff9d9d}
+.btn.gefahr:hover{background:rgba(255,107,107,.22)}
+
+/* ---------- Lektionen ---------- */
+.lek{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:9px;
+  background:rgba(255,255,255,.035);border:1px solid var(--linie);border-radius:var(--r-xs);flex-wrap:wrap}
+.lek .nr{width:30px;height:30px;flex:0 0 30px;border-radius:9px;display:grid;place-items:center;
+  font-size:.82rem;font-weight:800;background:rgba(46,230,197,.14);color:var(--tuerkis)}
+.lek .txt{flex:1;min-width:150px}
+.lek .txt b{display:block;font-size:.95rem;font-weight:600}
+.lek .txt span{font-size:.79rem;color:var(--text-3)}
+.lek .tat{display:flex;gap:7px;flex-wrap:wrap}
+
+.ablage{border:1.5px dashed var(--linie-2);border-radius:var(--r-s);padding:20px;text-align:center;
+  color:var(--text-3);font-size:.9rem;cursor:pointer;transition:.2s;background:rgba(255,255,255,.02)}
+.ablage:hover,.ablage.drauf{border-color:var(--tuerkis);color:var(--tuerkis);background:rgba(46,230,197,.06)}
+.fortschritt{height:7px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;margin-top:10px;display:none}
+.fortschritt.an{display:block}
+.fortschritt i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--tuerkis),var(--gold));transition:width .25s}
+
+/* ---------- Tabelle ---------- */
+.tab{width:100%;border-collapse:collapse;font-size:.88rem}
+.tab th{text-align:left;padding:9px 10px;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--text-3);border-bottom:1px solid var(--linie);white-space:nowrap}
+.tab td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+.tab tr:last-child td{border-bottom:none}
+.rollbar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+.meldung{padding:12px 15px;border-radius:var(--r-s);font-size:.9rem;line-height:1.55;margin-bottom:16px;display:none}
+.meldung.an{display:block}
+.meldung.gut{background:rgba(53,208,127,.12);border:1px solid rgba(53,208,127,.3);color:#8becb6}
+.meldung.schlecht{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3);color:#ff9d9d}
+
+.zahlen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;margin-bottom:26px}
+.zahl{padding:16px 18px;background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid var(--linie);border-radius:var(--r-s)}
+.zahl b{display:block;font-size:1.6rem;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.zahl span{font-size:.79rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em}
+
+.kopfbalken{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.kopfbalken h1{margin:0;font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:-.035em}
+.kopfbalken .rechts{margin-left:auto;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.wer{font-size:.84rem;color:var(--text-3)}
+@media(max-width:640px){ .lek .tat{width:100%} .zeile-kopf .weg{margin-left:0;width:100%} }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="videokurse.html">Videokurse</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a class="btn t" href="player.html">Meine Kurse</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ Anmeldung ============ -->
+  <section id="anmeldung">
+    <div class="anmeldebox">
+      <h1>Studio</h1>
+      <p>Nur für die Ausbilder der Angelschule Ostfriesland. Melde dich mit deiner E-Mail-Adresse
+      und deinem Passwort an – dieselben Daten wie in der App.</p>
+      <div class="meldung schlecht" id="anmFehler"></div>
+      <form id="anmForm" autocomplete="on">
+        <div class="feld">
+          <label for="aMail">E-Mail-Adresse</label>
+          <input type="email" id="aMail" name="email" autocomplete="username" required>
+        </div>
+        <div class="feld">
+          <label for="aPass">Passwort</label>
+          <input type="password" id="aPass" name="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn voll gross" type="submit" id="anmKnopf">Anmelden</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ Studio ============ -->
+  <section id="studio" style="display:none">
+
+    <div class="kopfbalken">
+      <h1>Studio</h1>
+      <div class="rechts">
+        <span class="wer" id="wer"></span>
+        <button class="btn t klein" id="neuLaden">Neu laden</button>
+        <button class="btn geist klein" id="abmelden">Abmelden</button>
+      </div>
+    </div>
+
+    <div class="meldung" id="hinweis"></div>
+
+    <div class="zahlen" id="zahlen"></div>
+
+    <div class="reiter">
+      <button data-blatt="bKurse" class="an">Kurse</button>
+      <button data-blatt="bLektionen">Lektionen &amp; Videos</button>
+      <button data-blatt="bKaeufe">Bestellungen</button>
+      <button data-blatt="bZugaenge">Zugänge</button>
+    </div>
+
+    <!-- ---- Kurse ---- -->
+    <div class="blatt an" id="bKurse">
+      <p class="klein" style="color:var(--text-2);max-width:760px;margin:0 0 20px;line-height:1.65">
+        Ein Kurs ist erst kaufbar, wenn er auf <b>fertig</b> steht. Solange er auf <b>in Vorbereitung</b> steht,
+        sieht man ihn im Shop, kann ihn aber nicht bestellen. Lade also erst die Videos hoch und stell ihn dann um.
+      </p>
+      <div id="kursListe"></div>
+
+      <div class="zeile" style="border-style:dashed">
+        <div class="zeile-kopf">
+          <div class="sym" style="--kf:#ffc247">＋</div>
+          <div><h3>Neuen Kurs anlegen</h3><div class="meta">Kürzel, Titel und Preis reichen zum Start</div></div>
+          <div class="weg"><button class="btn t klein" id="neuKursAuf">Öffnen</button></div>
+        </div>
+        <div class="klapp" id="neuKursKlapp">
+          <div class="feld-reihe">
+            <div class="feld"><label>Kürzel (nur Kleinbuchstaben und Bindestriche)</label><input type="text" id="nkSlug" placeholder="mini-posen"></div>
+            <div class="feld"><label>Art</label><select id="nkArt"><option value="mini">Mini-Kurs</option><option value="kurs">Themenkurs</option><option value="bundle">Paket</option></select></div>
+          </div>
+          <div class="feld"><label>Titel</label><input type="text" id="nkTitel" placeholder="Posenmontagen für Einsteiger"></div>
+          <div class="feld"><label>Untertitel</label><input type="text" id="nkUnter"></div>
+          <div class="feld-reihe">
+            <div class="feld"><label>Preis in Cent</label><input type="number" id="nkPreis" value="799"></div>
+            <div class="feld"><label>Symbol</label><input type="text" id="nkSymbol" value="🎣"></div>
+            <div class="feld"><label>Farbe</label><input type="text" id="nkFarbe" value="#2ee6c5"></div>
+            <div class="feld"><label>Sortierung</label><input type="number" id="nkSort" value="100"></div>
+          </div>
+          <button class="btn" id="nkSpeichern">Kurs anlegen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- Lektionen ---- -->
+    <div class="blatt" id="bLektionen">
+      <div class="feld" style="max-width:420px">
+        <label for="lkKurs">Kurs auswählen</label>
+        <select id="lkKurs"></select>
+      </div>
+      <div id="lekBereich"></div>
+    </div>
+
+    <!-- ---- Käufe ---- -->
+    <div class="blatt" id="bKaeufe">
+      <p class="klein" style="color:var(--text-2);max-width:760px;margin:0 0 20px;line-height:1.65">
+        Sobald das Geld auf dem Konto ist: auf <b>Bezahlt</b> klicken. Der Käufer bekommt dann automatisch
+        seine Zugangs-Mail mit Code – und kann den Kurs ab sofort unbegrenzt ansehen.
+      </p>
+      <div class="rollbar"><table class="tab" id="kaufTab"></table></div>
+    </div>
+
+    <!-- ---- Zugänge ---- -->
+    <div class="blatt" id="bZugaenge">
+      <div class="zeile" style="border-style:dashed">
+        <div class="zeile-kopf">
+          <div class="sym" style="--kf:#35d07f">🔑</div>
+          <div><h3>Zugang von Hand vergeben</h3><div class="meta">Für Barzahlung, Gewinne oder Testleser</div></div>
+          <div class="weg"><button class="btn t klein" id="zhAuf">Öffnen</button></div>
+        </div>
+        <div class="klapp" id="zhKlapp">
+          <div class="feld-reihe">
+            <div class="feld"><label>Kurs</label><select id="zhKurs"></select></div>
+            <div class="feld"><label>E-Mail-Adresse</label><input type="email" id="zhMail"></div>
+            <div class="feld"><label>Name (für die Mail)</label><input type="text" id="zhName"></div>
+          </div>
+          <label class="haken"><input type="checkbox" id="zhSenden" checked><span>Freischalt-Mail mit Zugangscode direkt verschicken</span></label>
+          <button class="btn" id="zhSpeichern">Zugang vergeben</button>
+        </div>
+      </div>
+      <div class="rollbar"><table class="tab" id="zugangTab"></table></div>
+    </div>
+
+  </section>
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SB_URL = 'https://vqjpwhqpcybpblgtjuxw.supabase.co';
+const API    = SB_URL + '/functions/v1/videokurs';
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+const SPEICHER = 'angelup-studio-sitzung';
+
+let TOKEN = '', ERNEUERN = '', WER = '';
+let KURSE = [], LEKTIONEN = [], KAEUFE = [], ZUGAENGE = [], PAKETE = [];
+
+/* ---------- Helfer ---------- */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function euro(cent){ return (Number(cent||0)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+function datum(s){ if(!s) return '–'; const d = new Date(s); return d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' + d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+function minSek(sek){ if(!sek) return '–'; const m = Math.floor(sek/60), s = sek%60; return m + ':' + String(s).padStart(2,'0') + ' min'; }
+function el(id){ return document.getElementById(id); }
+
+function sagen(text, gut){
+  const m = el('hinweis');
+  m.className = 'meldung an ' + (gut ? 'gut' : 'schlecht');
+  m.textContent = text;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  clearTimeout(sagen._t);
+  sagen._t = setTimeout(() => { m.className = 'meldung'; }, 7000);
+}
+
+const burger = el('burger');
+if (burger) burger.addEventListener('click', () => {
+  const l = el('navLinks');
+  const auf = l.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', auf ? 'true' : 'false');
+});
+
+/* ---------- Anmeldung ---------- */
+async function anmelden(email, passwort){
+  const r = await fetch(SB_URL + '/auth/v1/token?grant_type=password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SB_KEY },
+    body: JSON.stringify({ email: email, password: passwort })
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || !d.access_token) return { ok: false, text: d.error_description || d.msg || 'Anmeldung fehlgeschlagen.' };
+  TOKEN = d.access_token; ERNEUERN = d.refresh_token || ''; WER = (d.user && d.user.email) || email;
+  try { sessionStorage.setItem(SPEICHER, JSON.stringify({ t: TOKEN, r: ERNEUERN, w: WER })); } catch(e){}
+  return { ok: true };
+}
+
+async function erneuern(){
+  if (!ERNEUERN) return false;
+  const r = await fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SB_KEY },
+    body: JSON.stringify({ refresh_token: ERNEUERN })
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || !d.access_token) return false;
+  TOKEN = d.access_token; ERNEUERN = d.refresh_token || ERNEUERN;
+  try { sessionStorage.setItem(SPEICHER, JSON.stringify({ t: TOKEN, r: ERNEUERN, w: WER })); } catch(e){}
+  return true;
+}
+
+function abmelden(){
+  TOKEN = ''; ERNEUERN = ''; WER = '';
+  try { sessionStorage.removeItem(SPEICHER); } catch(e){}
+  el('studio').style.display = 'none';
+  el('anmeldung').style.display = '';
+}
+
+el('anmForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const k = el('anmKnopf'); k.disabled = true; k.textContent = 'Einen Moment …';
+  const f = el('anmFehler'); f.className = 'meldung schlecht';
+  const a = await anmelden(el('aMail').value.trim(), el('aPass').value);
+  k.disabled = false; k.textContent = 'Anmelden';
+  if (!a.ok) { f.className = 'meldung schlecht an'; f.textContent = a.text; return; }
+  el('aPass').value = '';
+  await starten();
+});
+
+el('abmelden').addEventListener('click', abmelden);
+el('neuLaden').addEventListener('click', () => laden());
+
+/* ---------- Aufruf der Function ---------- */
+async function ruf(koerper, nochmal){
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Authorization: 'Bearer ' + TOKEN },
+    body: JSON.stringify(koerper)
+  });
+  let d = {}; try { d = await r.json(); } catch(e){}
+  if ((r.status === 401 || r.status === 403) && !nochmal) {
+    if (await erneuern()) return ruf(koerper, true);
+  }
+  return { status: r.status, d: d };
+}
+
+/* ---------- Daten laden ---------- */
+async function laden(){
+  const a = await ruf({ was: 'studio' });
+  if (a.status === 403) {
+    el('anmFehler').className = 'meldung schlecht an';
+    el('anmFehler').textContent = 'Dieses Konto darf nicht ins Studio. Es braucht die Rolle „ausbilder“ oder „admin“.';
+    abmelden();
+    return false;
+  }
+  if (a.status !== 200) { sagen('Die Daten ließen sich nicht laden (Fehler ' + a.status + ').', false); return false; }
+  KURSE = a.d.kurse || []; LEKTIONEN = a.d.lektionen || [];
+  KAEUFE = a.d.kaeufe || []; ZUGAENGE = a.d.zugaenge || []; PAKETE = a.d.pakete || [];
+  zeichnen();
+  return true;
+}
+
+async function starten(){
+  el('anmeldung').style.display = 'none';
+  el('studio').style.display = '';
+  el('wer').textContent = WER;
+  await laden();
+}
+
+/* ---------- Zeichnen ---------- */
+function lektionenVon(slug){ return LEKTIONEN.filter(l => l.kurs_slug === slug).sort((a,b) => a.nr - b.nr); }
+
+function zeichnen(){
+  const offen = KAEUFE.filter(k => k.status !== 'bezahlt' && k.status !== 'storniert').length;
+  const umsatz = KAEUFE.filter(k => k.status === 'bezahlt').reduce((s,k) => s + Number(k.preis_cent||0), 0);
+  const fertig = KURSE.filter(k => k.status === 'fertig').length;
+  const mitVideo = LEKTIONEN.filter(l => l.video_pfad).length;
+
+  el('zahlen').innerHTML =
+    '<div class="zahl"><b>' + KURSE.length + '</b><span>Kurse (' + fertig + ' fertig)</span></div>' +
+    '<div class="zahl"><b>' + LEKTIONEN.length + '</b><span>Lektionen (' + mitVideo + ' mit Video)</span></div>' +
+    '<div class="zahl"><b>' + offen + '</b><span>offene Bestellungen</span></div>' +
+    '<div class="zahl"><b>' + euro(umsatz) + '</b><span>bezahlt gesamt</span></div>';
+
+  kurseZeichnen();
+  kursAuswahl();
+  lekZeichnen();
+  kaeufeZeichnen();
+  zugaengeZeichnen();
+}
+
+const STATUS_TEXT = { fertig:'fertig', vorbereitung:'in Vorbereitung', pause:'pausiert' };
+
+function kurseZeichnen(){
+  el('kursListe').innerHTML = KURSE.map(k => {
+    const n = lektionenVon(k.slug).length;
+    const st = k.status === 'fertig' ? 'gruen' : (k.status === 'vorbereitung' ? 'gelb' : 'grau');
+    const paket = k.art === 'bundle';
+    const drin = paket ? PAKETE.filter(p => p.bundle_slug === k.slug).map(p => p.kurs_slug) : [];
+    return '' +
+    '<div class="zeile" data-kurs="' + esc(k.slug) + '">' +
+      '<div class="zeile-kopf">' +
+        '<div class="sym" style="--kf:' + esc(k.farbe || '#2ee6c5') + '">' + esc(k.symbol || '🎥') + '</div>' +
+        '<div><h3>' + esc(k.titel) + '</h3>' +
+          '<div class="meta">' + esc(k.slug) + ' · ' + euro(k.preis_cent) + ' · ' +
+          (paket ? drin.length + ' Kurse im Paket' : n + (n === 1 ? ' Lektion' : ' Lektionen')) +
+          (k.aktiv === false ? ' · <b style="color:var(--rot)">im Shop versteckt</b>' : '') + '</div></div>' +
+        '<div class="weg">' +
+          '<span class="stand ' + st + '">' + esc(STATUS_TEXT[k.status] || k.status || '–') + '</span>' +
+          (k.status === 'fertig'
+            ? '<button class="btn geist klein" data-um="' + esc(k.slug) + '" data-ziel="vorbereitung">Verkauf stoppen</button>'
+            : '<button class="btn klein" data-um="' + esc(k.slug) + '" data-ziel="fertig">Zum Verkauf freigeben</button>') +
+          '<button class="btn t klein" data-auf="k-' + esc(k.slug) + '">Bearbeiten</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="klapp" id="k-' + esc(k.slug) + '">' +
+        '<div class="feld"><label>Titel</label><input type="text" data-f="titel" value="' + esc(k.titel) + '"></div>' +
+        '<div class="feld"><label>Untertitel</label><input type="text" data-f="untertitel" value="' + esc(k.untertitel) + '"></div>' +
+        '<div class="feld-reihe">' +
+          '<div class="feld"><label>Preis in Cent</label><input type="number" data-f="preis_cent" value="' + Number(k.preis_cent||0) + '"></div>' +
+          '<div class="feld"><label>Dauer in Minuten</label><input type="number" data-f="dauer_min" value="' + (k.dauer_min == null ? '' : Number(k.dauer_min)) + '"></div>' +
+          '<div class="feld"><label>Symbol</label><input type="text" data-f="symbol" value="' + esc(k.symbol) + '"></div>' +
+          '<div class="feld"><label>Farbe</label><input type="text" data-f="farbe" value="' + esc(k.farbe) + '"></div>' +
+          '<div class="feld"><label>Sortierung</label><input type="number" data-f="sortierung" value="' + Number(k.sortierung||0) + '"></div>' +
+        '</div>' +
+        '<div class="feld"><label>Störer oben rechts (leer lassen für keinen)</label><input type="text" data-f="badge" value="' + esc(k.badge) + '"></div>' +
+        '<div class="feld"><label>Beschreibung</label><textarea data-f="beschreibung">' + esc(k.beschreibung) + '</textarea></div>' +
+        '<div class="feld"><label>Für wen ist der Kurs (eine Zeile je Punkt)</label><textarea data-f="fuer_wen">' + esc(k.fuer_wen) + '</textarea></div>' +
+        '<div class="feld"><label>Das lernst du (eine Zeile je Punkt)</label><textarea data-f="inhalt">' + esc(k.inhalt) + '</textarea></div>' +
+        '<label class="haken"><input type="checkbox" data-f="aktiv"' + (k.aktiv === false ? '' : ' checked') + '><span>Im Shop sichtbar</span></label>' +
+        '<button class="btn" data-speichern="' + esc(k.slug) + '">Änderungen speichern</button>' +
+      '</div>' +
+    '</div>';
+  }).join('') || '<p class="klein" style="color:var(--text-3)">Noch keine Kurse angelegt.</p>';
+}
+
+function kursAuswahl(){
+  const nurKurse = KURSE.filter(k => k.art !== 'bundle');
+  const alt = el('lkKurs').value;
+  el('lkKurs').innerHTML = nurKurse.map(k =>
+    '<option value="' + esc(k.slug) + '">' + esc(k.symbol || '') + ' ' + esc(k.titel) + ' (' + lektionenVon(k.slug).length + ')</option>').join('');
+  if (alt && nurKurse.some(k => k.slug === alt)) el('lkKurs').value = alt;
+  el('zhKurs').innerHTML = KURSE.map(k =>
+    '<option value="' + esc(k.slug) + '">' + esc(k.titel) + '</option>').join('');
+}
+
+function lekZeichnen(){
+  const slug = el('lkKurs').value;
+  if (!slug) { el('lekBereich').innerHTML = '<p class="klein" style="color:var(--text-3)">Kein Kurs ausgewählt.</p>'; return; }
+  const liste = lektionenVon(slug);
+  el('lekBereich').innerHTML =
+    liste.map(l => {
+      const v = l.video_pfad ? '<span class="stand gruen">Video da</span>' : '<span class="stand rot">kein Video</span>';
+      const f = l.frei ? '<span class="stand gelb">gratis</span>' : '';
+      const m = l.material_pfad ? '<span class="stand grau">PDF</span>' : '';
+      return '' +
+      '<div class="zeile" style="padding:14px 16px">' +
+        '<div class="lek" style="border:none;background:none;padding:0;margin:0">' +
+          '<div class="nr">' + Number(l.nr) + '</div>' +
+          '<div class="txt"><b>' + esc(l.titel) + '</b><span>' + minSek(l.dauer_sek) + '</span></div>' +
+          '<div class="tat">' + v + ' ' + f + ' ' + m +
+            '<button class="btn t klein" data-auf="l-' + esc(l.id) + '">Bearbeiten</button>' +
+            '<button class="btn gefahr klein" data-lekweg="' + esc(l.id) + '">Löschen</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="klapp" id="l-' + esc(l.id) + '">' +
+          '<div class="feld"><label>Titel der Lektion</label><input type="text" data-lf="titel" value="' + esc(l.titel) + '"></div>' +
+          '<div class="feld"><label>Kurzbeschreibung</label><textarea data-lf="beschreibung">' + esc(l.beschreibung) + '</textarea></div>' +
+          '<div class="feld-reihe">' +
+            '<div class="feld"><label>Länge in Sekunden</label><input type="number" data-lf="dauer_sek" value="' + (l.dauer_sek == null ? '' : Number(l.dauer_sek)) + '"></div>' +
+          '</div>' +
+          '<label class="haken"><input type="checkbox" data-lf="frei"' + (l.frei ? ' checked' : '') + '><span>Gratis-Lektion – jeder darf sie ohne Kauf ansehen</span></label>' +
+          '<div class="feld"><label>Videodatei' + (l.video_pfad ? ' (vorhanden: ' + esc(l.video_pfad) + ')' : '') + '</label>' +
+            '<div class="ablage" data-hoch="' + esc(l.id) + '" data-art="video" data-kurs="' + esc(slug) + '" data-nr="' + Number(l.nr) + '">Video hierher ziehen oder klicken · MP4</div>' +
+            '<div class="fortschritt" id="fs-video-' + esc(l.id) + '"><i></i></div></div>' +
+          '<div class="feld"><label>Material zum Herunterladen' + (l.material_pfad ? ' (vorhanden)' : '') + '</label>' +
+            '<div class="ablage" data-hoch="' + esc(l.id) + '" data-art="material" data-kurs="' + esc(slug) + '" data-nr="' + Number(l.nr) + '">PDF hierher ziehen oder klicken</div>' +
+            '<div class="fortschritt" id="fs-material-' + esc(l.id) + '"><i></i></div></div>' +
+          '<button class="btn" data-lekspeichern="' + esc(l.id) + '">Lektion speichern</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') +
+    '<div class="zeile" style="border-style:dashed">' +
+      '<div class="zeile-kopf">' +
+        '<div class="sym" style="--kf:#ffc247">＋</div>' +
+        '<div><h3>Neue Lektion</h3><div class="meta">wird als Nummer ' + (liste.length + 1) + ' angehängt</div></div>' +
+      '</div>' +
+      '<div class="klapp auf" style="border-top:none;padding-top:14px">' +
+        '<div class="feld"><label>Titel</label><input type="text" id="nlTitel" placeholder="Das Haar-Rig Schritt für Schritt"></div>' +
+        '<div class="feld"><label>Kurzbeschreibung</label><textarea id="nlText"></textarea></div>' +
+        '<label class="haken"><input type="checkbox" id="nlFrei"' + (liste.length === 0 ? ' checked' : '') + '><span>Gratis-Lektion (die erste Lektion sollte immer gratis sein)</span></label>' +
+        '<button class="btn" id="nlSpeichern">Lektion anlegen</button>' +
+      '</div>' +
+    '</div>';
+}
+
+function kaeufeZeichnen(){
+  if (!KAEUFE.length) { el('kaufTab').innerHTML = '<tr><td class="klein" style="color:var(--text-3)">Noch keine Bestellungen.</td></tr>'; return; }
+  el('kaufTab').innerHTML =
+    '<thead><tr><th>Referenz</th><th>Kurs</th><th>Name</th><th>E-Mail</th><th>Preis</th><th>Eingang</th><th>Stand</th><th></th></tr></thead><tbody>' +
+    KAEUFE.map(k => {
+      const bez = k.status === 'bezahlt';
+      const kurs = KURSE.find(x => x.slug === k.kurs_slug);
+      return '<tr>' +
+        '<td><code>' + esc(k.referenz) + '</code></td>' +
+        '<td>' + esc(kurs ? kurs.titel : k.kurs_slug) + '</td>' +
+        '<td>' + esc(k.name) + '</td>' +
+        '<td><a href="mailto:' + esc(k.email) + '">' + esc(k.email) + '</a></td>' +
+        '<td>' + euro(k.preis_cent) + '</td>' +
+        '<td>' + datum(k.angelegt_am) + '</td>' +
+        '<td><span class="stand ' + (bez ? 'gruen' : 'gelb') + '">' + (bez ? 'bezahlt' : 'offen') + '</span></td>' +
+        '<td>' + (bez ? '' : '<button class="btn klein" data-bezahlt="' + esc(k.id) + '">Bezahlt</button>') + '</td>' +
+      '</tr>';
+    }).join('') + '</tbody>';
+}
+
+function zugaengeZeichnen(){
+  if (!ZUGAENGE.length) { el('zugangTab').innerHTML = '<tr><td class="klein" style="color:var(--text-3)">Noch keine Zugänge vergeben.</td></tr>'; return; }
+  el('zugangTab').innerHTML =
+    '<thead><tr><th>E-Mail</th><th>Kurs</th><th>Code</th><th>seit</th><th></th></tr></thead><tbody>' +
+    ZUGAENGE.map(z => {
+      const kurs = KURSE.find(x => x.slug === z.kurs_slug);
+      return '<tr>' +
+        '<td>' + esc(z.email) + '</td>' +
+        '<td>' + esc(kurs ? kurs.titel : z.kurs_slug) + '</td>' +
+        '<td><code>' + esc(z.code) + '</code></td>' +
+        '<td>' + datum(z.seit) + '</td>' +
+        '<td><button class="btn gefahr klein" data-zweg="' + esc(z.kurs_slug) + '|' + esc(z.email) + '">Entziehen</button></td>' +
+      '</tr>';
+    }).join('') + '</tbody>';
+}
+
+/* ---------- Reiter ---------- */
+document.querySelectorAll('.reiter button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.reiter button').forEach(x => x.classList.remove('an'));
+  document.querySelectorAll('.blatt').forEach(x => x.classList.remove('an'));
+  b.classList.add('an');
+  el(b.dataset.blatt).classList.add('an');
+}));
+
+el('lkKurs').addEventListener('change', lekZeichnen);
+el('neuKursAuf').addEventListener('click', () => el('neuKursKlapp').classList.toggle('auf'));
+el('zhAuf').addEventListener('click', () => el('zhKlapp').classList.toggle('auf'));
+
+/* ---------- Klicks im Studio ---------- */
+el('studio').addEventListener('click', async (e) => {
+  const z = e.target.closest('button');
+  if (!z) return;
+
+  if (z.dataset.auf) { const k = el(z.dataset.auf); if (k) k.classList.toggle('auf'); return; }
+
+  /* Kurs freigeben / stoppen */
+  if (z.dataset.um) {
+    z.disabled = true;
+    const a = await ruf({ was: 'kurs_speichern', slug: z.dataset.um, status: z.dataset.ziel });
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Das Umstellen hat nicht geklappt.', false); return; }
+    sagen(z.dataset.ziel === 'fertig' ? 'Der Kurs ist jetzt im Shop kaufbar.' : 'Der Verkauf ist gestoppt – der Kurs steht wieder auf „in Vorbereitung“.', true);
+    await laden();
+    return;
+  }
+
+  /* Kurs speichern */
+  if (z.dataset.speichern) {
+    const box = z.closest('.klapp');
+    const satz = { was: 'kurs_speichern', slug: z.dataset.speichern };
+    box.querySelectorAll('[data-f]').forEach(i => {
+      const f = i.dataset.f;
+      if (i.type === 'checkbox') satz[f] = i.checked;
+      else if (i.type === 'number') satz[f] = i.value === '' ? null : Number(i.value);
+      else satz[f] = i.value;
+    });
+    z.disabled = true;
+    const a = await ruf(satz);
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Speichern fehlgeschlagen: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
+    sagen('Gespeichert.', true);
+    await laden();
+    return;
+  }
+
+  /* neuer Kurs */
+  if (z.id === 'nkSpeichern') {
+    const slug = el('nkSlug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    if (!slug) { sagen('Bitte ein Kürzel eintragen.', false); return; }
+    z.disabled = true;
+    const a = await ruf({ was:'kurs_speichern', slug: slug, art: el('nkArt').value,
+      titel: el('nkTitel').value.trim() || slug, untertitel: el('nkUnter').value.trim(),
+      preis_cent: Number(el('nkPreis').value || 0), symbol: el('nkSymbol').value.trim(),
+      farbe: el('nkFarbe').value.trim(), sortierung: Number(el('nkSort').value || 100),
+      status: 'vorbereitung', aktiv: true });
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Anlegen fehlgeschlagen: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
+    sagen('Kurs angelegt. Er steht auf „in Vorbereitung“ und ist noch nicht kaufbar.', true);
+    el('nkSlug').value = ''; el('nkTitel').value = ''; el('nkUnter').value = '';
+    await laden();
+    return;
+  }
+
+  /* neue Lektion */
+  if (z.id === 'nlSpeichern') {
+    const titel = el('nlTitel').value.trim();
+    if (!titel) { sagen('Bitte einen Titel für die Lektion eintragen.', false); return; }
+    z.disabled = true;
+    const a = await ruf({ was:'lektion_speichern', kurs: el('lkKurs').value, titel: titel,
+      beschreibung: el('nlText').value.trim(), frei: el('nlFrei').checked });
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Anlegen fehlgeschlagen: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
+    sagen('Lektion angelegt – jetzt das Video hochladen.', true);
+    await laden();
+    return;
+  }
+
+  /* Lektion speichern */
+  if (z.dataset.lekspeichern) {
+    const box = z.closest('.klapp');
+    const satz = { was:'lektion_speichern', id: z.dataset.lekspeichern };
+    box.querySelectorAll('[data-lf]').forEach(i => {
+      const f = i.dataset.lf;
+      if (i.type === 'checkbox') satz[f] = i.checked;
+      else if (i.type === 'number') satz[f] = i.value === '' ? null : Number(i.value);
+      else satz[f] = i.value;
+    });
+    z.disabled = true;
+    const a = await ruf(satz);
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Speichern fehlgeschlagen: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
+    sagen('Lektion gespeichert.', true);
+    await laden();
+    return;
+  }
+
+  /* Lektion löschen */
+  if (z.dataset.lekweg) {
+    if (z.dataset.sicher !== 'ja') { z.dataset.sicher = 'ja'; z.textContent = 'Wirklich löschen?';
+      setTimeout(() => { z.dataset.sicher = ''; z.textContent = 'Löschen'; }, 5000); return; }
+    z.disabled = true;
+    const a = await ruf({ was:'lektion_loeschen', id: z.dataset.lekweg });
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Löschen fehlgeschlagen.', false); return; }
+    sagen('Lektion gelöscht.', true);
+    await laden();
+    return;
+  }
+
+  /* Kauf auf bezahlt buchen */
+  if (z.dataset.bezahlt) {
+    if (z.dataset.sicher !== 'ja') { z.dataset.sicher = 'ja'; z.textContent = 'Wirklich buchen?';
+      setTimeout(() => { z.dataset.sicher = ''; z.textContent = 'Bezahlt'; }, 5000); return; }
+    z.disabled = true; z.textContent = '…';
+    const a = await ruf({ was:'kauf_bezahlt', id: z.dataset.bezahlt });
+    if (a.status !== 200) { z.disabled = false; z.textContent = 'Bezahlt'; sagen('Buchen fehlgeschlagen: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
+    sagen('Freigeschaltet. Code ' + a.d.code + (a.d.mail ? ' – die Mail ist raus.' : ' – die Mail ging NICHT raus, bitte den Code selbst schicken.'), a.d.mail !== false);
+    await laden();
+    return;
+  }
+
+  /* Zugang von Hand */
+  if (z.id === 'zhSpeichern') {
+    const mail = el('zhMail').value.trim();
+    if (!mail) { sagen('Bitte eine E-Mail-Adresse eintragen.', false); return; }
+    z.disabled = true;
+    const a = await ruf({ was:'zugang_haendisch', kurs: el('zhKurs').value, email: mail,
+      name: el('zhName').value.trim(), mail: el('zhSenden').checked });
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Das hat nicht geklappt: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
+    sagen('Zugang vergeben. Code ' + a.d.code, true);
+    el('zhMail').value = ''; el('zhName').value = '';
+    await laden();
+    return;
+  }
+
+  /* Zugang entziehen */
+  if (z.dataset.zweg) {
+    if (z.dataset.sicher !== 'ja') { z.dataset.sicher = 'ja'; z.textContent = 'Wirklich?';
+      setTimeout(() => { z.dataset.sicher = ''; z.textContent = 'Entziehen'; }, 5000); return; }
+    const teil = z.dataset.zweg.split('|');
+    z.disabled = true;
+    const a = await ruf({ was:'zugang_weg', kurs: teil[0], email: teil[1] });
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Das hat nicht geklappt.', false); return; }
+    sagen('Zugang entzogen.', true);
+    await laden();
+  }
+});
+
+/* ---------- Hochladen ---------- */
+function dateiWaehlen(art){
+  return new Promise(fertig => {
+    const i = document.createElement('input');
+    i.type = 'file';
+    i.accept = art === 'video' ? 'video/*' : '.pdf,application/pdf,image/*';
+    i.addEventListener('change', () => fertig(i.files && i.files[0] ? i.files[0] : null));
+    i.click();
+  });
+}
+
+function hochschieben(url, datei, balken){
+  return new Promise((fertig, schief) => {
+    const x = new XMLHttpRequest();
+    x.open('PUT', url, true);
+    x.setRequestHeader('Content-Type', datei.type || 'application/octet-stream');
+    x.upload.addEventListener('progress', ev => {
+      if (ev.lengthComputable && balken) balken.querySelector('i').style.width = Math.round(ev.loaded / ev.total * 100) + '%';
+    });
+    x.addEventListener('load', () => (x.status >= 200 && x.status < 300) ? fertig(true) : schief(new Error('HTTP ' + x.status)));
+    x.addEventListener('error', () => schief(new Error('Netzwerk')));
+    x.send(datei);
+  });
+}
+
+async function hochladen(feld, datei){
+  const art  = feld.dataset.art;
+  const id   = feld.dataset.hoch;
+  const kurs = feld.dataset.kurs;
+  const nr   = feld.dataset.nr;
+  const balken = el('fs-' + art + '-' + id);
+
+  const grenze = art === 'video' ? 5 * 1024 * 1024 * 1024 : 20 * 1024 * 1024;
+  if (datei.size > grenze) { sagen('Die Datei ist zu groß (' + Math.round(datei.size/1048576) + ' MB).', false); return; }
+
+  feld.textContent = 'Adresse wird geholt …';
+  const a = await ruf({ was:'upload_url', kurs: kurs, nr: Number(nr), dateiname: datei.name, art: art });
+  if (a.status !== 200 || !a.d.url) { feld.textContent = 'Fehlgeschlagen – noch einmal versuchen'; sagen('Die Upload-Adresse kam nicht zurück.', false); return; }
+
+  balken.classList.add('an');
+  balken.querySelector('i').style.width = '0%';
+  feld.textContent = 'Wird hochgeladen – Fenster offen lassen …';
+  try {
+    await hochschieben(a.d.url, datei, balken);
+  } catch (e) {
+    balken.classList.remove('an');
+    feld.textContent = 'Hochladen abgebrochen – noch einmal versuchen';
+    sagen('Das Hochladen ist abgebrochen: ' + e.message, false);
+    return;
+  }
+
+  const satz = { was:'lektion_speichern', id: id };
+  const box = feld.closest('.klapp');
+  box.querySelectorAll('[data-lf]').forEach(i => {
+    const f = i.dataset.lf;
+    if (i.type === 'checkbox') satz[f] = i.checked;
+    else if (i.type === 'number') satz[f] = i.value === '' ? null : Number(i.value);
+    else satz[f] = i.value;
+  });
+  if (art === 'video') satz.video_pfad = a.d.pfad; else satz.material_pfad = a.d.pfad;
+
+  /* Videolänge automatisch ermitteln */
+  if (art === 'video' && !satz.dauer_sek) {
+    const sek = await laengeLesen(datei).catch(() => null);
+    if (sek) satz.dauer_sek = Math.round(sek);
+  }
+
+  const b = await ruf(satz);
+  balken.classList.remove('an');
+  if (b.status !== 200) { feld.textContent = 'Datei ist oben, das Speichern klemmt'; sagen('Die Datei liegt im Speicher, ließ sich aber nicht der Lektion zuordnen.', false); return; }
+  sagen('Hochgeladen und gespeichert.', true);
+  await laden();
+}
+
+function laengeLesen(datei){
+  return new Promise((fertig, schief) => {
+    const v = document.createElement('video');
+    v.preload = 'metadata';
+    v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(v.src); (isFinite(d) ? fertig(d) : schief(new Error('unbekannt'))); };
+    v.onerror = () => schief(new Error('unlesbar'));
+    v.src = URL.createObjectURL(datei);
+  });
+}
+
+el('studio').addEventListener('click', async (e) => {
+  const f = e.target.closest('.ablage');
+  if (!f) return;
+  const d = await dateiWaehlen(f.dataset.art);
+  if (d) hochladen(f, d);
+});
+el('studio').addEventListener('dragover', e => {
+  const f = e.target.closest('.ablage'); if (!f) return;
+  e.preventDefault(); f.classList.add('drauf');
+});
+el('studio').addEventListener('dragleave', e => {
+  const f = e.target.closest('.ablage'); if (f) f.classList.remove('drauf');
+});
+el('studio').addEventListener('drop', e => {
+  const f = e.target.closest('.ablage'); if (!f) return;
+  e.preventDefault(); f.classList.remove('drauf');
+  const d = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (d) hochladen(f, d);
+});
+
+window.addEventListener('beforeunload', e => {
+  if (document.querySelector('.fortschritt.an')) { e.preventDefault(); e.returnValue = ''; }
+});
+
+/* ---------- Start ---------- */
+(async function(){
+  let s = null;
+  try { s = JSON.parse(sessionStorage.getItem(SPEICHER) || 'null'); } catch(e){}
+  if (s && s.t) {
+    TOKEN = s.t; ERNEUERN = s.r || ''; WER = s.w || '';
+    el('anmeldung').style.display = 'none';
+    el('studio').style.display = '';
+    el('wer').textContent = WER;
+    const ok = await laden();
+    if (!ok && !TOKEN) abmelden();
+  }
+})();
+</script>
+</body>
+</html>

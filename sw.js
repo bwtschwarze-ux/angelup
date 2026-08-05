@@ -1,6 +1,8 @@
-const CACHE = 'angelup-v27';
+const CACHE = 'angelup-v28';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
-  './live.html', './aal.html', './kursinhalt.js', './stil.css', './impressum.html', './datenschutz.html',
+  './live.html', './aal.html', './kurse.html', './vormerken.html',
+  './videokurse.html', './videokurs.html', './player.html',
+  './kursinhalt.js', './stil.css', './impressum.html', './datenschutz.html', './agb.html',
   './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(DATEIEN)).then(() => self.skipWaiting()));
@@ -12,6 +14,8 @@ self.addEventListener('fetch', e => {
   // Wikimedia-Bilder nicht cachen (extern), damit sie live geladen werden
   const u = new URL(e.request.url);
   if (u.hostname.endsWith('wikimedia.org') || u.hostname.endsWith('wikipedia.org')) return;
+  // Studio nie zwischenspeichern - dort wird verwaltet und hochgeladen
+  if (u.origin === location.origin && u.pathname.endsWith('/studio.html')) return;
   // Livekurs-Seite immer frisch aus dem Netz holen, Cache nur als Notfall
   if (u.origin === location.origin && u.pathname.endsWith('/live.html')) {
     e.respondWith(fetch(e.request).then(netz => {

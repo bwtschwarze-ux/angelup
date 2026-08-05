@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="robots" content="noindex">
+<meta name="description" content="Videokurs der Angelschule Ostfriesland – einmal kaufen, unbegrenzt ansehen.">
+<title>Videokurs – AngelUp</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
+.zurueck{display:inline-flex;align-items:center;gap:7px;color:var(--text-3);font-size:.88rem;
+  text-decoration:none;margin-bottom:20px}
+.zurueck:hover{color:var(--tuerkis)}
+
+.kopfteil{display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(22px,3.4vw,40px);align-items:start}
+@media(max-width:900px){ .kopfteil{grid-template-columns:1fr} }
+
+.held{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
+.held .sym{width:64px;height:64px;flex:0 0 64px;border-radius:19px;display:grid;place-items:center;font-size:2rem;
+  background:color-mix(in srgb, var(--kf,#2ee6c5) 18%, transparent);
+  border:1px solid color-mix(in srgb, var(--kf,#2ee6c5) 34%, transparent)}
+.held .badge{font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--kf,var(--tuerkis));display:block;margin-bottom:5px}
+.held h1{margin:0;font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.035em;line-height:1.15}
+
+.spieler{background:#000;border:1px solid var(--linie);border-radius:var(--r);overflow:hidden;
+  aspect-ratio:16/9;display:grid;place-items:center;margin-bottom:20px;position:relative}
+.spieler video{width:100%;height:100%;display:block;background:#000}
+.spieler .platz{text-align:center;padding:24px;color:var(--text-3);font-size:.92rem;line-height:1.6}
+.spieler .platz .gross{display:block;font-size:2.4rem;margin-bottom:10px;opacity:.5}
+
+.lekliste{list-style:none;margin:0;padding:0;border:1px solid var(--linie);border-radius:var(--r);overflow:hidden}
+.lekliste li{display:flex;align-items:center;gap:13px;padding:14px 17px;border-top:1px solid var(--linie);
+  font-size:.93rem;background:rgba(255,255,255,.018)}
+.lekliste li:first-child{border-top:none}
+.lekliste .nr{flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:.8rem;
+  font-weight:800;background:var(--glas);border:1px solid var(--linie);color:var(--text-2)}
+.lekliste .txt{flex:1;min-width:0}
+.lekliste .txt b{display:block;font-weight:600;line-height:1.35}
+.lekliste .txt small{color:var(--text-3);font-size:.79rem}
+.lekliste .marke{font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:4px 9px;border-radius:100px;white-space:nowrap}
+.lekliste .marke.frei{background:rgba(53,208,127,.14);border:1px solid rgba(53,208,127,.3);color:var(--gruen)}
+.lekliste .marke.zu{background:var(--glas);border:1px solid var(--linie);color:var(--text-3)}
+.lekliste li.spielbar{cursor:pointer}
+.lekliste li.spielbar:hover{background:rgba(46,230,197,.06)}
+.lekliste li.aktiv{background:rgba(46,230,197,.09)}
+
+.kaufbox{position:sticky;top:88px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  border:1px solid var(--linie-2);border-radius:var(--r);padding:24px;box-shadow:var(--glanz)}
+@media(max-width:900px){ .kaufbox{position:static} }
+.kaufbox .gross-preis{font-size:2.3rem;font-weight:900;letter-spacing:-.04em;line-height:1}
+.kaufbox .gross-preis small{display:block;font-size:.8rem;font-weight:600;color:var(--text-3);
+  letter-spacing:0;margin-top:6px}
+.kaufbox ul{list-style:none;margin:18px 0;padding:0;display:flex;flex-direction:column;gap:9px}
+.kaufbox ul li{display:flex;gap:9px;font-size:.88rem;color:var(--text-2);line-height:1.5}
+.kaufbox ul li span:first-child{flex:0 0 17px}
+.sparhinweis{background:rgba(255,194,71,.1);border:1px solid rgba(255,194,71,.28);border-radius:var(--r-s);
+  padding:12px 14px;font-size:.85rem;color:var(--gold);line-height:1.55;margin-bottom:16px}
+
+.feld{margin-bottom:14px}
+.feld label{display:block;font-size:.82rem;font-weight:600;color:var(--text-2);margin-bottom:6px}
+.feld input,.feld textarea{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--linie);
+  border-radius:var(--r-s);padding:12px 14px;color:var(--text);font:inherit;font-size:.94rem}
+.feld input:focus,.feld textarea:focus{outline:none;border-color:var(--tuerkis);
+  box-shadow:0 0 0 3px rgba(46,230,197,.14)}
+.haken{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px;font-size:.83rem;
+  color:var(--text-2);line-height:1.55}
+.haken input{margin-top:2px;width:17px;height:17px;flex:0 0 17px;accent-color:var(--tuerkis)}
+.haken a{color:var(--tuerkis)}
+.honig{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+.meldung{border-radius:var(--r-s);padding:14px 16px;font-size:.9rem;line-height:1.6;margin-bottom:14px;display:none}
+.meldung.zeig{display:block}
+.meldung.rot{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.28);color:var(--rot)}
+.meldung.gruen{background:rgba(53,208,127,.1);border:1px solid rgba(53,208,127,.3);color:var(--gruen)}
+
+.danke{background:linear-gradient(150deg,rgba(53,208,127,.13),rgba(255,255,255,.03));
+  border:1px solid rgba(53,208,127,.32);border-radius:var(--r);padding:26px}
+.danke h3{margin:0 0 10px}
+.danke p{color:var(--text-2);font-size:.93rem;line-height:1.7;margin:0 0 14px}
+.konto{background:rgba(0,0,0,.26);border:1px solid var(--linie);border-radius:var(--r-s);padding:16px;margin:14px 0}
+.konto div{display:flex;justify-content:space-between;gap:14px;padding:6px 0;font-size:.89rem;flex-wrap:wrap}
+.konto div span:first-child{color:var(--text-3)}
+.konto div span:last-child{font-weight:700;text-align:right;word-break:break-all}
+
+.paketteile{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px;margin-top:8px}
+.paketteil{background:var(--glas);border:1px solid var(--linie);border-radius:var(--r-s);padding:15px;
+  display:flex;gap:11px;align-items:flex-start;text-decoration:none;color:inherit}
+.paketteil:hover{border-color:var(--linie-2);color:inherit}
+.paketteil .s{font-size:1.4rem}
+.paketteil b{display:block;font-size:.94rem;line-height:1.3}
+.paketteil small{color:var(--text-3);font-size:.79rem}
+
+.abschnitt{margin-top:clamp(38px,5vw,60px)}
+.abschnitt h2{font-size:clamp(1.25rem,2.4vw,1.65rem);margin:0 0 14px}
+.abschnitt p{color:var(--text-2);line-height:1.75;font-size:.96rem}
+.laedt{text-align:center;color:var(--text-3);padding:60px 0}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="videokurse.html">Videokurse</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a class="btn t" href="player.html">Meine Kurse</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main id="haupt">
+  <div class="laedt">Kurs wird geladen …</div>
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API    = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/videokurs';
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+const SLUG   = (new URLSearchParams(location.search).get('k') || '').trim().toLowerCase();
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function euro(cent){ return (cent/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+function minSek(sek){ if(!sek) return ''; const m=Math.floor(sek/60), s=sek%60; return m+':'+String(s).padStart(2,'0')+' min'; }
+
+const burger = document.getElementById('burger');
+if (burger) burger.addEventListener('click', () => {
+  const l = document.getElementById('navLinks');
+  const auf = l.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', auf ? 'true' : 'false');
+});
+
+async function ruf(koerper){
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SB_KEY },
+    body: JSON.stringify(koerper)
+  });
+  let d = {}; try { d = await r.json(); } catch(e){}
+  return { status: r.status, d };
+}
+
+const FEHLERTEXT = {
+  kurs: 'Bitte wähle einen Kurs aus.',
+  name: 'Bitte trag deinen Namen ein.',
+  email: 'Diese E-Mail-Adresse sieht nicht richtig aus.',
+  agb: 'Bitte bestätige die AGB und die Datenschutzhinweise.',
+  widerruf: 'Ohne die Bestätigung zum Widerrufsrecht dürfen wir dir den Kurs nicht sofort freischalten.',
+  unbekannt: 'Diesen Kurs gibt es nicht mehr.',
+  noch_nicht: 'Dieser Kurs ist noch in Vorbereitung und lässt sich noch nicht kaufen.',
+  hast_schon: 'Diesen Kurs hast du schon – schau unter „Meine Kurse“ nach.',
+  zu_viele: 'Von dieser Adresse kamen heute schon mehrere Bestellungen. Bitte melde dich kurz bei uns.',
+  speichern: 'Die Bestellung ließ sich nicht speichern. Bitte versuch es noch einmal.'
+};
+
+let KURS = null, LEKTIONEN = [], PAKET = [];
+
+function zeichne(){
+  const k = KURS;
+  const fertig = k.status === 'fertig';
+  const gesamt = LEKTIONEN.reduce((s,l) => s + (l.dauer_sek || 0), 0);
+  const dauer  = gesamt > 0
+    ? (gesamt >= 3600 ? Math.floor(gesamt/3600)+' Std '+Math.round((gesamt%3600)/60)+' min' : Math.round(gesamt/60)+' min')
+    : (k.dauer_min ? 'rund ' + k.dauer_min + ' min' : null);
+
+  const einzelSumme = PAKET.reduce((s,p) => s + (p.preis_cent||0), 0);
+  const spart = PAKET.length && einzelSumme > k.preis_cent ? einzelSumme - k.preis_cent : 0;
+
+  const punkte = [];
+  if (LEKTIONEN.length) punkte.push(['🎬', LEKTIONEN.length + (LEKTIONEN.length===1?' Lektion':' Lektionen')]);
+  if (PAKET.length)     punkte.push(['📦', PAKET.length + ' komplette Kurse enthalten']);
+  if (dauer)            punkte.push(['⏱️', dauer + ' Video']);
+  punkte.push(['♾️', 'Unbegrenzter Zugang, kein Abo']);
+  punkte.push(['📱', 'Auf Handy, Tablet und Rechner']);
+  punkte.push(['💳', 'Zahlung per Überweisung']);
+
+  const lekHtml = LEKTIONEN.length ? '<ul class="lekliste" id="lekliste">' + LEKTIONEN.map(l => {
+    const spielbar = l.frei && l.hat_video;
+    return '<li class="' + (spielbar ? 'spielbar' : '') + '" data-nr="' + l.nr + '">' +
+      '<span class="nr">' + l.nr + '</span>' +
+      '<span class="txt"><b>' + esc(l.titel) + '</b>' +
+        (l.beschreibung ? '<small>' + esc(l.beschreibung) + '</small>' :
+         (l.dauer_sek ? '<small>' + minSek(l.dauer_sek) + '</small>' : '')) + '</span>' +
+      (l.frei ? '<span class="marke frei">' + (l.hat_video ? 'Gratis ansehen' : 'Gratis') + '</span>'
+              : '<span class="marke zu">🔒</span>') +
+    '</li>';
+  }).join('') + '</ul>' : '<p class="klein">Die Lektionen stehen fest, sobald die Aufnahmen fertig sind.</p>';
+
+  const paketHtml = PAKET.length ? '<div class="abschnitt"><h2>Diese Kurse sind enthalten</h2>' +
+    '<div class="paketteile">' + PAKET.map(p =>
+      '<a class="paketteil" href="videokurs.html?k=' + encodeURIComponent(p.slug) + '">' +
+        '<span class="s">' + esc(p.symbol || '🎥') + '</span>' +
+        '<span><b>' + esc(p.titel) + '</b>' +
+        '<small>' + (p.untertitel ? esc(p.untertitel) + ' · ' : '') + 'einzeln ' + euro(p.preis_cent) + '</small></span>' +
+      '</a>').join('') + '</div></div>' : '';
+
+  const inhaltHtml = k.inhalt ? '<div class="abschnitt"><h2>Das lernst du</h2><ul class="lekliste">' +
+    k.inhalt.split('|').map((t,i) => '<li><span class="nr">' + (i+1) + '</span><span class="txt"><b>' +
+      esc(t.trim()) + '</b></span></li>').join('') + '</ul></div>' : '';
+
+  document.getElementById('haupt').innerHTML =
+  '<a class="zurueck" href="videokurse.html">← Alle Videokurse</a>' +
+  '<div class="kopfteil" style="--kf:' + esc(k.farbe || '#2ee6c5') + '">' +
+    '<div>' +
+      '<div class="held"><span class="sym">' + esc(k.symbol || '🎥') + '</span><div>' +
+        (k.badge ? '<span class="badge">' + esc(k.badge) + '</span>' : '') +
+        '<h1>' + esc(k.titel) + '</h1></div></div>' +
+      (k.untertitel ? '<p class="lead" style="margin:0 0 22px">' + esc(k.untertitel) + '</p>' : '') +
+      '<div class="spieler" id="spieler"><div class="platz"><span class="gross">▶</span>' +
+        (fertig ? 'Tipp auf eine Lektion mit „Gratis ansehen“, um reinzuschauen.'
+                : 'Die Videos werden gerade produziert. Der Kurs geht bald online.') +
+      '</div></div>' +
+      '<h2 style="font-size:1.15rem;margin:0 0 12px">Die Lektionen</h2>' + lekHtml +
+    '</div>' +
+
+    '<aside><div class="kaufbox">' +
+      '<div class="gross-preis">' + euro(k.preis_cent) +
+        '<small>' + (fertig ? 'einmalig – danach für immer deiner' : 'Preis steht, Kurs kommt in Kürze') + '</small></div>' +
+      (spart ? '<div class="sparhinweis" style="margin-top:16px">Einzeln kosten die enthaltenen Kurse ' +
+        euro(einzelSumme) + '. Im Paket sparst du ' + euro(spart) + '.</div>' : '') +
+      '<ul>' + punkte.map(p => '<li><span>' + p[0] + '</span><span>' + esc(p[1]) + '</span></li>').join('') + '</ul>' +
+      (fertig
+        ? '<button class="btn voll gross" id="kaufKnopf">Jetzt kaufen</button>' +
+          '<p class="klein" style="margin:12px 0 0;text-align:center">Du bekommst eine E-Mail mit den Überweisungsdaten. ' +
+          'Sobald das Geld da ist, schalten wir dich frei.</p>'
+        : '<div class="meldung gruen zeig" style="margin:0">Dieser Kurs ist noch in Vorbereitung. ' +
+          'Schreib uns kurz, wenn du benachrichtigt werden willst, sobald er online geht.</div>' +
+          '<a class="btn t voll" style="margin-top:14px" href="mailto:bwt.schwarze@gmail.com?subject=' +
+          encodeURIComponent('Bescheid geben: ' + k.titel) + '">Bescheid geben lassen</a>') +
+    '</div></aside>' +
+  '</div>' +
+
+  (k.beschreibung ? '<div class="abschnitt"><h2>Worum es geht</h2><p>' +
+    esc(k.beschreibung).replace(/\n/g,'<br>') + '</p></div>' : '') +
+  (k.fuer_wen ? '<div class="abschnitt"><h2>Für wen der Kurs ist</h2><p>' +
+    esc(k.fuer_wen).replace(/\n/g,'<br>') + '</p></div>' : '') +
+  (PAKET.length ? paketHtml : (LEKTIONEN.length ? '' : inhaltHtml)) +
+
+  '<div class="abschnitt"><h2>Häufige Fragen</h2>' +
+    '<p><strong>Wie lange kann ich den Kurs ansehen?</strong><br>Unbegrenzt. Du kaufst einmal, der Zugang läuft nie ab ' +
+    'und kostet nie wieder etwas.</p>' +
+    '<p><strong>Brauche ich ein Benutzerkonto?</strong><br>Nein. Du bekommst nach der Zahlung einen Zugangscode per ' +
+    'E-Mail. Mit E-Mail und Code kommst du auf jedem Gerät an deine Kurse.</p>' +
+    '<p><strong>Wie bezahle ich?</strong><br>Per Überweisung. Nach der Bestellung bekommst du die Kontodaten und deine ' +
+    'Referenznummer per E-Mail. Sobald das Geld eingegangen ist, schalten wir dich frei und du bekommst deinen Code.</p>' +
+    '<p><strong>Kann ich die Videos herunterladen?</strong><br>Die Videos laufen im Browser und lassen sich streamen. ' +
+    'Beiliegende Anleitungen und Skripte kannst du als PDF herunterladen und behalten.</p>' +
+    '<p><strong>Was ist mit dem Widerrufsrecht?</strong><br>Damit wir dich sofort nach Zahlungseingang freischalten ' +
+    'dürfen, musst du im Bestellformular zustimmen, dass wir vor Ablauf der Widerrufsfrist starten – damit erlischt ' +
+    'dein Widerrufsrecht für diesen Kurs. Ohne diese Zustimmung schalten wir erst nach 14 Tagen frei; schreib uns dann ' +
+    'einfach.</p>' +
+  '</div>' +
+
+  '<div id="kaufBereich"></div>';
+
+  const liste = document.getElementById('lekliste');
+  if (liste) liste.addEventListener('click', ev => {
+    const li = ev.target.closest('li.spielbar');
+    if (li) probeSpielen(Number(li.dataset.nr), li);
+  });
+
+  const kn = document.getElementById('kaufKnopf');
+  if (kn) kn.addEventListener('click', () => {
+    zeigeFormular();
+    document.getElementById('kaufBereich').scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+}
+
+async function probeSpielen(nr, li){
+  const sp = document.getElementById('spieler');
+  sp.innerHTML = '<div class="platz">Video wird geladen …</div>';
+  document.querySelectorAll('.lekliste li').forEach(x => x.classList.remove('aktiv'));
+  li.classList.add('aktiv');
+  const { status, d } = await ruf({ was:'video', kurs: SLUG, nr });
+  if (status === 200 && d.url) {
+    sp.innerHTML = '<video controls playsinline autoplay preload="metadata" src="' + esc(d.url) + '"></video>';
+  } else {
+    sp.innerHTML = '<div class="platz"><span class="gross">▶</span>Dieses Video ist noch nicht hochgeladen.</div>';
+  }
+}
+
+function zeigeFormular(){
+  const b = document.getElementById('kaufBereich');
+  if (document.getElementById('kaufForm')) return;
+  b.innerHTML =
+  '<div class="abschnitt" id="bestellAnker"><h2>Bestellung</h2>' +
+  '<div class="karte" style="padding:26px;max-width:620px">' +
+    '<div class="meldung rot" id="mldg"></div>' +
+    '<form id="kaufForm" novalidate>' +
+      '<div class="honig"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>' +
+      '<div class="feld"><label for="fName">Dein Name *</label>' +
+        '<input id="fName" name="name" type="text" autocomplete="name" required maxlength="80"></div>' +
+      '<div class="feld"><label for="fMail">E-Mail-Adresse *</label>' +
+        '<input id="fMail" name="email" type="email" autocomplete="email" required maxlength="120">' +
+        '<p class="klein" style="margin:6px 0 0">An diese Adresse gehen Rechnung und Zugangscode. Sie ist gleichzeitig ' +
+        'dein Schlüssel zu den Kursen – nimm eine, an die du immer rankommst.</p></div>' +
+      '<div class="feld"><label for="fTel">Telefon (freiwillig)</label>' +
+        '<input id="fTel" name="telefon" type="tel" autocomplete="tel" maxlength="40"></div>' +
+      '<label class="haken"><input type="checkbox" id="hAgb">' +
+        '<span>Ich habe die <a href="agb.html" target="_blank" rel="noopener">AGB</a> und die ' +
+        '<a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzhinweise</a> gelesen und bin einverstanden.</span></label>' +
+      '<label class="haken"><input type="checkbox" id="hWid">' +
+        '<span>Ich verlange ausdrücklich, dass ihr vor Ablauf der Widerrufsfrist mit der Ausführung beginnt. ' +
+        'Mir ist bekannt, dass ich mit dem Beginn der Ausführung mein Widerrufsrecht verliere.</span></label>' +
+      '<button class="btn voll gross" type="submit" id="sendKnopf">Kostenpflichtig bestellen</button>' +
+      '<p class="klein" style="margin:12px 0 0">Kleinunternehmer nach § 19 UStG – es wird keine Umsatzsteuer ausgewiesen.</p>' +
+    '</form>' +
+  '</div></div>';
+
+  document.getElementById('kaufForm').addEventListener('submit', absenden);
+}
+
+async function absenden(ev){
+  ev.preventDefault();
+  const knopf = document.getElementById('sendKnopf');
+  const mldg  = document.getElementById('mldg');
+  mldg.className = 'meldung rot';
+  knopf.disabled = true; knopf.textContent = 'Wird gesendet …';
+
+  const { status, d } = await ruf({
+    was: 'kauf', kurs: SLUG,
+    name:  document.getElementById('fName').value,
+    email: document.getElementById('fMail').value,
+    telefon: document.getElementById('fTel').value,
+    agb_ok: document.getElementById('hAgb').checked,
+    widerruf_ok: document.getElementById('hWid').checked,
+    website: document.querySelector('input[name=website]').value
+  });
+
+  if (status === 200 && d.ok) { danke(d); return; }
+
+  mldg.textContent = FEHLERTEXT[d.fehler] || 'Das hat gerade nicht geklappt. Bitte versuch es noch einmal oder schreib uns.';
+  mldg.classList.add('zeig');
+  knopf.disabled = false; knopf.textContent = 'Kostenpflichtig bestellen';
+  mldg.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+function danke(d){
+  const konto = d.konto || {};
+  document.getElementById('kaufBereich').innerHTML =
+  '<div class="abschnitt"><div class="danke">' +
+    '<h3>✅ Bestellung eingegangen</h3>' +
+    '<p>Danke! Wir haben dir eine E-Mail mit allen Daten geschickt. Überweise den Betrag mit deiner Referenz als ' +
+    'Verwendungszweck – sobald das Geld da ist, bekommst du deinen Zugangscode und kannst sofort loslegen.</p>' +
+    '<div class="konto">' +
+      '<div><span>Kurs</span><span>' + esc(d.titel || '') + '</span></div>' +
+      '<div><span>Betrag</span><span>' + euro(d.preis_cent || 0) + '</span></div>' +
+      '<div><span>Verwendungszweck</span><span>' + esc(d.referenz) + '</span></div>' +
+      '<div><span>Empfänger</span><span>' + esc(konto.inhaber || '') + '</span></div>' +
+      '<div><span>IBAN</span><span>' + esc(konto.iban || '') + '</span></div>' +
+      '<div><span>BIC</span><span>' + esc(konto.bic || '') + '</span></div>' +
+      '<div><span>Bank</span><span>' + esc(konto.bank || '') + '</span></div>' +
+    '</div>' +
+    (d.mail === false ? '<p class="klein" style="color:var(--gold)">Die Bestätigungsmail konnten wir gerade nicht ' +
+      'verschicken. Notier dir bitte die Daten oben – deine Bestellung ist trotzdem gespeichert.</p>' : '') +
+    '<div class="btn-reihe"><a class="btn t" href="videokurse.html">Weitere Kurse ansehen</a>' +
+    '<a class="btn geist" href="player.html">Meine Kurse</a></div>' +
+  '</div></div>';
+  document.getElementById('kaufBereich').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+async function laden(){
+  if (!SLUG) { location.replace('videokurse.html'); return; }
+  try {
+    const r = await fetch(API + '?was=kurs&k=' + encodeURIComponent(SLUG), { headers: { apikey: SB_KEY } });
+    if (!r.ok) throw new Error('kurs ' + r.status);
+    const d = await r.json();
+    KURS = d.kurs; LEKTIONEN = d.lektionen || []; PAKET = d.paketKurse || [];
+    document.title = KURS.titel + ' – Videokurs | AngelUp';
+    zeichne();
+  } catch (e) {
+    document.getElementById('haupt').innerHTML =
+      '<a class="zurueck" href="videokurse.html">← Alle Videokurse</a>' +
+      '<div class="karte" style="padding:26px"><h2 style="margin:0 0 8px">Kurs nicht gefunden</h2>' +
+      '<p class="klein">Diesen Videokurs gibt es nicht (mehr). Schau in der Übersicht, was gerade verfügbar ist.</p>' +
+      '<div class="btn-reihe" style="margin-top:16px"><a class="btn t" href="videokurse.html">Zur Übersicht</a></div></div>';
+  }
+}
+laden();
+</script>
+</body>
+</html>

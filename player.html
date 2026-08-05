@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="robots" content="noindex">
+<meta name="description" content="Deine gekauften Videokurse der Angelschule Ostfriesland ansehen.">
+<title>Meine Kurse – AngelUp</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
+.anmeldebox{max-width:460px;margin:clamp(20px,6vw,60px) auto;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  border:1px solid var(--linie-2);border-radius:var(--r);padding:clamp(24px,4vw,34px);box-shadow:var(--glanz)}
+.anmeldebox h1{margin:0 0 8px;font-size:1.6rem;letter-spacing:-.03em}
+.anmeldebox .lead{font-size:.94rem;margin:0 0 22px}
+.feld{margin-bottom:14px}
+.feld label{display:block;font-size:.82rem;font-weight:600;color:var(--text-2);margin-bottom:6px}
+.feld input{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--linie);border-radius:var(--r-s);
+  padding:12px 14px;color:var(--text);font:inherit;font-size:.94rem}
+.feld input:focus{outline:none;border-color:var(--tuerkis);box-shadow:0 0 0 3px rgba(46,230,197,.14)}
+#fCode{letter-spacing:.16em;text-transform:uppercase;font-weight:700;text-align:center;font-size:1.1rem}
+.meldung{border-radius:var(--r-s);padding:13px 15px;font-size:.88rem;line-height:1.6;margin-bottom:14px;display:none}
+.meldung.zeig{display:block}
+.meldung.rot{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.28);color:var(--rot)}
+
+.kopfzeile{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.kopfzeile h1{margin:0;font-size:clamp(1.6rem,3.4vw,2.3rem);letter-spacing:-.035em}
+.wer{font-size:.85rem;color:var(--text-3)}
+
+.kursleiste{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;
+  scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.kurschip{display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:100px;white-space:nowrap;
+  background:var(--glas);border:1px solid var(--linie);cursor:pointer;font-size:.9rem;font-weight:600;
+  transition:border-color .2s,background .2s}
+.kurschip:hover{border-color:var(--linie-2)}
+.kurschip.aktiv{background:color-mix(in srgb, var(--kf,#2ee6c5) 16%, transparent);
+  border-color:color-mix(in srgb, var(--kf,#2ee6c5) 42%, transparent)}
+.kurschip .s{font-size:1.15rem}
+
+.buehne{display:grid;grid-template-columns:1.4fr .8fr;gap:clamp(18px,2.6vw,30px);align-items:start}
+@media(max-width:900px){ .buehne{grid-template-columns:1fr} }
+.spieler{background:#000;border:1px solid var(--linie);border-radius:var(--r);overflow:hidden;
+  aspect-ratio:16/9;display:grid;place-items:center;position:relative}
+.spieler video{width:100%;height:100%;display:block;background:#000}
+.spieler .platz{text-align:center;padding:24px;color:var(--text-3);font-size:.92rem;line-height:1.6}
+.spieler .platz .gross{display:block;font-size:2.4rem;margin-bottom:10px;opacity:.5}
+.unterspieler{margin-top:16px}
+.unterspieler h2{margin:0 0 6px;font-size:1.25rem;letter-spacing:-.02em}
+.unterspieler p{color:var(--text-2);font-size:.93rem;line-height:1.7;margin:0}
+
+.lekliste{list-style:none;margin:0;padding:0;border:1px solid var(--linie);border-radius:var(--r);overflow:hidden;
+  max-height:70vh;overflow-y:auto}
+.lekliste li{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--linie);
+  font-size:.91rem;cursor:pointer;background:rgba(255,255,255,.018);transition:background .2s}
+.lekliste li:first-child{border-top:none}
+.lekliste li:hover{background:rgba(46,230,197,.06)}
+.lekliste li.aktiv{background:rgba(46,230,197,.11)}
+.lekliste li.leer{cursor:default;color:var(--text-3);justify-content:center}
+.lekliste .nr{flex:0 0 29px;height:29px;border-radius:9px;display:grid;place-items:center;font-size:.78rem;
+  font-weight:800;background:var(--glas);border:1px solid var(--linie);color:var(--text-2)}
+.lekliste li.fertig .nr{background:rgba(53,208,127,.16);border-color:rgba(53,208,127,.34);color:var(--gruen)}
+.lekliste .txt{flex:1;min-width:0}
+.lekliste .txt b{display:block;font-weight:600;line-height:1.35}
+.lekliste .txt small{color:var(--text-3);font-size:.78rem}
+.listenkopf{padding:14px 16px;border-bottom:1px solid var(--linie);font-size:.75rem;font-weight:800;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);background:rgba(0,0,0,.2)}
+.balken{height:4px;background:var(--glas);border-radius:100px;overflow:hidden;margin-top:12px}
+.balken i{display:block;height:100%;background:linear-gradient(90deg,var(--tuerkis),var(--gold));border-radius:100px}
+.laedt{text-align:center;color:var(--text-3);padding:60px 0}
+.matbtn{display:inline-flex;align-items:center;gap:8px;margin-top:14px}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="videokurse.html">Videokurse</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a class="btn t" href="player.html">Meine Kurse</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main id="haupt">
+  <div class="anmeldebox" id="anmeldung">
+    <h1>Meine Kurse</h1>
+    <p class="lead">Gib die E-Mail-Adresse aus deiner Bestellung und den Zugangscode ein, den du per E-Mail
+    bekommen hast. Der Zugang läuft nicht ab und funktioniert auf jedem Gerät.</p>
+    <div class="meldung rot" id="mldg"></div>
+    <form id="anmForm" novalidate>
+      <div class="feld"><label for="fMail">E-Mail-Adresse</label>
+        <input id="fMail" type="email" autocomplete="email" inputmode="email" required maxlength="120"></div>
+      <div class="feld"><label for="fCode">Zugangscode</label>
+        <input id="fCode" type="text" autocomplete="one-time-code" placeholder="XXXX-XXXX" required maxlength="20"></div>
+      <button class="btn voll gross" type="submit" id="anmKnopf">Kurse öffnen</button>
+    </form>
+    <p class="klein" style="margin:16px 0 0">Noch keinen Kurs? <a href="videokurse.html">Zur Kursübersicht</a>.
+    Code verlegt? <a href="mailto:bwt.schwarze@gmail.com?subject=Zugangscode%20Videokurs">Schreib uns kurz.</a></p>
+  </div>
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API    = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/videokurs';
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+const SPEICHER = 'angelup-videokurs-zugang';
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function minSek(sek){ if(!sek) return ''; const m=Math.floor(sek/60), s=sek%60; return m+':'+String(s).padStart(2,'0')+' min'; }
+
+const burger = document.getElementById('burger');
+if (burger) burger.addEventListener('click', () => {
+  const l = document.getElementById('navLinks');
+  const auf = l.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', auf ? 'true' : 'false');
+});
+
+let EMAIL = '', CODE = '', KURSE = [], AKTIV = null, LEKTIONEN = [], LEKTION = null;
+const GESEHEN = new Set();
+
+function merken(){ try { localStorage.setItem(SPEICHER, JSON.stringify({ e: EMAIL, c: CODE })); } catch(e){} }
+function holen(){ try { return JSON.parse(localStorage.getItem(SPEICHER) || 'null'); } catch(e){ return null; } }
+function vergessen(){ try { localStorage.removeItem(SPEICHER); } catch(e){} }
+function gesehenLaden(){ try { (JSON.parse(localStorage.getItem(SPEICHER+'-fertig')||'[]')).forEach(x=>GESEHEN.add(x)); } catch(e){} }
+function gesehenMerken(){ try { localStorage.setItem(SPEICHER+'-fertig', JSON.stringify([...GESEHEN])); } catch(e){} }
+
+async function ruf(koerper){
+  const r = await fetch(API, { method:'POST',
+    headers:{ 'Content-Type':'application/json', apikey: SB_KEY }, body: JSON.stringify(koerper) });
+  let d = {}; try { d = await r.json(); } catch(e){}
+  return { status: r.status, d };
+}
+
+document.getElementById('anmForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const knopf = document.getElementById('anmKnopf');
+  const mldg  = document.getElementById('mldg');
+  mldg.classList.remove('zeig');
+  knopf.disabled = true; knopf.textContent = 'Wird geprüft …';
+
+  const mail = document.getElementById('fMail').value.trim().toLowerCase();
+  const code = document.getElementById('fCode').value.trim().toUpperCase();
+  const ok = await anmelden(mail, code);
+
+  if (!ok) {
+    mldg.textContent = 'E-Mail-Adresse und Code passen nicht zusammen. Bitte prüf beides – ' +
+      'am einfachsten kopierst du sie direkt aus unserer E-Mail.';
+    mldg.classList.add('zeig');
+    knopf.disabled = false; knopf.textContent = 'Kurse öffnen';
+  }
+});
+
+async function anmelden(mail, code){
+  const { status, d } = await ruf({ was:'zugang', email: mail, code });
+  if (status !== 200 || !d.ok) return false;
+  EMAIL = mail; CODE = code; KURSE = d.kurse || [];
+  merken(); gesehenLaden(); zeichneOberflaeche();
+  if (KURSE.length) waehle(KURSE[0].slug);
+  return true;
+}
+
+function zeichneOberflaeche(){
+  document.getElementById('haupt').innerHTML =
+  '<div class="kopfzeile"><div><h1>Meine Kurse</h1>' +
+    '<span class="wer">' + esc(EMAIL) + ' · unbegrenzter Zugang</span></div>' +
+    '<div class="btn-reihe"><a class="btn geist" href="videokurse.html">Weitere Kurse</a>' +
+    '<button class="btn geist" id="raus">Abmelden</button></div></div>' +
+  (KURSE.length
+    ? '<div class="kursleiste" id="kursleiste"></div>' +
+      '<div class="buehne">' +
+        '<div><div class="spieler" id="spieler"><div class="platz"><span class="gross">▶</span>' +
+          'Wähl links eine Lektion aus.</div></div>' +
+          '<div class="unterspieler" id="unter"></div></div>' +
+        '<aside><div class="lekliste" id="lekliste"><div class="listenkopf">Lektionen</div>' +
+          '<li class="leer">Kurs wird geladen …</li></div></aside>' +
+      '</div>'
+    : '<div class="karte" style="padding:26px"><h2 style="margin:0 0 8px">Noch kein Kurs freigeschaltet</h2>' +
+      '<p class="klein">Dein Code stimmt, aber es ist noch kein Kurs hinterlegt. Falls du gerade erst überwiesen ' +
+      'hast: Wir schalten von Hand frei, das kann einen Tag dauern.</p>' +
+      '<div class="btn-reihe" style="margin-top:16px"><a class="btn t" href="videokurse.html">Kurse ansehen</a></div></div>');
+
+  document.getElementById('raus').addEventListener('click', () => { vergessen(); location.reload(); });
+
+  const leiste = document.getElementById('kursleiste');
+  if (leiste) {
+    leiste.innerHTML = KURSE.map(k =>
+      '<div class="kurschip" data-slug="' + esc(k.slug) + '" style="--kf:' + esc(k.farbe || '#2ee6c5') + '">' +
+      '<span class="s">' + esc(k.symbol || '🎥') + '</span><span>' + esc(k.titel) + '</span></div>').join('');
+    leiste.addEventListener('click', ev => {
+      const chip = ev.target.closest('.kurschip');
+      if (chip) waehle(chip.dataset.slug);
+    });
+  }
+}
+
+async function waehle(slug){
+  AKTIV = slug; LEKTION = null;
+  document.querySelectorAll('.kurschip').forEach(c =>
+    c.classList.toggle('aktiv', c.dataset.slug === slug));
+  const liste = document.getElementById('lekliste');
+  liste.innerHTML = '<div class="listenkopf">Lektionen</div><li class="leer">wird geladen …</li>';
+  const sp = document.getElementById('spieler');
+  sp.innerHTML = '<div class="platz"><span class="gross">▶</span>Wähl eine Lektion aus.</div>';
+  document.getElementById('unter').innerHTML = '';
+
+  const r = await fetch(API + '?was=kurs&k=' + encodeURIComponent(slug), { headers:{ apikey: SB_KEY } });
+  if (!r.ok) { liste.innerHTML = '<div class="listenkopf">Lektionen</div><li class="leer">Kurs nicht gefunden</li>'; return; }
+  const d = await r.json();
+  LEKTIONEN = d.lektionen || [];
+
+  if (!LEKTIONEN.length) {
+    liste.innerHTML = '<div class="listenkopf">Lektionen</div>' +
+      '<li class="leer">Die Videos sind noch in Arbeit – schau bald wieder rein.</li>';
+    return;
+  }
+
+  const fertigZahl = LEKTIONEN.filter(l => GESEHEN.has(l.id)).length;
+  liste.innerHTML = '<div class="listenkopf">' + LEKTIONEN.length + ' Lektionen · ' + fertigZahl + ' gesehen' +
+      '<div class="balken"><i style="width:' + Math.round(fertigZahl/LEKTIONEN.length*100) + '%"></i></div></div>' +
+    LEKTIONEN.map(l =>
+      '<li data-nr="' + l.nr + '" class="' + (GESEHEN.has(l.id) ? 'fertig' : '') + '">' +
+      '<span class="nr">' + (GESEHEN.has(l.id) ? '✓' : l.nr) + '</span>' +
+      '<span class="txt"><b>' + esc(l.titel) + '</b>' +
+      '<small>' + (l.dauer_sek ? minSek(l.dauer_sek) : (l.hat_video ? 'Video' : 'kommt noch')) +
+      (l.hat_material ? ' · PDF dabei' : '') + '</small></span></li>').join('');
+
+  liste.addEventListener('click', ev => {
+    const li = ev.target.closest('li[data-nr]');
+    if (li) spiele(Number(li.dataset.nr));
+  }, { once: false });
+
+  spiele(LEKTIONEN[0].nr);
+}
+
+async function spiele(nr){
+  const lek = LEKTIONEN.find(l => l.nr === nr);
+  if (!lek) return;
+  LEKTION = lek;
+  document.querySelectorAll('.lekliste li[data-nr]').forEach(li =>
+    li.classList.toggle('aktiv', Number(li.dataset.nr) === nr));
+
+  const sp = document.getElementById('spieler');
+  const unter = document.getElementById('unter');
+  sp.innerHTML = '<div class="platz">Video wird geladen …</div>';
+  unter.innerHTML = '<h2>' + esc(lek.titel) + '</h2>' +
+    (lek.beschreibung ? '<p>' + esc(lek.beschreibung) + '</p>' : '');
+
+  const { status, d } = await ruf({ was:'video', kurs: AKTIV, nr, email: EMAIL, code: CODE });
+
+  if (status !== 200 || !d.url) {
+    const txt = d.fehler === 'kein_video'
+      ? 'Dieses Video ist noch nicht hochgeladen. Wir sind dran.'
+      : (d.fehler === 'kein_zugang'
+        ? 'Für diesen Kurs hast du keinen Zugang. Schau in der Kursübersicht nach.'
+        : 'Das Video ließ sich gerade nicht laden. Bitte versuch es gleich noch einmal.');
+    sp.innerHTML = '<div class="platz"><span class="gross">▶</span>' + txt + '</div>';
+    return;
+  }
+
+  sp.innerHTML = '<video id="vid" controls playsinline preload="metadata" src="' + esc(d.url) + '"></video>';
+  if (d.material) {
+    unter.innerHTML += '<a class="btn t matbtn" href="' + esc(d.material) + '" target="_blank" rel="noopener" ' +
+      'download>📄 Anleitung herunterladen</a>';
+  }
+
+  const vid = document.getElementById('vid');
+  let letzte = 0;
+  vid.addEventListener('timeupdate', () => {
+    const s = Math.floor(vid.currentTime);
+    if (s - letzte >= 20) { letzte = s; melde(lek.id, s, false); }
+  });
+  vid.addEventListener('ended', () => {
+    GESEHEN.add(lek.id); gesehenMerken();
+    melde(lek.id, Math.floor(vid.duration || 0), true);
+    const li = document.querySelector('.lekliste li[data-nr="' + lek.nr + '"]');
+    if (li) { li.classList.add('fertig'); li.querySelector('.nr').textContent = '✓'; }
+    const naechste = LEKTIONEN.find(l => l.nr === lek.nr + 1);
+    if (naechste) spiele(naechste.nr);
+  });
+}
+
+function melde(lektionId, sekunden, fertig){
+  ruf({ was:'fortschritt', email: EMAIL, lektion_id: lektionId, sekunden, fertig }).catch(()=>{});
+}
+
+(async function start(){
+  const g = holen();
+  if (g && g.e && g.c) {
+    document.getElementById('anmeldung').innerHTML = '<div class="laedt">Deine Kurse werden geladen …</div>';
+    const ok = await anmelden(g.e, g.c);
+    if (!ok) { vergessen(); location.reload(); }
+  }
+})();
+</script>
+</body>
+</html>

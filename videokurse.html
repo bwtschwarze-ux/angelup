@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="description" content="Videokurse der Angelschule Ostfriesland: Mini-Kurse zum Rigs binden und Knoten für 7,99 €, komplette Themenkurse für 19,99 € und Pakete. Einmal kaufen, unbegrenzt ansehen.">
+<title>Videokurse – einmal kaufen, unbegrenzt ansehen | AngelUp</title>
+<link rel="canonical" href="https://angelup.de/videokurse.html">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:1180px;margin:0 auto;padding:34px 22px 90px}
+main section{padding:0;margin-bottom:clamp(40px,6vw,72px)}
+main h2{font-size:clamp(1.4rem,2.8vw,2rem);margin:0 0 6px}
+.abschnitt-kopf{margin-bottom:22px}
+.abschnitt-kopf p{color:var(--text-2);margin:0;font-size:.98rem;line-height:1.65;max-width:720px}
+
+.raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:18px}
+.pk{
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  background:linear-gradient(165deg,rgba(255,255,255,.062),rgba(255,255,255,.022));
+  border:1px solid var(--linie);border-radius:var(--r);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
+  text-decoration:none;color:inherit;
+}
+.pk:hover{transform:translateY(-5px);border-color:var(--linie-2);box-shadow:var(--glanz-hoch);color:inherit}
+.pk .band{height:5px;width:100%;background:var(--kf,var(--tuerkis))}
+.pk .inhalt{padding:22px 22px 0;flex:1;display:flex;flex-direction:column}
+.pk .kopf{display:flex;align-items:flex-start;gap:13px;margin-bottom:12px}
+.pk .sym{
+  width:50px;height:50px;flex:0 0 50px;border-radius:15px;display:grid;place-items:center;font-size:1.5rem;
+  background:color-mix(in srgb, var(--kf,#2ee6c5) 18%, transparent);
+  border:1px solid color-mix(in srgb, var(--kf,#2ee6c5) 34%, transparent);
+}
+.pk h3{margin:0 0 3px;font-size:1.14rem;letter-spacing:-.02em;line-height:1.25}
+.pk .badge{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--kf,var(--tuerkis));display:block;margin-bottom:4px}
+.pk .unter{color:var(--text-2);font-size:.9rem;line-height:1.55;margin:0 0 14px}
+.pk .fakten{display:flex;flex-direction:column;gap:7px;margin:0 0 16px;padding:0;list-style:none}
+.pk .fakten li{display:flex;gap:9px;align-items:flex-start;font-size:.86rem;color:var(--text-2);line-height:1.5}
+.pk .fakten li span:first-child{flex:0 0 17px;opacity:.85}
+.pk .fuss-teil{margin-top:auto;padding:16px 22px 22px;border-top:1px solid var(--linie);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.pk .preis{font-size:1.32rem;font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.pk .preis small{display:block;font-size:.72rem;font-weight:600;color:var(--text-3);letter-spacing:0;margin-top:2px}
+.pk .cta{font-size:.9rem;font-weight:700;padding:11px 18px;border-radius:12px;white-space:nowrap;
+  background:linear-gradient(120deg,var(--gold),var(--gold-2));color:#251200;box-shadow:var(--glow-g)}
+.pk .cta.merken{background:transparent;color:var(--text);border:1.5px solid var(--linie-2);box-shadow:none}
+.pk .ecke{position:absolute;top:16px;right:16px;font-size:.68rem;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;padding:5px 11px;border-radius:100px;
+  background:rgba(53,208,127,.14);border:1px solid rgba(53,208,127,.3);color:var(--gruen)}
+.pk .ecke.wartet{background:var(--glas);border-color:var(--linie);color:var(--text-3)}
+.pk .ecke.spar{background:rgba(255,194,71,.15);border-color:rgba(255,194,71,.32);color:var(--gold)}
+
+.vorteile{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:26px}
+.vorteil{background:var(--glas);border:1px solid var(--linie);border-radius:var(--r-s);padding:20px}
+.vorteil .ic{font-size:1.5rem;display:block;margin-bottom:9px}
+.vorteil h4{margin:0 0 5px;font-size:1rem}
+.vorteil p{margin:0;color:var(--text-2);font-size:.88rem;line-height:1.6}
+
+.laedt{text-align:center;color:var(--text-3);padding:48px 0;font-size:.95rem}
+.fehler{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.28);border-radius:var(--r-s);
+  padding:16px 18px;color:var(--rot);font-size:.92rem}
+.hilfe{background:linear-gradient(140deg,rgba(46,230,197,.11),rgba(255,255,255,.03));
+  border:1px solid var(--linie-2);border-radius:var(--r);padding:26px}
+.hilfe h3{margin:0 0 8px}
+.hilfe p{color:var(--text-2);font-size:.94rem;line-height:1.7;margin:0 0 16px}
+@media(max-width:560px){ .pk .fuss-teil{flex-direction:column;align-items:stretch}
+  .pk .cta{text-align:center} }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="videokurse.html">Videokurse</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a class="btn t" href="player.html">Meine Kurse</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <section style="margin-bottom:clamp(30px,4vw,48px)">
+    <span class="etikett"><span class="punkt"></span>Angelschule Ostfriesland</span>
+    <h1 style="margin:16px 0 10px;font-size:clamp(2rem,4.6vw,3.1rem);letter-spacing:-.035em">Videokurse fürs Wasser</h1>
+    <p class="lead" style="max-width:760px">Einmal kaufen, unbegrenzt ansehen – ohne Abo, ohne Ablaufdatum.
+    Die kurzen Mini-Kurse zeigen dir einen Handgriff in wenigen Minuten, die großen Themenkurse nehmen dich
+    von der Vorbereitung bis zum Fisch mit. Die erste Lektion jedes Kurses kannst du kostenlos ansehen.</p>
+
+    <div class="vorteile">
+      <div class="vorteil"><span class="ic">♾️</span><h4>Unbegrenzt statt Abo</h4>
+        <p>Du kaufst den Kurs einmal und siehst ihn, so oft du willst – auch in fünf Jahren noch.</p></div>
+      <div class="vorteil"><span class="ic">👀</span><h4>Erst reinschauen</h4>
+        <p>Lektion 1 ist bei jedem Kurs frei. Du siehst vorher, wie gefilmt und erklärt wird.</p></div>
+      <div class="vorteil"><span class="ic">📱</span><h4>Auf jedem Gerät</h4>
+        <p>Zugang über E-Mail und Code – Handy am Wasser, Tablet auf der Couch, kein Konto nötig.</p></div>
+      <div class="vorteil"><span class="ic">📄</span><h4>Material zum Mitnehmen</h4>
+        <p>Wo es sinnvoll ist, liegt eine Anleitung als PDF zum Herunterladen dabei.</p></div>
+    </div>
+  </section>
+
+  <section id="mini">
+    <div class="abschnitt-kopf">
+      <h2>⚡ Mini-Kurse – ein Thema, vier Videos</h2>
+      <p>Kurz, sauber gefilmt und ohne Umschweife: vier Videos, ein Handgriff, den du danach kannst.
+      Ideal, wenn du genau eine Sache lernen willst und nicht zwei Stunden Zeit hast.</p>
+    </div>
+    <div class="raster" id="rasterMini"><div class="laedt">Kurse werden geladen …</div></div>
+  </section>
+
+  <section id="kurse">
+    <div class="abschnitt-kopf">
+      <h2>🎥 Themenkurse – alles zu einer Fischart</h2>
+      <p>Der komplette Weg zu einer Fischart: Gewässer lesen, Montagen, Köder, Ansitz und was danach kommt.
+      Mehrere Stunden Video, in einzelne Lektionen zerlegt, damit du gezielt nachschlagen kannst.</p>
+    </div>
+    <div class="raster" id="rasterKurse"><div class="laedt">Kurse werden geladen …</div></div>
+  </section>
+
+  <section id="pakete">
+    <div class="abschnitt-kopf">
+      <h2>📦 Pakete – mehrere Kurse, ein Preis</h2>
+      <p>Wenn dich mehr als ein Thema interessiert, ist das Paket günstiger als die Einzelkurse.
+      Was drin steckt, steht bei jedem Paket dabei.</p>
+    </div>
+    <div class="raster" id="rasterPakete"><div class="laedt">Pakete werden geladen …</div></div>
+  </section>
+
+  <section>
+    <div class="hilfe">
+      <h3>Du hast schon gekauft?</h3>
+      <p>Nach dem Zahlungseingang bekommst du eine E-Mail mit deinem persönlichen Zugangscode.
+      Damit kommst du jederzeit und von jedem Gerät an deine Kurse – der Zugang läuft nicht ab.
+      Code verlegt? Schreib uns kurz, wir schicken ihn dir noch mal.</p>
+      <div class="btn-reihe">
+        <a class="btn" href="player.html">Zu meinen Kursen</a>
+        <a class="btn geist" href="mailto:bwt.schwarze@gmail.com?subject=Zugangscode%20Videokurs">Code anfordern</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API    = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/videokurs';
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function euro(cent){ return (cent/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+
+const burger = document.getElementById('burger');
+if (burger) burger.addEventListener('click', () => {
+  const l = document.getElementById('navLinks');
+  const auf = l.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', auf ? 'true' : 'false');
+});
+
+function dauerText(kurs, sek){
+  if (sek && sek > 0) { const m = Math.round(sek/60); return m >= 60 ? Math.floor(m/60)+' Std '+(m%60)+' min Video' : m+' min Video'; }
+  if (kurs.dauer_min) return 'rund ' + kurs.dauer_min + ' min Video';
+  return null;
+}
+
+function karte(kurs, anzahl, laenge, paketInfo){
+  const fertig = kurs.status === 'fertig';
+  const sym    = kurs.symbol || '🎥';
+  const fakten = [];
+  if (anzahl) fakten.push(['🎬', anzahl + (anzahl === 1 ? ' Lektion' : ' Lektionen')]);
+  const d = dauerText(kurs, laenge);
+  if (d) fakten.push(['⏱️', d]);
+  if (paketInfo) fakten.push(['📦', paketInfo]);
+  fakten.push(['♾️', 'Unbegrenzter Zugang, kein Abo']);
+
+  const ecke = fertig
+    ? '<div class="ecke">Sofort ansehen</div>'
+    : '<div class="ecke wartet">In Vorbereitung</div>';
+
+  return '<a class="pk" style="--kf:' + esc(kurs.farbe || '#2ee6c5') + '" href="videokurs.html?k=' + encodeURIComponent(kurs.slug) + '">' +
+    '<div class="band"></div>' + ecke +
+    '<div class="inhalt">' +
+      '<div class="kopf"><span class="sym">' + esc(sym) + '</span>' +
+        '<div>' + (kurs.badge ? '<span class="badge">' + esc(kurs.badge) + '</span>' : '') +
+        '<h3>' + esc(kurs.titel) + '</h3></div></div>' +
+      (kurs.untertitel ? '<p class="unter">' + esc(kurs.untertitel) + '</p>' : '') +
+      '<ul class="fakten">' + fakten.map(f =>
+        '<li><span>' + f[0] + '</span><span>' + esc(f[1]) + '</span></li>').join('') + '</ul>' +
+    '</div>' +
+    '<div class="fuss-teil">' +
+      '<div class="preis">' + euro(kurs.preis_cent) +
+        '<small>' + (fertig ? 'einmalig, dann für immer' : 'Preis steht fest') + '</small></div>' +
+      '<span class="cta' + (fertig ? '' : ' merken') + '">' + (fertig ? 'Ansehen &amp; kaufen' : 'Reinschauen') + '</span>' +
+    '</div></a>';
+}
+
+async function laden(){
+  const zMini = document.getElementById('rasterMini');
+  const zKurs = document.getElementById('rasterKurse');
+  const zPak  = document.getElementById('rasterPakete');
+  try {
+    const r = await fetch(API + '?was=katalog', { headers: { apikey: SB_KEY } });
+    if (!r.ok) throw new Error('katalog ' + r.status);
+    const d = await r.json();
+    const kurse = d.kurse || [], pakete = d.pakete || [];
+    const anzahl = d.anzahl || {}, laenge = d.laenge || {};
+
+    const nachSlug = {}; kurse.forEach(k => nachSlug[k.slug] = k);
+    const teileVon = {};
+    pakete.forEach(p => { (teileVon[p.bundle_slug] = teileVon[p.bundle_slug] || []).push(p.kurs_slug); });
+
+    const bau = (liste, el, leer, paketModus) => {
+      el.innerHTML = liste.length ? liste.map(k => {
+        let info = null, az = anzahl[k.slug] || 0, ln = laenge[k.slug] || 0;
+        if (paketModus) {
+          const teile = teileVon[k.slug] || [];
+          az = teile.reduce((s,t) => s + (anzahl[t] || 0), 0);
+          ln = teile.reduce((s,t) => s + (laenge[t] || 0), 0);
+          const namen = teile.map(t => (nachSlug[t] || {}).titel).filter(Boolean);
+          info = namen.length ? namen.join(' · ') : null;
+        }
+        return karte(k, az, ln, info);
+      }).join('') : '<p class="klein">' + leer + '</p>';
+    };
+
+    bau(kurse.filter(k => k.art === 'mini'),   zMini, 'Zurzeit ist kein Mini-Kurs veröffentlicht.', false);
+    bau(kurse.filter(k => k.art === 'kurs'),   zKurs, 'Zurzeit ist kein Themenkurs veröffentlicht.', false);
+    bau(kurse.filter(k => k.art === 'bundle'), zPak,  'Zurzeit gibt es kein Paket.', true);
+  } catch (e) {
+    zMini.innerHTML = '<div class="fehler">Die Kursliste ließ sich gerade nicht laden. Bitte lade die Seite neu – ' +
+      'oder schreib uns an <a href="mailto:bwt.schwarze@gmail.com">bwt.schwarze@gmail.com</a>.</div>';
+    zKurs.innerHTML = ''; zPak.innerHTML = '';
+  }
+}
+laden();
+</script>
+</body>
+</html>
