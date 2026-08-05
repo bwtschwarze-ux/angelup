@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="robots" content="noindex">
+<meta name="description" content="Livekurs zur Fischerprüfung – Videoraum für angemeldete Teilnehmer des Vorbereitungslehrgangs.">
+<title>Livekurs – AngelUp</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:1120px;margin:0 auto;padding:34px 20px 90px}
+main h2{font-size:clamp(1.4rem,2.8vw,2rem);margin:0 0 8px}
+.mitte{max-width:520px;margin:60px auto;text-align:center}
+.feld{display:block;text-align:left;font-size:.85rem;font-weight:700;margin:14px 0 5px;color:var(--text-2)}
+.eingabe{width:100%;padding:13px 15px;border:1.5px solid var(--linie);border-radius:var(--r-s);
+  background:var(--glas);color:var(--text);font-size:.97rem;font-family:inherit}
+.eingabe:focus{outline:none;border-color:var(--tuerkis);background:var(--glas-2)}
+.meld{border-radius:var(--r-s);padding:12px 15px;font-size:.9rem;margin:14px 0;line-height:1.55}
+.meld.rot{background:rgba(255,107,107,.10);border:1px solid rgba(255,107,107,.32);color:#ffb3b3}
+.meld.blau{background:rgba(46,230,197,.09);border:1px solid rgba(46,230,197,.28);color:#bff2e8}
+.buehne{position:relative;width:100%;aspect-ratio:16/9;min-height:420px;border-radius:var(--r);
+  overflow:hidden;border:1px solid var(--linie-2);background:#000;box-shadow:var(--glanz-hoch)}
+.buehne iframe,.buehne>div{width:100%;height:100%;border:0;display:block}
+.kopfzeile{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.punkt{width:9px;height:9px;border-radius:50%;background:var(--rot);
+  box-shadow:0 0 0 4px rgba(255,107,107,.18);animation:puls 1.6s infinite}
+@keyframes puls{0%,100%{opacity:1}50%{opacity:.35}}
+.lader{width:34px;height:34px;border:3px solid var(--linie-2);border-top-color:var(--tuerkis);
+  border-radius:50%;animation:dreh .8s linear infinite;margin:0 auto 18px}
+@keyframes dreh{to{transform:rotate(360deg)}}
+.schritte{counter-reset:s;list-style:none;padding:0;margin:14px 0 0}
+.schritte li{counter-increment:s;position:relative;padding:0 0 14px 42px;color:var(--text-2);font-size:.93rem;line-height:1.6}
+.schritte li::before{content:counter(s);position:absolute;left:0;top:-2px;width:27px;height:27px;
+  border-radius:9px;background:rgba(46,230,197,.13);border:1px solid rgba(46,230,197,.3);
+  color:var(--tuerkis);font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center}
+.schritte li b{color:var(--text)}
+.zwei{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:860px){.zwei{grid-template-columns:1fr}.buehne{min-height:260px}}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="kurs.html">Anmeldung</a>
+      <a class="btn t" href="live.html">Livekurs</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+
+<div class="kopfzeile">
+  <span class="etikett"><span class="punkt"></span> Livekurs</span>
+  <span class="etikett grau" id="wer">wird geprüft …</span>
+</div>
+<h2>Livekurs zur Fischerprüfung</h2>
+<p style="color:var(--text-2);margin:0 0 26px;max-width:70ch">
+  Der Raum ist nur für angemeldete Teilnehmer des Vorbereitungslehrgangs zugänglich.
+  Du siehst und hörst den Ausbilder, kannst dich per Mikrofon melden und im Chat schreiben.</p>
+
+<!-- Zustand: laden -->
+<div id="laden" class="mitte">
+  <div class="lader"></div>
+  <p style="color:var(--text-2)">Zugang wird geprüft …</p>
+</div>
+
+<!-- Zustand: Login -->
+<div id="anmelden" class="mitte karte" style="display:none">
+  <h3 style="margin:0 0 6px">Bitte anmelden</h3>
+  <p style="color:var(--text-2);font-size:.92rem;margin:0 0 4px">
+    Melde dich mit dem Konto an, mit dem du auch in der Lern-App lernst.</p>
+  <div id="loginMeld"></div>
+  <label class="feld" for="e_mail">E-Mail</label>
+  <input class="eingabe" id="e_mail" type="email" autocomplete="email" placeholder="du@beispiel.de">
+  <label class="feld" for="e_pw">Passwort</label>
+  <input class="eingabe" id="e_pw" type="password" autocomplete="current-password" placeholder="••••••••">
+  <button class="btn voll gross" id="loginBtn" style="margin-top:18px">Anmelden</button>
+  <p style="font-size:.8rem;color:var(--text-3);margin-top:14px">
+    Noch kein Konto? <a href="app.html" style="color:var(--tuerkis)">Hier kostenlos anlegen</a></p>
+</div>
+
+<!-- Zustand: kein Zugang -->
+<div id="gesperrt" class="mitte karte" style="display:none">
+  <div class="icon gold" style="margin:0 auto 14px">🔒</div>
+  <h3 style="margin:0 0 8px">Kein gültiger Zugang</h3>
+  <p style="color:var(--text-2);font-size:.93rem">
+    Für dein Konto ist gerade kein laufender Kurszugang hinterlegt.
+    Der Livekurs ist Teil des Vorbereitungslehrgangs.</p>
+  <a class="btn voll gross" href="kurs.html" style="margin-top:18px">Zum Lehrgang anmelden</a>
+  <button class="btn geist voll" id="abmelden1" style="margin-top:10px">Mit anderem Konto anmelden</button>
+</div>
+
+<!-- Zustand: Fehler -->
+<div id="fehler" class="mitte karte" style="display:none">
+  <h3 style="margin:0 0 8px">Der Raum ist gerade nicht erreichbar</h3>
+  <p id="fehlerText" style="color:var(--text-2);font-size:.93rem"></p>
+  <button class="btn voll gross" id="nochmal" style="margin-top:18px">Erneut versuchen</button>
+</div>
+
+<!-- Zustand: Raum -->
+<div id="raum" style="display:none">
+  <div class="buehne" id="buehne"></div>
+
+  <div class="meld blau" style="margin-top:18px">
+    <b>Ton und Bild:</b> Beim Betreten sind Mikrofon und Kamera aus. Klicke im Videofenster
+    unten auf das Mikrofon-Symbol, wenn du etwas fragen möchtest. Der Chat liegt rechts im Fenster.
+  </div>
+
+  <div id="obsBlock" style="display:none;margin-top:30px">
+    <h2 style="margin-bottom:6px">Senden mit OBS</h2>
+    <p style="color:var(--text-2);margin:0 0 4px;max-width:70ch">
+      So behältst du deine OBS-Szenen, Folien und Overlays und hast trotzdem echten
+      Zwei-Wege-Ton mit den Teilnehmern.</p>
+    <div class="zwei" style="margin-top:16px">
+      <div class="karte">
+        <h3 style="margin:0 0 4px">Einmal einrichten</h3>
+        <ol class="schritte">
+          <li>In OBS unten rechts auf <b>„Virtuelle Kamera starten"</b> klicken.</li>
+          <li>Diese Seite in <b>Chrome</b> öffnen (Firefox erkennt die Virtualkamera nicht immer).</li>
+          <li>Im Videofenster oben auf das Zahnrad, bei <b>Kamera</b> „OBS Virtual Camera" wählen.</li>
+          <li>Als <b>Mikrofon</b> dein echtes Mikrofon wählen — <b>nicht</b> das OBS-Audio,
+              sonst hörst du dich doppelt.</li>
+          <li>Systemton (Musik, Videoclips) überträgt die Virtualkamera <b>nicht</b>.
+              Dafür im Videofenster <b>Bildschirm teilen</b> mit „Ton mitteilen".</li>
+        </ol>
+      </div>
+      <div class="karte">
+        <h3 style="margin:0 0 4px">Vor jedem Kurs</h3>
+        <ol class="schritte">
+          <li>OBS starten, Szene wählen, <b>Virtuelle Kamera starten</b>.</li>
+          <li>Diese Seite öffnen — du kommst automatisch als <b>Moderator</b> rein.</li>
+          <li>Kamera und Mikrofon anschalten, kurz gegenprüfen.</li>
+          <li>Kopfhörer aufsetzen. Ohne Kopfhörer gibt es Rückkopplung,
+              sobald ein Teilnehmer spricht.</li>
+          <li>Als Moderator kannst du einzelne Teilnehmer stummschalten
+              oder aus dem Raum entfernen.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="meld blau">
+      <b>Der Raum bleibt immer der gleiche.</b> Du musst nichts neu anlegen und keine Links
+      verteilen — Teilnehmer mit laufendem Kurszugang kommen über diese Seite rein, alle anderen nicht.
+    </div>
+  </div>
+
+  <div id="teilnehmerBlock" style="margin-top:30px">
+    <div class="zwei">
+      <div class="karte">
+        <h3 style="margin:0 0 4px">Damit es rund läuft</h3>
+        <ol class="schritte">
+          <li>Nimm <b>Kopfhörer</b>. Ohne Kopfhörer hallt es für alle anderen.</li>
+          <li>Lass dein <b>Mikrofon aus</b>, solange du nicht dran bist.</li>
+          <li>Fragen kannst du jederzeit in den <b>Chat</b> schreiben.</li>
+          <li>Bei Rucklern: Kamera ausschalten, das spart die meiste Leitung.</li>
+        </ol>
+      </div>
+      <div class="karte">
+        <h3 style="margin:0 0 4px">Nebenbei üben</h3>
+        <p style="color:var(--text-2);font-size:.93rem">
+          Die Fragen aus dem Livekurs findest du direkt in der Lern-App wieder —
+          am besten gleich im Anschluss durchgehen.</p>
+        <a class="btn geist voll" href="app.html" style="margin-top:12px">Fragen üben</a>
+        <a class="btn geist voll" href="lernen.html" style="margin-top:8px">Zum Online-Kurs</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:26px">
+    <button class="btn geist" id="abmelden2">Abmelden</button>
+  </div>
+</div>
+
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ================================================================
+   Konfiguration
+   ================================================================ */
+const SB_URL = 'https://vqjpwhqpcybpblgtjuxw.supabase.co';
+/* Öffentlicher (client-safer) Publishable-Key – identisch mit dem der Lern-App */
+const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+const FUNKTION = SB_URL + '/functions/v1/live-raum';
+
+const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+const $ = (id) => document.getElementById(id);
+
+/* Navigation */
+const nav = $('nav'), burger = $('burger'), navLinks = $('navLinks');
+burger.addEventListener('click', () => {
+  const a = navLinks.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', a ? 'true' : 'false');
+});
+addEventListener('scroll', () => nav.classList.toggle('fest', scrollY > 12), {passive:true});
+
+function zeige(welcher){
+  ['laden','anmelden','gesperrt','fehler','raum'].forEach(id => {
+    $(id).style.display = (id === welcher) ? 'block' : 'none';
+  });
+}
+
+function meldung(text, art){
+  $('loginMeld').innerHTML = text ? '<div class="meld ' + (art||'rot') + '">' + text + '</div>' : '';
+}
+
+/* ================================================================
+   Ablauf
+   ================================================================ */
+let laeuft = false;
+
+async function start(){
+  if (!sb){
+    $('fehlerText').textContent = 'Die Verbindung zum Server konnte nicht aufgebaut werden. Bitte lade die Seite neu.';
+    return zeige('fehler');
+  }
+  zeige('laden');
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session){ $('wer').textContent = 'nicht angemeldet'; return zeige('anmelden'); }
+  await raumHolen(session.access_token);
+}
+
+async function raumHolen(token){
+  zeige('laden');
+  let a;
+  try {
+    const r = await fetch(FUNKTION, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: '{}'
+    });
+    a = await r.json();
+    if (r.status === 401){ $('wer').textContent = 'nicht angemeldet'; return zeige('anmelden'); }
+    if (r.status === 403){ $('wer').textContent = 'kein Zugang'; return zeige('gesperrt'); }
+    if (!r.ok) throw new Error(a && a.fehler ? a.fehler : ('HTTP ' + r.status));
+  } catch (e) {
+    $('fehlerText').textContent = 'Technischer Grund: ' + (e && e.message ? e.message : e)
+      + '. Versuche es in einem Moment noch einmal oder lade die Seite neu.';
+    return zeige('fehler');
+  }
+
+  $('wer').textContent = (a.moderator ? 'Ausbilder · ' : '') + (a.name || '');
+  $('obsBlock').style.display = a.moderator ? 'block' : 'none';
+  $('teilnehmerBlock').style.display = a.moderator ? 'none' : 'block';
+  zeige('raum');
+  betreten(a);
+}
+
+function betreten(a){
+  if (laeuft) return;
+  const b = $('buehne');
+  b.innerHTML = '';
+
+  if (a.anbieter === 'daily'){
+    const f = document.createElement('iframe');
+    f.src = a.url + '?t=' + encodeURIComponent(a.token);
+    f.allow = 'camera; microphone; fullscreen; display-capture; autoplay; clipboard-write';
+    f.setAttribute('allowfullscreen', '');
+    b.appendChild(f);
+    laeuft = true;
+    return;
+  }
+
+  /* Fallback: Jitsi – wird geladen, sobald es gebraucht wird */
+  const s = document.createElement('script');
+  s.src = 'https://' + a.domain + '/external_api.js';
+  s.onload = () => {
+    /* eslint-disable no-undef */
+    const api = new JitsiMeetExternalAPI(a.domain, {
+      roomName: a.raum,
+      parentNode: b,
+      width: '100%',
+      height: '100%',
+      lang: 'de',
+      userInfo: { displayName: a.name },
+      configOverwrite: {
+        startWithAudioMuted: !a.moderator,
+        startWithVideoMuted: !a.moderator,
+        prejoinPageEnabled: true,
+        disableDeepLinking: true,
+        defaultLanguage: 'de'
+      },
+      interfaceConfigOverwrite: {
+        SHOW_JITSI_WATERMARK: false,
+        SHOW_BRAND_WATERMARK: false,
+        MOBILE_APP_PROMO: false,
+        DEFAULT_BACKGROUND: '#050c13',
+        TOOLBAR_BUTTONS: ['microphone','camera','desktop','chat','raisehand','tileview',
+          'fullscreen','settings','hangup','participants-pane','toggle-camera']
+      }
+    });
+    api.addEventListener('readyToClose', () => { laeuft = false; b.innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#9db4c5">Du hast den Raum verlassen.</div>'; });
+    laeuft = true;
+  };
+  s.onerror = () => {
+    $('fehlerText').textContent = 'Der Videoraum konnte nicht geladen werden. Bitte Seite neu laden.';
+    zeige('fehler');
+  };
+  document.head.appendChild(s);
+}
+
+/* ================================================================
+   Anmeldung
+   ================================================================ */
+async function login(){
+  const email = $('e_mail').value.trim(), pw = $('e_pw').value;
+  if (!email || !pw) return meldung('Bitte E-Mail und Passwort eingeben.');
+  const b = $('loginBtn');
+  b.disabled = true; b.textContent = 'Bitte warten …'; meldung('');
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
+  b.disabled = false; b.textContent = 'Anmelden';
+  if (error){
+    return meldung(/Invalid login/i.test(error.message)
+      ? 'E-Mail oder Passwort stimmt nicht.'
+      : 'Anmeldung fehlgeschlagen: ' + error.message);
+  }
+  await raumHolen(data.session.access_token);
+}
+
+$('loginBtn').addEventListener('click', login);
+$('e_pw').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+$('nochmal').addEventListener('click', start);
+$('abmelden1').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+$('abmelden2').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+
+start();
+</script>
+</body>
+</html>
