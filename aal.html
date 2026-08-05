@@ -265,7 +265,8 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
     <button type="submit" class="btn gross" id="absenden" style="width:100%;margin-top:8px">Kostenpflichtig anmelden</button>
     <p class="klein" style="color:var(--text-3);margin-top:12px">
       Mit dem Absenden meldest du dich verbindlich an. Die Zahlung läuft per Überweisung,
-      die Bankdaten und deine Referenz bekommst du direkt im Anschluss auf dieser Seite angezeigt.</p>
+      die Bankdaten und deine Referenz siehst du direkt im Anschluss auf dieser Seite und
+      bekommst sie zusätzlich per E-Mail.</p>
   </form>
 
   <div id="erfolg">
@@ -285,10 +286,10 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
       <tr><td>Verwendungszweck</td><td><span id="eRef"></span><button class="kopieren" type="button" id="refKopie">kopieren</button></td></tr>
     </table>
     <div class="hinweis" id="eHinweis"></div>
-    <div class="hinweis" style="text-align:center">
-      <p style="margin:0 0 14px">Schick uns zum Schluss noch die kurze Bestätigung – dann liegt deine
-        Anmeldung direkt in unserem Postfach und wir melden uns bei dir.</p>
-      <a class="btn" id="eMailLink" href="#" style="display:inline-block">Anmeldung per E-Mail bestätigen</a>
+    <div class="hinweis" style="text-align:center" id="eMailBlock">
+      <p style="margin:0" id="eMailText">Die Bestätigung mit allen Daten ist gerade an deine E-Mail-Adresse
+        rausgegangen. Schau auch kurz in den Spam-Ordner, falls sie nicht ankommt.</p>
+      <a class="btn" id="eMailLink" href="#" style="display:none;margin-top:14px">Anmeldung per E-Mail bestätigen</a>
     </div>
     <div class="hinweis">Fragen? Schreib uns an <b>bwt.schwarze@gmail.com</b> oder komm im Laden vorbei:
       Zur Kiepe, Alter Postweg 80, 26607 Aurich.</div>
@@ -371,7 +372,7 @@ function summeZeichnen(){
 variantenZeichnen();
 summeZeichnen();
 
-/* Referenz */
+/* Referenz – nur Notfallreserve, im Normalfall vergibt sie der Server */
 function referenz(){
   const z = new Uint32Array(1);
   (crypto && crypto.getRandomValues) ? crypto.getRandomValues(z) : (z[0] = Math.floor(Math.random()*1e9));
@@ -403,9 +404,7 @@ $('formular').addEventListener('submit', async e => {
 
   const btn = $('absenden');
   btn.disabled = true; btn.textContent = 'Wird gesendet …';
-  const ref = referenz();
   const daten = {
-    referenz: ref,
     variante: gewaehlt.id,
     betrag_cent: gewaehlt.preis,
     name: w('name'),
@@ -419,14 +418,38 @@ $('formular').addEventListener('submit', async e => {
     datenschutz_ok: true
   };
 
+  let ref = '', mailRaus = false;
+
   try {
-    const r = await fetch(SB_URL + '/rest/v1/aal_anmeldung', {
-      method: 'POST',
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
-                 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify(daten)
-    });
-    if(!r.ok) throw new Error('Status ' + r.status);
+    /* Regelweg: Edge Function speichert und schickt sofort die Bestätigungsmail */
+    let ok = false;
+    try {
+      const f = await fetch(SB_URL + '/functions/v1/aal', {
+        method: 'POST',
+        headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify(daten)
+      });
+      const a = await f.json().catch(() => ({}));
+      if(f.status === 429){
+        btn.disabled = false; btn.textContent = 'Kostenpflichtig anmelden';
+        box.textContent = 'Für diese E-Mail-Adresse liegen schon mehrere Anmeldungen vor. Melde dich bitte kurz bei uns.';
+        box.classList.add('zeig');
+        return;
+      }
+      if(f.ok && a.ok && a.referenz){ ref = a.referenz; mailRaus = a.mail === true; ok = true; }
+    } catch(e){ /* Notweg unten */ }
+
+    /* Notweg: direkt in die Tabelle schreiben, Bestätigung dann per Mailprogramm */
+    if(!ok){
+      ref = referenz();
+      const r = await fetch(SB_URL + '/rest/v1/aal_anmeldung', {
+        method: 'POST',
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+                   'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(Object.assign({ referenz: ref }, daten, { betrag_cent: gewaehlt.preis }))
+      });
+      if(!r.ok) throw new Error('Status ' + r.status);
+    }
 
     $('eKurs').textContent = 'AAL TOTAL · ' + gewaehlt.art + ' · ' + gewaehlt.titel;
     $('eBetrag').textContent = eur(gewaehlt.preis);
@@ -451,6 +474,12 @@ $('formular').addEventListener('submit', async e => {
     $('eMailLink').href = 'mailto:bwt.schwarze@gmail.com'
       + '?subject=' + encodeURIComponent('Aalkurs ' + ref)
       + '&body=' + encodeURIComponent(zeilen.join('\n'));
+
+    if(!mailRaus){
+      $('eMailText').innerHTML = 'Schick uns zum Schluss noch die kurze Bestätigung – dann liegt deine '
+        + 'Anmeldung direkt in unserem Postfach und wir melden uns bei dir.';
+      $('eMailLink').style.display = 'inline-block';
+    }
 
     $('formular').style.display = 'none';
     $('summe').style.display = 'none';
