@@ -177,6 +177,17 @@ if (burger) burger.addEventListener('click', () => {
 function preisBlock(kurs, varianten){
   const mit = varianten.filter(v => v.preis_cent != null);
   if (!mit.length) return '<div class="preis">Preis folgt<small>steht rechtzeitig vor dem Kurs fest</small></div>';
+  // Beim Lehrgang steht der Kurspreis vorn - "ab 70" waere die reine Pruefung und damit missverstaendlich
+  if (kurs.art === 'lehrgang') {
+    const nurPruefung = mit.find(v => v.variante === 'nur_pruefung');
+    const mitKurs = mit.filter(v => v.variante !== 'nur_pruefung');
+    if (mitKurs.length) {
+      const p = Math.min.apply(null, mitKurs.map(v => v.preis_cent));
+      return '<div class="preis">' + euro(p) + '<small>Kurs mit Prüfung' +
+             (nurPruefung ? ' · nur Prüfung ' + euro(nurPruefung.preis_cent) : '') + '</small></div>';
+    }
+    if (nurPruefung) return '<div class="preis">' + euro(nurPruefung.preis_cent) + '<small>nur Prüfung</small></div>';
+  }
   const min = Math.min.apply(null, mit.map(v => v.preis_cent));
   const alleGleich = mit.every(v => v.preis_cent === min);
   return '<div class="preis">' + (alleGleich ? '' : 'ab ') + euro(min) +

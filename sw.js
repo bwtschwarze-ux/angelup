@@ -1,4 +1,4 @@
-const CACHE = 'angelup-v29';
+const CACHE = 'angelup-v30';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
   './live.html', './aal.html', './kurse.html', './vormerken.html',
   './videokurse.html', './videokurs.html', './player.html',
