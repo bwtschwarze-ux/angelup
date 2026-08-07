@@ -58,7 +58,8 @@ const MAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const RATE_LIMIT = 5;
 const RATE_FENSTER_MS = 24 * 60 * 60 * 1000;
-const VIDEO_GUELTIG_SEK = 4 * 60 * 60;
+const VIDEO_GUELTIG_SEK = 30 * 60; // kurzlebig, damit weitergegebene Links schnell tot sind
+const GERAETE_MAX = 2; // eine Person: z. B. Handy + Rechner
 
 const KONTO = {
   inhaber: 'Mark Schwarze',
@@ -168,6 +169,24 @@ async function ausbilder(req: Request): Promise<{ id: string; email: string } | 
   return { id: data.user.id, email: data.user.email ?? '' };
 }
 
+// Zugang an Geraete binden: bekanntes Geraet -> ok, neues Geraet nur solange Platz frei ist
+async function geraetOk(email: string, geraetId: string, ua: string): Promise<boolean> {
+  if (!geraetId || geraetId.length < 8) return false;
+  const { data: g } = await db.from('videokurs_geraet').select('id')
+    .eq('email', email).eq('geraet_id', geraetId).maybeSingle();
+  if (g) {
+    await db.from('videokurs_geraet')
+      .update({ zuletzt: new Date().toISOString() }).eq('id', (g as { id: string }).id);
+    return true;
+  }
+  const { count } = await db.from('videokurs_geraet')
+    .select('id', { count: 'exact', head: true }).eq('email', email);
+  if ((count ?? 0) >= GERAETE_MAX) return false;
+  const { error } = await db.from('videokurs_geraet')
+    .insert({ email, geraet_id: geraetId, ua: ua.slice(0, 200) });
+  return !error;
+}
+
 async function signierteVideoUrl(pfad: string): Promise<string | null> {
   const { data } = await db.storage.from('kursvideos').createSignedUrl(pfad, VIDEO_GUELTIG_SEK);
   return data?.signedUrl ?? null;
@@ -254,7 +273,8 @@ function textFrei(name: string, kurs: string, email: string, code: string): stri
     `Zugangscode: ${code}`,
     ``,
     `Der Zugang laeuft nicht ab. Du kannst den Kurs so oft ansehen, wie du willst.`,
-    `Heb den Code auf - damit kommst du auch von einem anderen Geraet wieder rein.`,
+    `Wichtig: Der Zugang ist persoenlich und gilt auf bis zu ${GERAETE_MAX} eigenen Geraeten`,
+    `(z. B. Handy und Rechner). Bitte gib Code und Videos nicht weiter.`,
     ``,
     `Petri!`,
     `Mark Schwarze`,
@@ -277,7 +297,7 @@ function htmlFrei(name: string, kurs: string, email: string, code: string): stri
     <p style="margin:20px 0 0;text-align:center">
       <a href="https://angelup.de/player.html" style="display:inline-block;background:#12212e;color:#2ee6c5;text-decoration:none;font-weight:700;font-size:15px;padding:13px 26px;border-radius:10px">Kurs jetzt ansehen</a>
     </p>
-    <p style="margin:20px 0 0;color:#3b4a58;font-size:15px;line-height:1.55">Der Zugang <b>l&auml;uft nicht ab</b>. Heb den Code auf &ndash; damit kommst du auch von einem anderen Ger&auml;t wieder rein.</p>
+    <p style="margin:20px 0 0;color:#3b4a58;font-size:15px;line-height:1.55">Der Zugang <b>l&auml;uft nicht ab</b> und ist <b>pers&ouml;nlich</b>: Er gilt auf bis zu ${GERAETE_MAX} eigenen Ger&auml;ten (z.&nbsp;B. Handy und Rechner). Bitte gib Code und Videos nicht weiter.</p>
     <p style="margin:22px 0 0;color:#3b4a58;font-size:15px;line-height:1.55">Petri!<br><b style="color:#12212e">Mark Schwarze</b><br>Zur Kiepe &middot; Alter Postweg 80 &middot; 26607 Aurich</p>`);
 }
 
@@ -417,6 +437,11 @@ Deno.serve(async (req) => {
       .from('videokurs_zugang').select('kurs_slug').eq('email', email).eq('code', code).maybeSingle();
     if (!treffer) return json(req, { fehler: 'falsch' }, 403);
 
+    const geraet = kurz(b.geraet, 80);
+    if (!(await geraetOk(email, geraet, req.headers.get('user-agent') ?? ''))) {
+      return json(req, { fehler: 'geraet', max: GERAETE_MAX }, 403);
+    }
+
     const slugs = await freigeschaltet(email);
     const { data: kurse } = await db
       .from('videokurs')
@@ -446,6 +471,10 @@ Deno.serve(async (req) => {
       const { data: t } = await db
         .from('videokurs_zugang').select('id').eq('email', email).eq('code', code).maybeSingle();
       if (!t) return json(req, { fehler: 'falsch' }, 403);
+      const geraet = kurz(b.geraet, 80);
+      if (!(await geraetOk(email, geraet, req.headers.get('user-agent') ?? ''))) {
+        return json(req, { fehler: 'geraet', max: GERAETE_MAX }, 403);
+      }
       darf = (await freigeschaltet(email)).includes(slug);
     }
     if (!darf) return json(req, { fehler: 'kein_zugang' }, 403);
@@ -484,10 +513,22 @@ Deno.serve(async (req) => {
     const { data: zugaenge } = await db
       .from('videokurs_zugang').select('*').order('seit', { ascending: false }).limit(200);
     const { data: pakete } = await db.from('videokurs_bundle').select('*').order('sortierung');
+    const { data: geraete } = await db
+      .from('videokurs_geraet').select('email, geraet_id, ua, seit, zuletzt')
+      .order('zuletzt', { ascending: false }).limit(400);
     return json(req, {
       kurse: kurse ?? [], lektionen: lektionen ?? [], kaeufe: kaeufe ?? [],
-      zugaenge: zugaenge ?? [], pakete: pakete ?? [],
+      zugaenge: zugaenge ?? [], pakete: pakete ?? [], geraete: geraete ?? [],
     });
+  }
+
+  // Geraete einer Mailadresse zuruecksetzen (wenn ein Kunde sein Geraet wechselt)
+  if (was === 'geraete_reset') {
+    const email = kurz(b.email, 120).toLowerCase();
+    if (!MAIL_RE.test(email)) return json(req, { fehler: 'ungueltig' }, 400);
+    const { error } = await db.from('videokurs_geraet').delete().eq('email', email);
+    if (error) return json(req, { fehler: 'loeschen', detail: error.message }, 500);
+    return json(req, { ok: true });
   }
 
   if (was === 'upload_url') {
