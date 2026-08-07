@@ -1,4 +1,4 @@
-const CACHE = 'angelup-v34';
+const CACHE = 'angelup-v35';
 const BILD_CACHE = 'angelup-bilder-v1';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
   './live.html', './aal.html', './kurse.html', './vormerken.html',
@@ -17,7 +17,8 @@ self.addEventListener('fetch', e => {
   if (u.hostname === 'upload.wikimedia.org') {
     e.respondWith(caches.open(BILD_CACHE).then(c =>
       c.match(e.request).then(treffer => treffer || fetch(e.request).then(netz => {
-        if (netz && netz.ok) c.put(e.request, netz.clone());
+        // auch "opaque" Antworten (Bilder ohne CORS, status 0) zwischenspeichern
+        if (netz && (netz.ok || netz.type === 'opaque')) c.put(e.request, netz.clone());
         return netz;
       }).catch(() => treffer))));
     return;
