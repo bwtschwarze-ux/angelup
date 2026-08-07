@@ -710,7 +710,10 @@ const XP_PRO_LEVEL = 120;
 const SB_URL = "https://vqjpwhqpcybpblgtjuxw.supabase.co";
 const SB_KEY = "sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9";
 const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
-const AUSBILDER_FREISCHALTCODE = "AUSBILDER2026"; // Code für Ausbilder-Registrierung (änderbar)
+/* Ausbilder-Rolle wird serverseitig geprüft (DB-Trigger profil_anlegen):
+   Der eingegebene Code geht als Metadaten-Feld ausbilder_code mit und wird
+   in der Datenbank gegen ein Geheimnis geprüft. Ohne gültigen Code bleibt
+   die Rolle 'pruefling'. Der Code steht bewusst NICHT mehr im Klartext hier. */
 
 /* =========================== ZUSTAND =========================== */
 let state = {
@@ -928,12 +931,14 @@ async function registerKlick(){
   const rolle=document.getElementById('a_rolle').value;
   const extra=document.getElementById('a_extra').value.trim();
   if(!name||!email||pw.length<6){ state.authMeldung={text:'Bitte Name, E-Mail und ein Passwort mit mind. 6 Zeichen eingeben.'}; return render(); }
-  if(rolle==='ausbilder' && extra!==AUSBILDER_FREISCHALTCODE){
-    state.authMeldung={text:'Der Ausbilder-Freischaltcode stimmt nicht. Du bekommst ihn vom AngelUp-Team.'}; return render();
+  if(rolle==='ausbilder' && !extra){
+    state.authMeldung={text:'Bitte den Ausbilder-Freischaltcode eingeben. Du bekommst ihn vom AngelUp-Team.'}; return render();
   }
   state.authBusy=true; render();
   const {error}=await sb.auth.signUp({email, password:pw,
-    options:{ data:{ name, rolle, kurs_code: rolle==='pruefling'?extra.toUpperCase():'' },
+    options:{ data:{ name, rolle,
+      kurs_code: rolle==='pruefling'?extra.toUpperCase():'',
+      ausbilder_code: rolle==='ausbilder'?extra:'' },
       emailRedirectTo: location.origin + location.pathname }});
   state.authBusy=false;
   if(error){ state.authMeldung={text:'Registrierung fehlgeschlagen: '+error.message}; return render(); }

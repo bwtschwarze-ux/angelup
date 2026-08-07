@@ -30,15 +30,56 @@
   }catch(e){}
 })();
 </script>
+<meta property="og:image" content="https://angelup.de/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
-  "@type":"EducationalOrganization",
-  "name":"Angelschule Ostfriesland",
-  "url":"https://angelup.de/",
-  "description":"Vorbereitung auf die Fischerprüfung in Niedersachsen – Lernapp, Online-Kurs und Präsenzlehrgang.",
-  "address":{"@type":"PostalAddress","streetAddress":"Alter Postweg 80","postalCode":"26607","addressLocality":"Aurich","addressCountry":"DE"},
-  "areaServed":"Niedersachsen"
+  "@graph":[
+    {
+      "@type":["EducationalOrganization","LocalBusiness"],
+      "@id":"https://angelup.de/#organisation",
+      "name":"Angelschule Ostfriesland",
+      "alternateName":"AngelUp",
+      "url":"https://angelup.de/",
+      "description":"Vorbereitung auf die Fischerprüfung in Niedersachsen – Lernapp, Online-Kurs und Präsenzlehrgang in Aurich.",
+      "logo":"https://angelup.de/icon-512.png",
+      "image":"https://angelup.de/icon-512.png",
+      "email":"bwt.schwarze@gmail.com",
+      "founder":{"@type":"Person","name":"Mark Schwarze"},
+      "address":{"@type":"PostalAddress","streetAddress":"Alter Postweg 80","postalCode":"26607","addressLocality":"Aurich","addressRegion":"Niedersachsen","addressCountry":"DE"},
+      "areaServed":[{"@type":"State","name":"Niedersachsen"},{"@type":"Place","name":"Ostfriesland"}]
+    },
+    {
+      "@type":"WebSite",
+      "@id":"https://angelup.de/#website",
+      "url":"https://angelup.de/",
+      "name":"AngelUp – Angelschule Ostfriesland",
+      "inLanguage":"de-DE",
+      "publisher":{"@id":"https://angelup.de/#organisation"}
+    },
+    {
+      "@type":"Course",
+      "name":"Vorbereitungskurs zur Fischerprüfung Niedersachsen",
+      "description":"Kompletter Vorbereitungskurs auf die Fischerprüfung in Niedersachsen (Weser-Ems): 7 Module, 37 Lektionen, über 200 Übungsfragen und Prüfungssimulation.",
+      "url":"https://angelup.de/lernen.html",
+      "provider":{"@id":"https://angelup.de/#organisation"},
+      "inLanguage":"de-DE",
+      "about":"Fischerprüfung Niedersachsen",
+      "hasCourseInstance":[
+        {"@type":"CourseInstance","courseMode":"online","url":"https://angelup.de/lernen.html"},
+        {"@type":"CourseInstance","courseMode":"onsite","location":{"@type":"Place","name":"Aurich","address":{"@type":"PostalAddress","addressLocality":"Aurich","addressCountry":"DE"}}}
+      ]
+    },
+    {
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"Wo kann ich mich in Ostfriesland auf die Fischerprüfung vorbereiten?","acceptedAnswer":{"@type":"Answer","text":"Bei der Angelschule Ostfriesland (AngelUp) in Aurich – als Präsenzlehrgang, als Online-Kurs oder mit der Lern-App. Prüfung nach den Regeln des Landesfischereiverbands Weser-Ems."}},
+        {"@type":"Question","name":"Was kostet der Lehrgang zur Fischerprüfung?","acceptedAnswer":{"@type":"Answer","text":"Der Vorbereitungslehrgang mit Prüfung kostet 160 €, die reine Prüfung 70 €. Die Prüfungsgebühr des Landesfischereiverbands Weser-Ems beträgt 60 €."}},
+        {"@type":"Question","name":"Wie läuft die Fischerprüfung in Niedersachsen ab?","acceptedAnswer":{"@type":"Answer","text":"60 Fragen aus 6 Sachgebieten, 10 Fragen je Sachgebiet, 60 Minuten Zeit. Bestanden ab 45 richtigen Antworten und mindestens 6 richtigen je Sachgebiet."}}
+      ]
+    }
+  ]
 }
 </script>
 </head>
