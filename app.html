@@ -373,6 +373,11 @@ const FRAGEN = [
   {id:"2-4b0612",g:2,f:"Welcher Fisch ist das?",bild:"barbe",a:["Nase","Barbe","Döbel"],r:1,e:"Die Barbe hat einen langgestreckten Körper, ein unterständiges Maul und 4 Barteln – ein typischer Grundfisch der Barbenregion."},
   {id:"2-729eba",g:2,f:"Welcher Fisch ist das?",bild:"dorsch",a:["Wittling","Köhler","Dorsch"],r:2,e:"Der Dorsch (Kabeljau) hat 3 Rückenflossen, 2 Afterflossen und eine typische Kinnbartel am Unterkiefer."},
   {id:"2-7b3c06",g:2,f:"Welcher Fisch ist das?",bild:"hornhecht",a:["Hornhecht","Makrele","Meerforelle"],r:0,e:"Der Hornhecht hat ein schnabelartig verlängertes Maul, einen extrem langgestreckten Körper – und typischerweise grüne Gräten."},
+  {id:"2-qa19f2",g:2,f:"Welcher Fisch ist das?",bild:"quappe",a:["Aal","Quappe","Wels"],r:1,e:"Die Quappe (Rutte/Aalquappe) ist der einzige heimische Süßwasser-Dorschartige: langgestreckter Körper, eine einzelne Bartel am Kinn und zwei Rückenflossen (die hintere sehr lang). Der Aal hat einen durchgehenden Flossensaum, der Wels einen breiten Kopf mit langen Barteln."},
+  {id:"2-ka77c3",g:2,f:"Welcher Fisch ist das?",bild:"kaulbarsch",a:["Flussbarsch","Zander","Kaulbarsch"],r:2,e:"Der Kaulbarsch ist klein, olivbraun marmoriert und hat eine durchgehende (zusammenhängende) Rückenflosse mit Stacheln – anders als Fluss­barsch (getrennte Flossen, Querbänder) und Zander (zwei getrennte Flossen, Hundszähne)."},
+  {id:"2-do4b8e",g:2,f:"Welcher Fisch ist das?",bild:"doebel",a:["Döbel","Rotauge","Aland"],r:0,e:"Der Döbel (Aitel) hat einen walzenförmigen Körper, einen breiten, stumpfen Kopf, große Schuppen mit dunklem Rand und eine nach außen gewölbte Afterflosse – kräftiger und gestreckter als das hochrückigere Rotauge."},
+  {id:"2-gr5c21",g:2,f:"Welcher Fisch ist das?",bild:"gruendling",a:["Schmerle","Gründling","Barbe"],r:1,e:"Der Gründling ist ein kleiner Grundfisch mit zwei Barteln an den Mundwinkeln und einer Reihe dunkler Flecken entlang der Seitenlinie. Die Barbe wird viel größer und hat vier Barteln."},
+  {id:"2-st3d94",g:2,f:"Welcher Fisch ist das?",bild:"stichling",a:["Elritze","Dreistachliger Stichling","Ukelei"],r:1,e:"Der Dreistachlige Stichling trägt vor der Rückenflosse drei einzeln stehende, freie Stacheln und hat Knochenplatten statt Schuppen an den Flanken – unverwechselbar."},
 
   /* ============ 3 · GEWÄSSERKUNDE (Fragen 1–53) ============ */
   {id:"3-93baea",g:3,f:"Welches Wasser ist in der Regel sauerstoffarm?",a:["Wasser in Teichen","das Wasser kalter, klarer Gebirgsbäche","Grundwasser"],r:2,e:"Grundwasser hat wegen fehlendem Kontakt zur Luft und zu Pflanzen kaum gelösten Sauerstoff."},
@@ -851,7 +856,7 @@ function viewRegion(){
       <h2 style="text-align:center">Wo machst du deine Prüfung?</h2>
       <div class="region-karten">${karten}</div>
       <div class="hinweis blau" style="max-width:640px;margin:22px auto">
-        <strong>Hinweis:</strong> Weitere Regionen (Niedersachsen Binnen, NRW, Bremen) werden nach dem Start ergänzt. Die Fragen stammen aus dem offiziellen Weser-Ems-Katalog (336 eingepflegt) – dazu 17 Bild-Fragen mit echten Fotos zur Fischerkennung heimischer Arten.
+        <strong>Hinweis:</strong> Weitere Regionen (Niedersachsen Binnen, NRW, Bremen) werden nach dem Start ergänzt. Die Fragen stammen aus dem offiziellen Weser-Ems-Katalog (336 eingepflegt) – dazu 22 Bild-Fragen mit echten Fotos zur Fischerkennung heimischer Arten.
       </div>
     </main>
   </div>`;
@@ -1286,36 +1291,41 @@ function autoVorlesen(){
     frageVorlesen(FRAGEN[idx], aktivePerm(idx));
   }
 }
-// Wikimedia-Commons-Fischbilder (Special:FilePath liefert stabile Redirect-URL auf upload.wikimedia.org)
-// Attribution und Lizenz siehe Objekt pro Fisch – Lizenz-Text wird unter jedem Bild angezeigt.
+// Fischbilder: direkte, stabile CDN-URLs auf upload.wikimedia.org (KEINE Weiterleitung),
+// damit der Service Worker sie zwischenspeichern kann -> die Bilder funktionieren auch offline.
+// url = Bildquelle (wird gecacht), file = Commons-Dateiname für den Bildnachweis-Link.
+const WM = "https://upload.wikimedia.org/wikipedia/commons/";
 const FISCHBILDER = {
-  karpfen:            { file:"Common_carp.jpg",                                autor:"USFWS",                       lizenz:"Public Domain" },
-  hecht:              { file:"Esox_lucius1.jpg",                                autor:"Timothy Knepp (USFWS)",       lizenz:"Public Domain" },
-  zander:             { file:"Sander_lucioperca_1.jpg",                         autor:"eLNuko",                      lizenz:"Public Domain" },
-  bachforelle:        { file:"Salmo_trutta.jpg",                                autor:"Eric Engbretson / USFWS",     lizenz:"Public Domain" },
-  bachsaibling:       { file:"Salvelinus fontinalis.jpg",                       autor:"Eric Engbretson",             lizenz:"Public Domain" },
-  regenbogenforelle:  { file:"Oncorhynchus_mykiss.jpg",                         autor:"Eric Engbretson / USFWS",     lizenz:"Public Domain" },
-  aal:                { file:"Anguilla_anguilla.jpg",                           autor:"GerardM",                     lizenz:"CC BY-SA 3.0" },
-  barsch:             { file:"Perca_fluviatilis_1.jpg",                         autor:"Fishjagercz",                 lizenz:"CC BY-SA 4.0" },
-  wels:               { file:"Silurus_glanis1.jpg",                             autor:"Wikimedia Commons",           lizenz:"Public Domain" },
-  schleie:            { file:"Tinca_tinca_Prague_Vltava_3.jpg",                 autor:"Karelj",                      lizenz:"Public Domain" },
-  rotauge:            { file:"Rutilus_rutilus_Prague_Vltava_2.jpg",             autor:"Karelj",                      lizenz:"Public Domain" },
-  rotfeder:           { file:"Scardinius erythropthalmus 2009 G1.jpg",          autor:"George Chernilevsky",         lizenz:"Public Domain" },
-  brassen:            { file:"Abramis_brama_Prague_Vltava_1.jpg",               autor:"Karelj",                      lizenz:"Public Domain" },
-  karausche:          { file:"Carassius_carassius_Prague_Vltava_1.jpg",         autor:"Karelj",                      lizenz:"Public Domain" },
-  barbe:              { file:"Barbus barbus in Losse - DE.jpg",                 autor:"Bernd Sauerwein",             lizenz:"CC BY-SA 3.0" },
-  dorsch:             { file:"Gadus_morhua_Cod-2b-Atlanterhavsparken-Norway.JPG", autor:"Hans-Petter Fjeld",         lizenz:"CC BY-SA 2.5" },
-  hornhecht:          { file:"Belone_belone.jpg",                               autor:"Wikimedia Commons",           lizenz:"Public Domain" }
+  karpfen:            { url:WM+"a/a8/Common_carp.jpg", file:"Common_carp.jpg", autor:"USFWS", lizenz:"Public Domain" },
+  hecht:              { url:WM+"thumb/c/c5/Esox_lucius1.jpg/960px-Esox_lucius1.jpg", file:"Esox_lucius1.jpg", autor:"Timothy Knepp (USFWS)", lizenz:"Public Domain" },
+  zander:             { url:WM+"thumb/6/63/Sander_lucioperca_1.jpg/960px-Sander_lucioperca_1.jpg", file:"Sander_lucioperca_1.jpg", autor:"eLNuko", lizenz:"Public Domain" },
+  bachforelle:        { url:WM+"thumb/2/2e/Salmo_trutta.jpg/960px-Salmo_trutta.jpg", file:"Salmo_trutta.jpg", autor:"Eric Engbretson / USFWS", lizenz:"Public Domain" },
+  bachsaibling:       { url:WM+"thumb/f/f9/Salvelinus_fontinalis.jpg/960px-Salvelinus_fontinalis.jpg", file:"Salvelinus_fontinalis.jpg", autor:"Eric Engbretson", lizenz:"Public Domain" },
+  regenbogenforelle:  { url:WM+"thumb/b/b1/Oncorhynchus_mykiss.jpg/960px-Oncorhynchus_mykiss.jpg", file:"Oncorhynchus_mykiss.jpg", autor:"Eric Engbretson / USFWS", lizenz:"Public Domain" },
+  aal:                { url:WM+"5/58/Anguilla_anguilla.jpg", file:"Anguilla_anguilla.jpg", autor:"GerardM", lizenz:"CC BY-SA 3.0" },
+  barsch:             { url:WM+"thumb/1/1b/Perca_fluviatilis_1.jpg/960px-Perca_fluviatilis_1.jpg", file:"Perca_fluviatilis_1.jpg", autor:"Fishjagercz", lizenz:"CC BY-SA 4.0" },
+  wels:               { url:WM+"thumb/8/81/Silurus_glanis1.jpg/960px-Silurus_glanis1.jpg", file:"Silurus_glanis1.jpg", autor:"Wikimedia Commons", lizenz:"Public Domain" },
+  schleie:            { url:WM+"thumb/d/dd/Tinca_tinca_Prague_Vltava_3.jpg/960px-Tinca_tinca_Prague_Vltava_3.jpg", file:"Tinca_tinca_Prague_Vltava_3.jpg", autor:"Karelj", lizenz:"Public Domain" },
+  rotauge:            { url:WM+"thumb/3/3a/Rutilus_rutilus_Prague_Vltava_2.jpg/960px-Rutilus_rutilus_Prague_Vltava_2.jpg", file:"Rutilus_rutilus_Prague_Vltava_2.jpg", autor:"Karelj", lizenz:"Public Domain" },
+  rotfeder:           { url:WM+"thumb/4/41/Scardinius_erythropthalmus_2009_G1.jpg/960px-Scardinius_erythropthalmus_2009_G1.jpg", file:"Scardinius_erythropthalmus_2009_G1.jpg", autor:"George Chernilevsky", lizenz:"Public Domain" },
+  brassen:            { url:WM+"thumb/d/d7/Abramis_brama_Prague_Vltava_1.jpg/960px-Abramis_brama_Prague_Vltava_1.jpg", file:"Abramis_brama_Prague_Vltava_1.jpg", autor:"Karelj", lizenz:"Public Domain" },
+  karausche:          { url:WM+"thumb/0/06/Carassius_carassius_Prague_Vltava_1.jpg/960px-Carassius_carassius_Prague_Vltava_1.jpg", file:"Carassius_carassius_Prague_Vltava_1.jpg", autor:"Karelj", lizenz:"Public Domain" },
+  barbe:              { url:WM+"thumb/9/95/Barbus_barbus_in_Losse_-_DE.jpg/960px-Barbus_barbus_in_Losse_-_DE.jpg", file:"Barbus_barbus_in_Losse_-_DE.jpg", autor:"Bernd Sauerwein", lizenz:"CC BY-SA 3.0" },
+  dorsch:             { url:WM+"thumb/e/ee/Gadus_morhua_Cod-2b-Atlanterhavsparken-Norway.JPG/960px-Gadus_morhua_Cod-2b-Atlanterhavsparken-Norway.JPG", file:"Gadus_morhua_Cod-2b-Atlanterhavsparken-Norway.JPG", autor:"Hans-Petter Fjeld", lizenz:"CC BY-SA 2.5" },
+  hornhecht:          { url:WM+"a/ab/Belone_belone.jpg", file:"Belone_belone.jpg", autor:"Wikimedia Commons", lizenz:"Public Domain" },
+  quappe:             { url:WM+"thumb/2/23/Lota_lota.jpg/960px-Lota_lota.jpg", file:"Lota_lota.jpg", autor:"Krüger", lizenz:"Public Domain" },
+  kaulbarsch:         { url:WM+"thumb/5/54/Gymnocephalus_cernua.jpg/960px-Gymnocephalus_cernua.jpg", file:"Gymnocephalus_cernua.jpg", autor:"Gilles San Martin", lizenz:"CC BY-SA 2.0" },
+  doebel:             { url:WM+"thumb/1/18/Squalius_cephalus_Prague_Vltava_2.jpg/960px-Squalius_cephalus_Prague_Vltava_2.jpg", file:"Squalius_cephalus_Prague_Vltava_2.jpg", autor:"Karelj", lizenz:"Public Domain" },
+  gruendling:         { url:WM+"thumb/2/23/LS_09776a_gruendling.jpg/960px-LS_09776a_gruendling.jpg", file:"LS_09776a_gruendling.jpg", autor:"Lorenz Seebauer", lizenz:"CC BY-SA 4.0" },
+  stichling:          { url:WM+"thumb/9/9b/Dreistachliger_Stichling_unterwasser.jpg/960px-Dreistachliger_Stichling_unterwasser.jpg", file:"Dreistachliger_Stichling_unterwasser.jpg", autor:"Lorenz Seebauer", lizenz:"CC BY-SA 4.0" }
 };
 function bildHTML(fr){
   if(!fr.bild) return '';
   const b = FISCHBILDER[fr.bild];
   if(!b) return '';
-  const fileEnc = encodeURIComponent(b.file);
-  const src = `https://commons.wikimedia.org/wiki/Special:FilePath/${fileEnc}?width=700`;
-  const quelle = `https://commons.wikimedia.org/wiki/File:${fileEnc}`;
+  const quelle = `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(b.file)}`;
   return `<figure class="fischfig">
-    <img class="fischbild" src="${src}" alt="Foto: ${fr.bild}" onerror="this.style.display='none';this.nextElementSibling.textContent='Bild konnte nicht geladen werden'">
+    <img class="fischbild" src="${b.url}" alt="Foto: ${fr.bild}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.textContent='Bild konnte nicht geladen werden'">
     <figcaption>Bild: <a href="${quelle}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${b.autor} · ${b.lizenz}</figcaption>
   </figure>`;
 }
