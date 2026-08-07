@@ -275,7 +275,7 @@ const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
 const SPEICHER = 'angelup-studio-sitzung';
 
 let TOKEN = '', ERNEUERN = '', WER = '';
-let KURSE = [], LEKTIONEN = [], KAEUFE = [], ZUGAENGE = [], PAKETE = [];
+let KURSE = [], LEKTIONEN = [], KAEUFE = [], ZUGAENGE = [], PAKETE = [], GERAETE = [];
 
 /* ---------- Helfer ---------- */
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -375,6 +375,7 @@ async function laden(){
   if (a.status !== 200) { sagen('Die Daten ließen sich nicht laden (Fehler ' + a.status + ').', false); return false; }
   KURSE = a.d.kurse || []; LEKTIONEN = a.d.lektionen || [];
   KAEUFE = a.d.kaeufe || []; ZUGAENGE = a.d.zugaenge || []; PAKETE = a.d.pakete || [];
+  GERAETE = a.d.geraete || [];
   zeichnen();
   return true;
 }
@@ -536,14 +537,17 @@ function kaeufeZeichnen(){
 function zugaengeZeichnen(){
   if (!ZUGAENGE.length) { el('zugangTab').innerHTML = '<tr><td class="klein" style="color:var(--text-3)">Noch keine Zugänge vergeben.</td></tr>'; return; }
   el('zugangTab').innerHTML =
-    '<thead><tr><th>E-Mail</th><th>Kurs</th><th>Code</th><th>seit</th><th></th></tr></thead><tbody>' +
+    '<thead><tr><th>E-Mail</th><th>Kurs</th><th>Code</th><th>seit</th><th>Geräte</th><th></th></tr></thead><tbody>' +
     ZUGAENGE.map(z => {
       const kurs = KURSE.find(x => x.slug === z.kurs_slug);
+      const anz = GERAETE.filter(g => g.email === z.email).length;
       return '<tr>' +
         '<td>' + esc(z.email) + '</td>' +
         '<td>' + esc(kurs ? kurs.titel : z.kurs_slug) + '</td>' +
         '<td><code>' + esc(z.code) + '</code></td>' +
         '<td>' + datum(z.seit) + '</td>' +
+        '<td>' + anz + '/2' + (anz ? ' <button class="btn klein" data-greset="' + esc(z.email) + '" ' +
+          'title="Gerätebindung löschen – der Kunde kann sich neu anmelden">Reset</button>' : '') + '</td>' +
         '<td><button class="btn gefahr klein" data-zweg="' + esc(z.kurs_slug) + '|' + esc(z.email) + '">Entziehen</button></td>' +
       '</tr>';
     }).join('') + '</tbody>';
@@ -685,6 +689,17 @@ el('studio').addEventListener('click', async (e) => {
     if (a.status !== 200) { sagen('Das hat nicht geklappt: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
     sagen('Zugang vergeben. Code ' + a.d.code, true);
     el('zhMail').value = ''; el('zhName').value = '';
+    await laden();
+    return;
+  }
+
+  /* Gerätebindung zurücksetzen */
+  if (z.dataset.greset) {
+    z.disabled = true;
+    const a = await ruf({ was:'geraete_reset', email: z.dataset.greset });
+    z.disabled = false;
+    if (a.status !== 200) { sagen('Das hat nicht geklappt.', false); return; }
+    sagen('Geräte zurückgesetzt – der Kunde kann sich neu anmelden.', true);
     await laden();
     return;
   }

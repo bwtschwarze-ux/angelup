@@ -48,6 +48,10 @@ main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
 .spieler{background:#000;border:1px solid var(--linie);border-radius:var(--r);overflow:hidden;
   aspect-ratio:16/9;display:grid;place-items:center;position:relative}
 .spieler video{width:100%;height:100%;display:block;background:#000}
+.spieler{-webkit-user-select:none;user-select:none}
+.wz{position:absolute;z-index:5;pointer-events:none;font-size:.72rem;font-weight:600;
+  color:rgba(255,255,255,.5);text-shadow:0 1px 4px rgba(0,0,0,.85);white-space:nowrap;
+  transition:top 2.5s ease,left 2.5s ease;top:8%;left:6%}
 .spieler .platz{text-align:center;padding:24px;color:var(--text-3);font-size:.92rem;line-height:1.6}
 .spieler .platz .gross{display:block;font-size:2.4rem;margin-bottom:10px;opacity:.5}
 .unterspieler{margin-top:16px}
@@ -107,7 +111,7 @@ main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
   <div class="anmeldebox" id="anmeldung">
     <h1>Meine Kurse</h1>
     <p class="lead">Gib die E-Mail-Adresse aus deiner Bestellung und den Zugangscode ein, den du per E-Mail
-    bekommen hast. Der Zugang läuft nicht ab und funktioniert auf jedem Gerät.</p>
+    bekommen hast. Der Zugang läuft nicht ab, ist persönlich und gilt auf bis zu 2 eigenen Geräten.</p>
     <div class="meldung rot" id="mldg"></div>
     <form id="anmForm" novalidate>
       <div class="feld"><label for="fMail">E-Mail-Adresse</label>
@@ -148,6 +152,14 @@ if (burger) burger.addEventListener('click', () => {
 let EMAIL = '', CODE = '', KURSE = [], AKTIV = null, LEKTIONEN = [], LEKTION = null;
 const GESEHEN = new Set();
 
+function geraet(){
+  try {
+    let g = localStorage.getItem('angelup-geraet');
+    if (!g) { g = crypto.randomUUID(); localStorage.setItem('angelup-geraet', g); }
+    return g;
+  } catch(e){ return 'ohne-speicher-' + (navigator.userAgent || '').length; }
+}
+
 function merken(){ try { localStorage.setItem(SPEICHER, JSON.stringify({ e: EMAIL, c: CODE })); } catch(e){} }
 function holen(){ try { return JSON.parse(localStorage.getItem(SPEICHER) || 'null'); } catch(e){ return null; } }
 function vergessen(){ try { localStorage.removeItem(SPEICHER); } catch(e){} }
@@ -170,19 +182,22 @@ document.getElementById('anmForm').addEventListener('submit', async ev => {
 
   const mail = document.getElementById('fMail').value.trim().toLowerCase();
   const code = document.getElementById('fCode').value.trim().toUpperCase();
-  const ok = await anmelden(mail, code);
+  const erg = await anmelden(mail, code);
 
-  if (!ok) {
-    mldg.textContent = 'E-Mail-Adresse und Code passen nicht zusammen. Bitte prüf beides – ' +
-      'am einfachsten kopierst du sie direkt aus unserer E-Mail.';
+  if (erg !== true) {
+    mldg.textContent = erg === 'geraet'
+      ? 'Dein Zugang ist schon auf der erlaubten Zahl eigener Geräte angemeldet (der Zugang ist ' +
+        'persönlich). Wenn du ein Gerät gewechselt hast, schreib uns kurz – wir setzen das zurück.'
+      : 'E-Mail-Adresse und Code passen nicht zusammen. Bitte prüf beides – ' +
+        'am einfachsten kopierst du sie direkt aus unserer E-Mail.';
     mldg.classList.add('zeig');
     knopf.disabled = false; knopf.textContent = 'Kurse öffnen';
   }
 });
 
 async function anmelden(mail, code){
-  const { status, d } = await ruf({ was:'zugang', email: mail, code });
-  if (status !== 200 || !d.ok) return false;
+  const { status, d } = await ruf({ was:'zugang', email: mail, code, geraet: geraet() });
+  if (status !== 200 || !d.ok) return d && d.fehler === 'geraet' ? 'geraet' : false;
   EMAIL = mail; CODE = code; KURSE = d.kurse || [];
   merken(); gesehenLaden(); zeichneOberflaeche();
   if (KURSE.length) waehle(KURSE[0].slug);
@@ -275,19 +290,31 @@ async function spiele(nr){
   unter.innerHTML = '<h2>' + esc(lek.titel) + '</h2>' +
     (lek.beschreibung ? '<p>' + esc(lek.beschreibung) + '</p>' : '');
 
-  const { status, d } = await ruf({ was:'video', kurs: AKTIV, nr, email: EMAIL, code: CODE });
+  const { status, d } = await ruf({ was:'video', kurs: AKTIV, nr, email: EMAIL, code: CODE, geraet: geraet() });
 
   if (status !== 200 || !d.url) {
     const txt = d.fehler === 'kein_video'
       ? 'Dieses Video ist noch nicht hochgeladen. Wir sind dran.'
       : (d.fehler === 'kein_zugang'
         ? 'Für diesen Kurs hast du keinen Zugang. Schau in der Kursübersicht nach.'
-        : 'Das Video ließ sich gerade nicht laden. Bitte versuch es gleich noch einmal.');
+        : (d.fehler === 'geraet'
+          ? 'Dein Zugang ist schon auf der erlaubten Zahl eigener Geräte angemeldet. Gerät gewechselt? Schreib uns kurz.'
+          : 'Das Video ließ sich gerade nicht laden. Bitte versuch es gleich noch einmal.'));
     sp.innerHTML = '<div class="platz"><span class="gross">▶</span>' + txt + '</div>';
     return;
   }
 
-  sp.innerHTML = '<video id="vid" controls playsinline preload="metadata" src="' + esc(d.url) + '"></video>';
+  sp.innerHTML = '<video id="vid" controls controlsList="nodownload noremoteplayback" ' +
+    'disablepictureinpicture playsinline preload="metadata" src="' + esc(d.url) + '"></video>' +
+    '<div class="wz" id="wz">' + esc(EMAIL) + '</div>';
+  sp.oncontextmenu = () => false;
+  if (window._wzTakt) clearInterval(window._wzTakt);
+  window._wzTakt = setInterval(() => {
+    const wz = document.getElementById('wz');
+    if (!wz) { clearInterval(window._wzTakt); return; }
+    wz.style.top  = (6 + Math.random() * 78) + '%';
+    wz.style.left = (4 + Math.random() * 55) + '%';
+  }, 7000);
   if (d.material) {
     unter.innerHTML += '<a class="btn t matbtn" href="' + esc(d.material) + '" target="_blank" rel="noopener" ' +
       'download>📄 Anleitung herunterladen</a>';
@@ -318,7 +345,7 @@ function melde(lektionId, sekunden, fertig){
   if (g && g.e && g.c) {
     document.getElementById('anmeldung').innerHTML = '<div class="laedt">Deine Kurse werden geladen …</div>';
     const ok = await anmelden(g.e, g.c);
-    if (!ok) { vergessen(); location.reload(); }
+    if (ok !== true) { vergessen(); location.reload(); }
   }
 })();
 </script>
