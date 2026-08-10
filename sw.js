@@ -1,4 +1,4 @@
-const CACHE = 'angelup-v37';
+const CACHE = 'angelup-v38';
 const BILD_CACHE = 'angelup-bilder-v1';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
   './live.html', './aal.html', './kurse.html', './vormerken.html',
@@ -36,11 +36,24 @@ self.addEventListener('fetch', e => {
     }).catch(() => caches.match('./live.html')));
     return;
   }
+  // App-eigene Seiten/Skripte: NETWORK-FIRST -> Updates kommen sofort an.
+  // Offline dann aus dem Cache. Verhindert, dass Nutzer auf einer alten Version haengenbleiben.
+  if (u.origin === location.origin) {
+    e.respondWith(fetch(e.request).then(netz => {
+      if (e.request.method === 'GET' && netz.ok) {
+        const kopie = netz.clone();
+        caches.open(CACHE).then(c => c.put(e.request, kopie));
+      }
+      return netz;
+    }).catch(() => caches.match(e.request).then(r => r || caches.match('./app.html').then(x => x || caches.match('./index.html')))));
+    return;
+  }
+  // Fremde Quellen (z. B. supabase-js vom CDN): Cache-first fuer Offline-Faehigkeit.
   e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(netz => {
-    if (e.request.method === 'GET' && netz.ok && u.origin === location.origin) {
+    if (e.request.method === 'GET' && netz && netz.ok) {
       const kopie = netz.clone();
       caches.open(CACHE).then(c => c.put(e.request, kopie));
     }
     return netz;
-  }).catch(() => caches.match('./app.html').then(r => r || caches.match('./index.html')))));
+  }).catch(() => r)));
 });
