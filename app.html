@@ -883,7 +883,7 @@ function viewAuth(){
     <button class="btn gross" style="margin-top:16px" onclick="loginKlick()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Anmelden'}</button>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--linie)">
       <button class="btn ghost" style="width:100%" onclick="pwVergessen()">🔑 Passwort vergessen?</button>
-      <p style="font-size:.72rem;color:var(--grau);margin:8px 0 0">E-Mail oben eintragen, dann hier klicken – du bekommst einen Link zum Zurücksetzen per E-Mail.</p>
+      <p style="font-size:.72rem;color:var(--grau);margin:8px 0 0">Kein Problem – dein Ausbilder setzt es für dich zurück. Hier tippen für die Info.</p>
     </div>`;
   } else {
     form=`${feld('a_name','Dein Name','text','Vorname Nachname')}
@@ -957,11 +957,10 @@ async function registerKlick(){
   state.authMeldung={ok:true, text:'✅ Registrierung erfolgreich! Du kannst dich jetzt direkt anmelden.'};
   state.authTab='login'; render();
 }
-async function pwVergessen(){
+function pwVergessen(){
   const email=document.getElementById('a_email')?document.getElementById('a_email').value.trim():'';
-  if(!email){ state.authMeldung={text:'Gib oben deine E-Mail ein und klicke dann auf „Passwort vergessen".'}; return render(); }
-  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo: location.origin+location.pathname});
-  state.authMeldung=error?{text:'Fehler: '+error.message}:{ok:true,text:'📧 E-Mail zum Zurücksetzen ist unterwegs. Öffne den Link in der E-Mail – dann kannst du hier ein neues Passwort festlegen.'};
+  const mit=email?` „${email}"`:'';
+  state.authMeldung={ok:true, text:`Kein Problem 🎣 Dein Passwort setzt dein Ausbilder für dich zurück. Schreib kurz mit deiner Anmelde-E-Mail${mit} an <a href="mailto:bwt.schwarze@gmail.com?subject=Passwort%20zur%C3%BCcksetzen" style="color:var(--wasser);font-weight:700">bwt.schwarze@gmail.com</a> (Angelschule Ostfriesland). Du bekommst dann ein neues Passwort.`};
   render();
 }
 /* Bildschirm: neues Passwort setzen (nach Klick auf den Reset-Link in der E-Mail) */
