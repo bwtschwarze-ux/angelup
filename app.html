@@ -944,14 +944,17 @@ async function registerKlick(){
     state.authMeldung={text:'Bitte den Ausbilder-Freischaltcode eingeben. Du bekommst ihn vom AngelUp-Team.'}; return render();
   }
   state.authBusy=true; render();
-  const {error}=await sb.auth.signUp({email, password:pw,
+  const {data,error}=await sb.auth.signUp({email, password:pw,
     options:{ data:{ name, rolle,
       kurs_code: rolle==='pruefling'?extra.toUpperCase():'',
       ausbilder_code: rolle==='ausbilder'?extra:'' },
       emailRedirectTo: location.origin + location.pathname }});
   state.authBusy=false;
   if(error){ state.authMeldung={text:'Registrierung fehlgeschlagen: '+error.message}; return render(); }
-  state.authMeldung={ok:true, text:'📧 Fast geschafft! Wir haben dir eine Bestätigungs-E-Mail geschickt. Klicke auf den Link darin, dann kannst du dich anmelden.'};
+  // Ohne E-Mail-Bestätigung: es kommt direkt eine Sitzung -> gleich einloggen.
+  if(data && data.session){ state.authMeldung=null; await nachLogin(); return; }
+  // Falls E-Mail-Bestätigung doch aktiv ist:
+  state.authMeldung={ok:true, text:'✅ Registrierung erfolgreich! Du kannst dich jetzt direkt anmelden.'};
   state.authTab='login'; render();
 }
 async function pwVergessen(){
