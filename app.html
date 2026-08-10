@@ -802,6 +802,7 @@ const FISCH_DEKO = `<svg class="fisch-deko" viewBox="0 0 240 110" fill="none">
 const $=s=>document.querySelector(s);
 function render(){
   const app=$('#app');
+  if(state.view==='pwNeu'){ app.innerHTML=viewPwNeu(); return; }
   if(state.view==='region'){ app.innerHTML=viewRegion(); return; }
   if(state.view==='rolle'){ app.innerHTML=viewRolle(); return; }
   if(!state.user && state.view!=='impressum' && state.view!=='datenschutz' && state.view!=='pruefungsinfo'){ app.innerHTML=viewAuth(); return; }
@@ -880,7 +881,10 @@ function viewAuth(){
     form=`${feld('a_email','E-Mail','email','du@beispiel.de')}
     ${feld('a_pw','Passwort','password','••••••••')}
     <button class="btn gross" style="margin-top:16px" onclick="loginKlick()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Anmelden'}</button>
-    <button class="zurueck" style="margin-top:10px" onclick="pwVergessen()">Passwort vergessen?</button>`;
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--linie)">
+      <button class="btn ghost" style="width:100%" onclick="pwVergessen()">🔑 Passwort vergessen?</button>
+      <p style="font-size:.72rem;color:var(--grau);margin:8px 0 0">E-Mail oben eintragen, dann hier klicken – du bekommst einen Link zum Zurücksetzen per E-Mail.</p>
+    </div>`;
   } else {
     form=`${feld('a_name','Dein Name','text','Vorname Nachname')}
     ${feld('a_email','E-Mail','email','du@beispiel.de')}
@@ -954,8 +958,41 @@ async function pwVergessen(){
   const email=document.getElementById('a_email')?document.getElementById('a_email').value.trim():'';
   if(!email){ state.authMeldung={text:'Gib oben deine E-Mail ein und klicke dann auf „Passwort vergessen".'}; return render(); }
   const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo: location.origin+location.pathname});
-  state.authMeldung=error?{text:'Fehler: '+error.message}:{ok:true,text:'📧 E-Mail zum Zurücksetzen ist unterwegs.'};
+  state.authMeldung=error?{text:'Fehler: '+error.message}:{ok:true,text:'📧 E-Mail zum Zurücksetzen ist unterwegs. Öffne den Link in der E-Mail – dann kannst du hier ein neues Passwort festlegen.'};
   render();
+}
+/* Bildschirm: neues Passwort setzen (nach Klick auf den Reset-Link in der E-Mail) */
+function viewPwNeu(){
+  const meld=state.authMeldung?`<div class="hinweis ${state.authMeldung.ok?'blau':''}" style="text-align:left">${state.authMeldung.text}</div>`:'';
+  return `<div class="held">
+    <a class="zur-website" href="index.html">← Website</a>
+    ${FISCH_DEKO}
+    <h1>Neues Passwort 🔑</h1>
+    <p class="unter">Fast fertig – leg jetzt dein neues Passwort fest.</p>
+    <main style="padding-top:0;max-width:430px">
+      <div class="karte" style="text-align:center">
+        ${meld}
+        <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Neues Passwort (mind. 6 Zeichen)</label>
+        <input id="pw_neu" type="password" placeholder="••••••••" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">
+        <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Passwort wiederholen</label>
+        <input id="pw_neu2" type="password" placeholder="••••••••" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">
+        <button class="btn gross gruen" style="margin-top:16px" onclick="pwNeuSpeichern()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Passwort speichern'}</button>
+      </div>
+      ${fusszeile()}
+    </main>
+  </div>`;
+}
+async function pwNeuSpeichern(){
+  const pw=document.getElementById('pw_neu').value, pw2=document.getElementById('pw_neu2').value;
+  if(pw.length<6){ state.authMeldung={text:'Das Passwort muss mind. 6 Zeichen haben.'}; return render(); }
+  if(pw!==pw2){ state.authMeldung={text:'Die beiden Passwörter stimmen nicht überein.'}; return render(); }
+  state.authBusy=true; render();
+  const {error}=await sb.auth.updateUser({password:pw});
+  state.authBusy=false;
+  if(error){ state.authMeldung={text:'Fehler: '+error.message}; return render(); }
+  state.authMeldung={ok:true, text:'✅ Passwort geändert. Du bist jetzt angemeldet.'};
+  state.view='dashboard';
+  await nachLogin();
 }
 async function nachLogin(){
   const {data:{user}}=await sb.auth.getUser();
@@ -1115,11 +1152,18 @@ function viewVollzugang(){
   <div class="karte" style="border-left:6px solid var(--gruen)">
     <div class="gebiet-kopf"><span class="gebiet-icon" style="background:var(--gruen)">🔑</span>
       <div><h3 style="margin:0">Kurs-Code einlösen</h3>
-      <span class="zahlen">Du bist schon Kursteilnehmer? Code hier eintragen.</span></div></div>
-    <input id="vzCode" type="text" placeholder="z. B. AU-2608" autocapitalize="characters"
+      <span class="zahlen">Schon registriert? Mit deinem Code die App voll freischalten.</span></div></div>
+    <p style="font-size:.9rem;line-height:1.7;margin:2px 0 12px">So schaltest du in wenigen Sekunden alles frei:</p>
+    <ol style="text-align:left;font-size:.9rem;line-height:1.7;margin:0 0 14px;padding-left:20px">
+      <li>Du bist bereits registriert und angemeldet (das bist du hier gerade ✅).</li>
+      <li>Trag deinen Code unten ein – z. B. den Code von deinem Ausbilder oder <b>ANGELUP2026</b>.</li>
+      <li>Auf <b>„Code einlösen"</b> tippen. Fertig – alle Fragen und die Prüfungssimulation sind sofort frei.</li>
+    </ol>
+    <input id="vzCode" type="text" placeholder="z. B. ANGELUP2026" autocapitalize="characters"
       style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--linie);font-size:1rem;margin-bottom:10px">
     <button class="btn gruen" onclick="codeEinloesen()">Code einlösen</button>
     <p id="vzMeldung" style="font-size:.88rem;color:var(--grau);margin-top:10px"></p>
+    <p style="font-size:.78rem;color:var(--grau);margin-top:10px;line-height:1.6">Falls der Vollzugang nach dem Einlösen nicht sofort erscheint: einmal abmelden und wieder anmelden. Noch keinen Code? Den bekommst du von deinem Ausbilder oder im Lehrgang.</p>
   </div>
   ${fusszeile()}`;
 }
@@ -1783,11 +1827,17 @@ function go(v){ stopSprich(); stopTimer(); state.view=v; render(); }
 lernzeitStart();
 /* Start: bestehende Sitzung prüfen, sonst Regionsauswahl */
 (async function init(){
+  // Reset-Link aus der E-Mail? Dann direkt zum Passwort-neu-Bildschirm.
+  const istRecovery=(location.hash||'').includes('type=recovery');
+  if(istRecovery){ state.view='pwNeu'; }
   render(); // sofort etwas zeigen (Region)
   if(!sb) return;
   const {data:{session}}=await sb.auth.getSession();
-  if(session){ await nachLogin(); }
-  sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_IN'&&!state.user){ nachLogin(); } });
+  if(session && !istRecovery){ await nachLogin(); }
+  sb.auth.onAuthStateChange((ev)=>{
+    if(ev==='PASSWORD_RECOVERY'){ state.view='pwNeu'; state.authMeldung=null; render(); return; }
+    if(ev==='SIGNED_IN'&&!state.user&&state.view!=='pwNeu'){ nachLogin(); }
+  });
 })();
 /* PWA: Service Worker registrieren (nur über https bzw. localhost aktiv) */
 if('serviceWorker' in navigator){
