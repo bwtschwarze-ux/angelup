@@ -236,7 +236,7 @@ async function laden(){
   const zKurs = document.getElementById('rasterKurse');
   const zPak  = document.getElementById('rasterPakete');
   try {
-    const r = await fetch(API + '?was=katalog', { headers: { apikey: SB_KEY } });
+    const r = await fetch(API + '?was=katalog', { headers: { apikey: SB_KEY }, cache: 'no-store' });
     if (!r.ok) throw new Error('katalog ' + r.status);
     const d = await r.json();
     const kurse = d.kurse || [], pakete = d.pakete || [];

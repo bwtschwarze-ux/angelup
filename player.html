@@ -248,7 +248,7 @@ async function waehle(slug){
   sp.innerHTML = '<div class="platz"><span class="gross">▶</span>Wähl eine Lektion aus.</div>';
   document.getElementById('unter').innerHTML = '';
 
-  const r = await fetch(API + '?was=kurs&k=' + encodeURIComponent(slug), { headers:{ apikey: SB_KEY } });
+  const r = await fetch(API + '?was=kurs&k=' + encodeURIComponent(slug), { headers:{ apikey: SB_KEY }, cache: 'no-store' });
   if (!r.ok) { liste.innerHTML = '<div class="listenkopf">Lektionen</div><li class="leer">Kurs nicht gefunden</li>'; return; }
   const d = await r.json();
   LEKTIONEN = d.lektionen || [];

@@ -393,7 +393,7 @@ function danke(d){
 async function laden(){
   if (!SLUG) { location.replace('videokurse.html'); return; }
   try {
-    const r = await fetch(API + '?was=kurs&k=' + encodeURIComponent(SLUG), { headers: { apikey: SB_KEY } });
+    const r = await fetch(API + '?was=kurs&k=' + encodeURIComponent(SLUG), { headers: { apikey: SB_KEY }, cache: 'no-store' });
     if (!r.ok) throw new Error('kurs ' + r.status);
     const d = await r.json();
     KURS = d.kurs; LEKTIONEN = d.lektionen || []; PAKET = d.paketKurse || [];
