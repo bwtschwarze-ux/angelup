@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="description" content="Mein Bereich bei AngelUp: Angelschein üben mit eigenem Konto oder mit E-Mail und Code auf deine freigeschalteten Videokurse und Schulungen zugreifen.">
+<meta name="robots" content="noindex">
+<title>Mein Bereich · AngelUp</title>
+<link rel="canonical" href="https://angelup.de/mein.html">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+main{max-width:980px;margin:0 auto;padding:40px 22px 90px}
+.kopf h1{font-size:clamp(1.7rem,4vw,2.5rem);margin:0 0 8px}
+.kopf p{color:var(--grau);margin:0 0 34px;max-width:60ch}
+.wahl{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-bottom:26px}
+.gross{
+  display:flex;flex-direction:column;gap:10px;padding:26px 24px;
+  background:linear-gradient(165deg,rgba(255,255,255,.062),rgba(255,255,255,.022));
+  border:1px solid var(--linie);border-radius:var(--r);
+}
+.gross .sym{font-size:2rem;line-height:1}
+.gross h2{margin:0;font-size:1.25rem}
+.gross p{margin:0;color:var(--grau);font-size:.95rem;line-height:1.55}
+.gross .unten-btn{margin-top:auto;padding-top:14px}
+.feld{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.feld label{font-size:.8rem;font-weight:700;color:var(--grau)}
+.feld input{
+  background:rgba(255,255,255,.05);border:1px solid var(--linie);border-radius:12px;
+  padding:12px 14px;color:var(--hell);font-size:1rem;font-family:inherit;
+}
+.feld input:focus{outline:none;border-color:var(--tuerkis)}
+.meld{border-radius:12px;padding:10px 14px;font-size:.9rem;margin-top:10px;display:none}
+.meld.zeig{display:block}
+.meld.gut{background:rgba(46,230,197,.12);border:1px solid rgba(46,230,197,.4)}
+.meld.schlecht{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.4)}
+.aktiv-karte{
+  display:none;margin-bottom:26px;padding:20px 24px;border-radius:var(--r);
+  background:rgba(46,230,197,.08);border:1px solid rgba(46,230,197,.35);
+}
+.aktiv-karte.zeig{display:block}
+.aktiv-karte b{color:var(--tuerkis)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.chip{background:rgba(255,255,255,.07);border:1px solid var(--linie);border-radius:999px;padding:6px 13px;font-size:.85rem}
+.hilfe{color:var(--grau);font-size:.9rem;line-height:1.6;margin-top:8px}
+.hilfe a{color:var(--tuerkis)}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="videokurse.html">Videokurse</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a class="btn t" href="mein.html">Mein Bereich</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+  <div class="kopf">
+    <h1>Mein Bereich</h1>
+    <p>Hier geht es zu deinen Sachen – egal ob du für die Fischerprüfung übst oder eine Schulung bzw. einen Videokurs bei uns gebucht hast.</p>
+  </div>
+
+  <div class="aktiv-karte" id="aktivKarte">
+    <b>✅ Videokurs-Zugang aktiv</b> – angemeldet als <span id="aktivMail"></span>
+    <div class="chips" id="aktivKurse"></div>
+    <a class="btn p" href="player.html">▶ Weiter zu meinen Videos</a>
+    <a class="btn t" href="#" id="abmelden" style="margin-left:8px">Abmelden</a>
+  </div>
+
+  <div class="wahl">
+    <section class="gross">
+      <div class="sym">🎓</div>
+      <h2>Angelschein üben</h2>
+      <p>Alle 341 Prüfungsfragen, Prüfungssimulation und Lernfortschritt – mit kostenlosem Konto auf jedem Gerät.
+      Für alle, die die Fischerprüfung machen (oder einfach mitüben wollen).</p>
+      <div class="unten-btn"><a class="btn p" href="app.html">Zum Üben anmelden</a></div>
+    </section>
+
+    <section class="gross">
+      <div class="sym">🎬</div>
+      <h2>Meine Videokurse &amp; Schulungen</h2>
+      <p>Du hast eine Schulung mitgemacht (z.&nbsp;B. AAL&nbsp;TOTAL, KARPFEN&nbsp;TOTAL, WALLER&nbsp;TOTAL) oder einen Videokurs
+      gekauft? Melde dich mit deiner E-Mail und deinem persönlichen Zugangscode an.</p>
+      <form id="zform">
+        <div class="feld">
+          <label for="zmail">E-Mail</label>
+          <input id="zmail" type="email" autocomplete="email" placeholder="du@beispiel.de" required>
+        </div>
+        <div class="feld">
+          <label for="zcode">Zugangscode</label>
+          <input id="zcode" type="text" autocomplete="off" autocapitalize="characters" placeholder="z. B. AB12CD34" required>
+        </div>
+        <div class="meld" id="zmeld"></div>
+        <div class="unten-btn"><button class="btn p" type="submit" id="zknopf">Anmelden</button></div>
+      </form>
+      <p class="hilfe">Deinen Code bekommst du nach der Bezahlung per E-Mail. Kein Code angekommen?
+      Schreib kurz an <a href="mailto:bwt.schwarze@gmail.com?subject=Zugangscode%20Videokurs">bwt.schwarze@gmail.com</a>.</p>
+    </section>
+  </div>
+
+  <p class="hilfe">Noch keinen Zugang? Hier findest du alles:
+  <a href="kurse.html">Kurse &amp; Schulungen</a> · <a href="videokurse.html">Videokurse</a> · <a href="lernen.html">Online-Kurs zur Prüfung</a></p>
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav'), burger = document.getElementById('burger'), navLinks = document.getElementById('navLinks');
+if (burger) burger.addEventListener('click', () => {
+  const offen = navLinks.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', offen ? 'true' : 'false');
+});
+
+// Gleiche Speicher- und Geräte-Logik wie player.html – ein Login gilt für beide Seiten.
+const API = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/videokurs';
+const SPEICHER = 'angelup-videokurs-zugang';
+function geraet(){
+  let g = localStorage.getItem('angelup-geraet');
+  if (!g) { g = crypto.randomUUID(); localStorage.setItem('angelup-geraet', g); }
+  return g;
+}
+async function ruf(body){
+  const r = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  let d = null; try { d = await r.json(); } catch(e){}
+  return { status: r.status, d };
+}
+function meld(text, gut){
+  const m = document.getElementById('zmeld');
+  m.textContent = text; m.className = 'meld zeig ' + (gut ? 'gut' : 'schlecht');
+}
+
+// Bereits gespeicherten Zugang anzeigen
+(async function(){
+  let alt = null;
+  try { alt = JSON.parse(localStorage.getItem(SPEICHER) || 'null'); } catch(e){}
+  if (!alt || !alt.e || !alt.c) return;
+  const { status, d } = await ruf({ was:'zugang', email: alt.e, code: alt.c, geraet: geraet() });
+  if (status === 200 && d && d.ok) {
+    document.getElementById('aktivMail').textContent = alt.e;
+    document.getElementById('aktivKurse').innerHTML =
+      (d.kurse || []).map(k => '<span class="chip">' + (k.symbol || '🎬') + ' ' + k.titel + '</span>').join('');
+    document.getElementById('aktivKarte').classList.add('zeig');
+  }
+})();
+
+document.getElementById('abmelden').addEventListener('click', (e) => {
+  e.preventDefault();
+  localStorage.removeItem(SPEICHER);
+  document.getElementById('aktivKarte').classList.remove('zeig');
+});
+
+document.getElementById('zform').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const mail = document.getElementById('zmail').value.trim().toLowerCase();
+  const code = document.getElementById('zcode').value.trim().toUpperCase();
+  if (!mail || !code) return;
+  const knopf = document.getElementById('zknopf');
+  knopf.disabled = true; knopf.textContent = 'Prüfe…';
+  try {
+    const { status, d } = await ruf({ was:'zugang', email: mail, code, geraet: geraet() });
+    if (status === 200 && d && d.ok) {
+      try { localStorage.setItem(SPEICHER, JSON.stringify({ e: mail, c: code })); } catch(err){}
+      meld('Zugang gefunden – du wirst zu deinen Videos weitergeleitet…', true);
+      setTimeout(() => { location.href = 'player.html'; }, 700);
+    } else if (d && d.fehler === 'geraet') {
+      meld('Dein Zugang ist schon auf der Höchstzahl an Geräten aktiv. Schreib uns kurz, dann setzen wir die Geräte zurück.', false);
+    } else {
+      meld('E-Mail oder Code stimmen nicht. Bitte prüfe beides – der Code steht in deiner Zugangs-E-Mail.', false);
+    }
+  } catch (err) {
+    meld('Gerade keine Verbindung. Bitte versuch es gleich noch einmal.', false);
+  } finally {
+    knopf.disabled = false; knopf.textContent = 'Anmelden';
+  }
+});
+</script>
+</body>
+</html>
