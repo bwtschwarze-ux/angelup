@@ -1,4 +1,4 @@
-const CACHE = 'angelup-v40';
+const CACHE = 'angelup-v41';
 const BILD_CACHE = 'angelup-bilder-v1';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
   './live.html', './aal.html', './kurse.html', './vormerken.html',
@@ -48,7 +48,10 @@ self.addEventListener('fetch', e => {
     }).catch(() => caches.match(e.request).then(r => r || caches.match('./app.html').then(x => x || caches.match('./index.html')))));
     return;
   }
-  // Fremde Quellen (z. B. supabase-js vom CDN): Cache-first fuer Offline-Faehigkeit.
+  // Supabase (Datenbank/API): NIE zwischenspeichern - Kurslisten, Plaetze und
+  // Zugaenge muessen immer frisch sein. Sonst sehen Besucher alte Kurse.
+  if (u.hostname.endsWith('supabase.co')) return;
+  // Andere fremde Quellen (z. B. supabase-js vom CDN, Fonts): Cache-first fuer Offline-Faehigkeit.
   e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(netz => {
     if (e.request.method === 'GET' && netz && netz.ok) {
       const kopie = netz.clone();
