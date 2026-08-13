@@ -123,7 +123,7 @@
         Alles aus einer Hand – von jemandem, der den Angelladen führt und selbst im Verein steht.
       </p>
       <div class="btn-reihe">
-        <a class="btn gross" href="kurs.html">Lehrgang &amp; Prüfung buchen</a>
+        <a class="btn gross" href="vormerken.html?k=oktober-2026">In 30 Sekunden voranmelden</a>
         <a class="btn geist gross" href="app.html">Kostenlos üben</a>
       </div>
       <div class="hero-fakten">
@@ -280,7 +280,7 @@
         <p style="margin:0 0 18px;color:var(--text-2);font-size:.95rem">
           Das ist <b style="color:var(--text)">ein einziger Kurs</b> über mehrere Termine plus Prüfung.
           Die genauen Tage stehen in Kürze fest – <b style="color:var(--text)">wer sich jetzt voranmeldet,
-          bekommt die Termine zuerst per E-Mail</b> und hat seinen Platz sicher.
+          bekommt die Termine zuerst per E-Mail</b> und hat seinen Platz sicher. Die Voranmeldung dauert 30 Sekunden – nur Name und E-Mail, unverbindlich.
         </p>
         <table style="width:100%;border-collapse:collapse;font-size:.95rem">
           <tbody>
@@ -303,7 +303,7 @@
           <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--tuerkis);font-weight:700">✓</span><span style="font-size:.93rem;color:var(--text-2)">Ab 13 Jahren möglich, unter 18 mit Einwilligung der Eltern.</span></div>
           <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--tuerkis);font-weight:700">✓</span><span style="font-size:.93rem;color:var(--text-2)">Nach dem Kurs bleibt der Laden dein Ansprechpartner.</span></div>
         </div>
-        <a class="btn voll" style="margin-top:26px" href="kurs.html">Zur Anmeldung</a>
+        <a class="btn voll" style="margin-top:26px" href="vormerken.html?k=oktober-2026">Jetzt voranmelden – nur Name &amp; E-Mail</a>
       </div>
     </div>
   </div>
@@ -438,7 +438,7 @@
           im Laden, nicht per Ticketsystem.
         </p>
         <div class="btn-reihe" style="margin-top:22px">
-          <a class="btn geist" href="kurs.html">Platz sichern</a>
+          <a class="btn geist" href="vormerken.html?k=oktober-2026">Platz sichern</a>
         </div>
       </div>
     </div>
@@ -503,7 +503,7 @@
         Zwölf Plätze, ein Termin. Wer zuerst überweist, hat den Platz.
       </p>
       <div class="btn-reihe zentriert">
-        <a class="btn gross" href="kurs.html">Jetzt anmelden</a>
+        <a class="btn gross" href="vormerken.html?k=oktober-2026">Jetzt voranmelden</a>
         <a class="btn geist gross" href="app.html">Erst mal reinschauen</a>
       </div>
     </div>
@@ -529,7 +529,7 @@
         <h4>Angebot</h4>
         <a href="app.html">Lernapp</a>
         <a href="lernen.html">Online-Kurs</a>
-        <a href="kurs.html">Lehrgang &amp; Prüfung</a>
+        <a href="vormerken.html?k=oktober-2026">Lehrgang &amp; Prüfung</a>
         <a href="live.html">Livekurs</a>
         <a href="videokurse.html">Videokurse</a>
         <a href="kurse.html">Alle Kurse</a>
@@ -557,7 +557,7 @@
 
 <!-- =============== Mobile Leiste =============== -->
 <div class="mobil-cta">
-  <a class="btn" href="kurs.html">Platz für Oktober sichern</a>
+  <a class="btn" href="vormerken.html?k=oktober-2026">Platz für Oktober sichern</a>
 </div>
 
 <script>
@@ -674,7 +674,7 @@ function tarifeZeichnen(varianten){
       + '<a class="btn ' + (b.beliebt ? '' : 'geist') + ' voll" href="kurs.html?variante=' + v.variante + '">Diesen Platz sichern</a>'
       + '</div>';
   }).join('');
-  ziel.innerHTML = html || '<p class="mitte lead" style="grid-column:1/-1">Die Preise für den nächsten Termin stehen in Kürze hier. <a href="kurs.html">Zur Anmeldung</a></p>';
+  ziel.innerHTML = html || '<p class="mitte lead" style="grid-column:1/-1">Die Preise für den nächsten Termin stehen in Kürze hier. <a href="vormerken.html?k=oktober-2026">Jetzt unverbindlich voranmelden</a></p>';
 }
 
 fetch(API + '?lehrgang=oktober-2026', {headers: API_HEADERS})
