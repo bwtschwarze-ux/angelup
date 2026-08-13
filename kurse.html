@@ -231,10 +231,10 @@ async function laden(){
   const zielS = document.getElementById('rasterSpezial');
   try {
     const [rk, rv, rl, rlv] = await Promise.all([
-      fetch(SB_URL + '/rest/v1/kursangebot?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF }),
-      fetch(SB_URL + '/rest/v1/kursangebot_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF }),
-      fetch(SB_URL + '/rest/v1/lehrgang_oeffentlich?select=id,slug', { headers: KOPF }),
-      fetch(SB_URL + '/rest/v1/lehrgang_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF })
+      fetch(SB_URL + '/rest/v1/kursangebot?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF, cache: 'no-store' }),
+      fetch(SB_URL + '/rest/v1/kursangebot_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF, cache: 'no-store' }),
+      fetch(SB_URL + '/rest/v1/lehrgang_oeffentlich?select=id,slug', { headers: KOPF, cache: 'no-store' }),
+      fetch(SB_URL + '/rest/v1/lehrgang_variante?select=*&aktiv=eq.true&order=sortierung', { headers: KOPF, cache: 'no-store' })
     ]);
     if (!rk.ok) throw new Error('kursangebot ' + rk.status);
     const kurse = await rk.json();
