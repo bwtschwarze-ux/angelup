@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Caveat:wght@600;700&display=swap');
 /* ==================================================================
    AngelUp – Designsystem "Deep Water"
    Ein System für Landingpage, Kursseite und Online-Lernbereich.
@@ -425,3 +426,84 @@ legend{font-size:.75rem;text-transform:uppercase;letter-spacing:.11em;color:var(
 .nur-mobil{display:none}
 @media(max-width:700px){.nur-mobil{display:block}.nicht-mobil{display:none}}
 .trenner{height:1px;background:linear-gradient(90deg,transparent,var(--linie),transparent);margin:0}
+
+/* ==================================================================
+   AngelUp – Persönlichkeits-Schicht "Nordsee-Werkstatt"
+   Eigener Charakter statt Baukasten-Look: Plakat-Typo, Handschrift,
+   Wellen-Signatur, Sticker und Knöpfe mit Sprungkraft.
+   ================================================================== */
+
+:root{
+  --schrift-kopf:'Bricolage Grotesque',var(--schrift);
+  --schrift-hand:'Caveat',cursive;
+}
+
+/* --- Typografie: Plakat-Überschriften mit Charakter --- */
+h1,h2,h3,h4{font-family:var(--schrift-kopf);letter-spacing:0}
+h1{letter-spacing:-.01em}
+.hand{font-family:var(--schrift-hand);font-weight:700;letter-spacing:0}
+
+/* Handschriftliche Notiz (z. B. „Moin aus Aurich!") */
+.hand-notiz{
+  font-family:var(--schrift-hand);font-size:clamp(1.25rem,2.6vw,1.7rem);
+  color:var(--gold);transform:rotate(-2deg);display:inline-block;
+  margin-bottom:10px;
+}
+
+/* --- Wellen-Signatur unter zentrierten Abschnitts-Überschriften --- */
+.kopfzeile h2{position:relative;padding-bottom:18px}
+.kopfzeile h2::after{
+  content:'';position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:96px;height:12px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 12'%3E%3Cpath d='M2 8c8-7 14-7 22 0s14 7 22 0 14-7 22 0 14 7 24 0' fill='none' stroke='%23ffc247' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* --- Knöpfe: satter Druckpunkt statt Weichzeichner-Glow --- */
+.btn{
+  border-radius:16px;
+  box-shadow:0 5px 0 #8a5a10, 0 14px 24px -14px rgba(0,0,0,.8);
+  border:none;
+}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 #8a5a10, 0 20px 30px -14px rgba(0,0,0,.85);filter:brightness(1.05)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #8a5a10, 0 8px 14px -10px rgba(0,0,0,.8)}
+.btn.t{box-shadow:0 5px 0 #0b6a5d, 0 14px 24px -14px rgba(0,0,0,.8)}
+.btn.t:hover{box-shadow:0 8px 0 #0b6a5d, 0 20px 30px -14px rgba(0,0,0,.85)}
+.btn.t:active{box-shadow:0 2px 0 #0b6a5d, 0 8px 14px -10px rgba(0,0,0,.8)}
+.btn.geist{box-shadow:none;border:2px solid var(--linie-2)}
+.btn.geist:hover{transform:translateY(-2px);box-shadow:none;border-color:var(--tuerkis)}
+.btn.geist:active{transform:translateY(1px)}
+.btn:disabled{box-shadow:none}
+
+/* --- Etiketten als schief aufgeklebte Sticker --- */
+.etikett{
+  transform:rotate(-1.6deg);
+  border-width:1.5px;
+  box-shadow:2px 3px 0 rgba(0,0,0,.35);
+  border-radius:10px;
+}
+.etikett.gold{transform:rotate(1.2deg)}
+
+/* --- Karten: leben beim Anfassen --- */
+.karte.heb:hover{transform:translateY(-6px) rotate(.4deg)}
+
+/* --- Feine Körnung über allem: nimmt dem Verlauf die Glätte --- */
+body::after{
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23k)'/%3E%3C/svg%3E"),
+    linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:120px 120px,56px 56px,56px 56px;
+  mask-image:none;-webkit-mask-image:none;
+  opacity:.55;
+}
+
+/* --- Kleinigkeiten mit Wiedererkennung --- */
+::selection{background:var(--gold);color:#1c1002}
+html{scrollbar-color:var(--tuerkis-tief) var(--tief)}
+::-webkit-scrollbar{width:11px}
+::-webkit-scrollbar-track{background:var(--tief)}
+::-webkit-scrollbar-thumb{background:var(--tuerkis-tief);border-radius:8px;border:2px solid var(--tief)}
+::-webkit-scrollbar-thumb:hover{background:var(--tuerkis-2)}
+:focus-visible{outline:2px dashed var(--gold);outline-offset:3px;border-radius:4px}
+a:hover{text-decoration:underline wavy;text-decoration-thickness:1.5px;text-underline-offset:5px}
+.nav-links a:hover,.btn:hover,.marke:hover{text-decoration:none}
