@@ -154,9 +154,11 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
   <p class="lead">Ein Ziel, drei Wege – die Prüfung legst du in jedem Fall bei uns in Aurich ab.
      Entweder du machst den Lehrgang komplett bei uns vor Ort, oder du lernst die Theorie online
      bei uns und kommst nur zum Praxistag und zur Prüfung, oder du hast deinen Lehrgang schon
-     woanders gemacht und meldest dich nur zum Prüfungstag an. In beiden Kurspaketen ist die
-     Prüfungsgebühr enthalten – beide kosten 160,00 €. Die Bausteine einzeln: Online-Kurs 70,00 €,
-     Praxistag 20,00 €, Prüfungstag mit Prüfungsgebühr 70,00 €. Wähle unten aus, der Preis passt sich automatisch an.</p>
+     woanders gemacht und meldest dich nur zum Prüfungstag an. Beide Kurspakete kosten 160,00 €
+     – aufgeteilt in 90,00 € Lehrgangsbeitrag per Überweisung und 70,00 € Prüfungsgebühr, die du bar am
+     Prüfungstag an den Angelverein Fisch &amp; Wasser Holtgast-Blomberg e.&nbsp;V. zahlst. Die Bausteine einzeln:
+     Online-Kurs 70,00 €, Praxistag 20,00 €, Prüfungstag mit Prüfungsgebühr 70,00 €.
+     Wähle unten aus, die Aufteilung rechnet sich automatisch.</p>
   <div class="varianten" id="varianten"><div class="lade">Kursdaten werden geladen …</div></div>
 </section>
 
@@ -338,6 +340,10 @@ let daten = null, gewaehlt = null;
 
 const $ = (id) => document.getElementById(id);
 const euro = (c) => (c/100).toLocaleString('de-DE',{minimumFractionDigits:2}) + ' €';
+/* Die Pruefungsgebuehr wird bar am Pruefungstag an den Verein gezahlt, nicht ueberwiesen. */
+const BAR_CENT = { komplett_vor_ort:7000, online_plus_vor_ort:7000, nur_pruefung:7000 };
+const bar = (v) => (v && BAR_CENT[v.variante]) || 0;
+const gesamt = (v) => ((v && v.preis_cent) || 0) + bar(v);
 const dat = (s) => s ? new Date(s+'T12:00:00').toLocaleDateString('de-DE',
   {weekday:'short', day:'2-digit', month:'long', year:'numeric'}) : '';
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
@@ -415,8 +421,10 @@ function zeichnen(){
       <h3>${esc(v.titel)}</h3>
       <div class="kurz">${esc(v.kurztext||'')}</div>
       <p class="lang">${esc(v.beschreibung||'')}</p>
-      <div class="preis">${v.preis_cent>0 ? euro(v.preis_cent) : 'auf Anfrage'}
-        ${v.preis_wiederholer_cent!=null ? `<small>Wiederholer ${euro(v.preis_wiederholer_cent)} – nach Nachweis</small>` : ''}
+      <div class="preis">${gesamt(v)>0 ? euro(gesamt(v)) : 'auf Anfrage'}
+        <small>${v.preis_cent>0
+          ? euro(v.preis_cent)+' Überweisung + '+euro(bar(v))+' bar am Prüfungstag'
+          : (bar(v)>0 ? euro(bar(v))+' bar am Prüfungstag – keine Überweisung' : '')}</small>
       </div>
       <div class="waehlen">Diese Variante wählen</div>
     </div>`).join('');
@@ -458,12 +466,18 @@ function summeZeichnen(){
   // Der Wiederholer-Preis wird bewusst NICHT automatisch gezogen: Das Häkchen ist
   // eine Selbstauskunft. Geprueft wird der Nachweis, danach kommt der endgueltige
   // Betrag per Mail. Die Bestaetigungsmail rechnet aus demselben Grund voll.
-  const wdh = $('wiederholer').checked && gewaehlt.preis_wiederholer_cent != null;
-  const betrag = gewaehlt.preis_cent;
+  const wdh = $('wiederholer').checked;
+  const ueb = gewaehlt.preis_cent || 0;
+  const b = bar(gewaehlt);
   $('summe').innerHTML = `
     <div class="z"><span>Variante</span><b>${esc(gewaehlt.titel)}</b></div>
-    <div class="z gesamt"><span>Zu zahlen</span><b>${betrag>0?euro(betrag):'auf Anfrage'}</b></div>
-    ${wdh ? `<div class="z"><span>Wiederholer</span><b>ggf. ${euro(gewaehlt.preis_wiederholer_cent)}</b></div><p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">Den ermäßigten Wiederholer-Preis bestätigen wir erst nach Prüfung deines letzten Prüfungsnachweises. Bitte erst nach unserer Mail überweisen.</p>` : ''}`;
+    ${ueb>0 ? `<div class="z"><span>Lehrgangsbeitrag · Überweisung binnen 10 Tagen</span><b>${euro(ueb)}</b></div>` : ''}
+    ${b>0 ? `<div class="z"><span>Prüfungsgebühr · bar am Prüfungstag an den Verein</span><b>${euro(b)}</b></div>` : ''}
+    <div class="z gesamt"><span>Gesamt</span><b>${gesamt(gewaehlt)>0?euro(gesamt(gewaehlt)):'auf Anfrage'}</b></div>
+    <p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">${ueb>0
+      ? 'Überwiesen wird nur der Lehrgangsbeitrag. Geht er nicht innerhalb von 10 Tagen ein, wird der Platz neu vergeben. Die Prüfungsgebühr bringst du am Prüfungstag in bar mit, sie geht an den Angelverein Fisch &amp; Wasser Holtgast-Blomberg e.&nbsp;V.'
+      : 'Für diese Variante ist keine Überweisung nötig. Die Prüfungsgebühr zahlst du bar am Prüfungstag an den Angelverein Fisch &amp; Wasser Holtgast-Blomberg e.&nbsp;V.'}</p>
+    ${wdh ? `<p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">Als Wiederholer zahlst du eine ermäßigte Prüfungsgebühr. Den genauen Betrag bestätigen wir dir nach Prüfung deines letzten Prüfungsnachweises per Mail.</p>` : ''}`;
 }
 
 /* ================================================================
@@ -588,12 +602,15 @@ function fertig(a){
   }else{
     $('erfolgText').textContent =
       'Wir haben dir eine Bestätigung an ' + $('email').value.trim() +
-      ' geschickt. Mit der Überweisung ist dein Platz endgültig gesichert.';
+      ' geschickt. Überweise den Lehrgangsbeitrag innerhalb von 10 Tagen – damit ist dein Platz endgültig ' +
+      'gesichert. Die Prüfungsgebühr von 70,00 € bringst du am Prüfungstag in bar mit, sie geht an den ' +
+      'Angelverein Fisch & Wasser Holtgast-Blomberg e. V.';
   }
 
   const z = a.zahlung || {};
   const zeilen = [
-    ['Betrag', a.betrag_cent > 0 ? euro(a.betrag_cent) : 'wird dir mitgeteilt'],
+    ['Jetzt überweisen', a.betrag_cent > 0 ? euro(a.betrag_cent) : 'keine Überweisung nötig'],
+    ['Bar am Prüfungstag', bar(gewaehlt) > 0 ? euro(bar(gewaehlt)) + ' an den Verein' : ''],
     ['Empfänger', z.inhaber],
     ['IBAN', z.iban],
     ['BIC', z.bic],
