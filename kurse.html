@@ -261,7 +261,9 @@ async function laden(){
         ? liste.map(k => karte(k, proKurs[k.slug] || [])).join('')
         : '<p class="klein">' + leer + '</p>';
     };
-    bau(kurse.filter(k => k.art === 'lehrgang'), zielL, 'Zurzeit ist kein Lehrgangstermin ausgeschrieben.');
+    // Lehrgaenge/Pruefungen ohne festen Termin nicht anzeigen (z. B. alter Eintrag 'Pruefung September 2026 - Termin folgt').
+    // Die naechste Pruefung ist immer Teil des aktuellen Lehrgangs (Variante 'Nur Pruefung').
+    bau(kurse.filter(k => k.art === 'lehrgang' && !k.datum_offen && k.datum), zielL, 'Zurzeit ist kein Lehrgangstermin ausgeschrieben.');
     bau(kurse.filter(k => k.art !== 'lehrgang'), zielS, 'Zurzeit ist kein Spezialkurs ausgeschrieben.');
   } catch (e) {
     const txt = '<div class="fehler">Die Kursliste ließ sich gerade nicht laden. Bitte lade die Seite neu – ' +
