@@ -16,9 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Nur für die Kursseite – der Rest kommt aus stil.css */
@@ -154,11 +152,10 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
   <p class="lead">Ein Ziel, drei Wege – die Prüfung legst du in jedem Fall bei uns in Aurich ab.
      Entweder du machst den Lehrgang komplett bei uns vor Ort, oder du lernst die Theorie online
      bei uns und kommst nur zum Praxistag und zur Prüfung, oder du hast deinen Lehrgang schon
-     woanders gemacht und meldest dich nur zum Prüfungstag an. Beide Kurspakete kosten 160,00 €
-     – aufgeteilt in 90,00 € Lehrgangsbeitrag per Überweisung und 70,00 € Prüfungsgebühr, die du bar am
-     Prüfungstag an den Angelverein Fisch &amp; Wasser Holtgast-Blomberg e.&nbsp;V. zahlst. Die Bausteine einzeln:
-     Online-Kurs 70,00 €, Praxistag 20,00 €, Prüfungstag mit Prüfungsgebühr 70,00 €.
-     Wähle unten aus, die Aufteilung rechnet sich automatisch.</p>
+     woanders gemacht und meldest dich nur zum Prüfungstag an. Beide Kurspakete kosten 160,00 € inkl. MwSt.,
+     die reine Prüfung 70,00 €. Die Prüfungsgebühr ist immer schon enthalten – es kommt nichts obendrauf.
+     Die Bausteine einzeln: Online-Kurs 70,00 €, Praxistag 20,00 €, Prüfungstag mit Prüfungsgebühr 70,00 €.
+     Wähle unten aus, der Gesamtpreis steht sofort da.</p>
   <div class="varianten" id="varianten"><div class="lade">Kursdaten werden geladen …</div></div>
 </section>
 
@@ -167,6 +164,9 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
   <h2>Anmeldung</h2>
   <p class="lead">Alle Angaben brauchen wir für die Anmeldung deiner Prüfung beim Verband.
      Wir geben sie ausschließlich dafür weiter.</p>
+  <p class="klein" style="margin:-6px 0 0;color:var(--text-3)">Lieber auf Papier? Hier ist das
+     <a href="Anmeldung-Angelscheinkurs-AngelUp.pdf" target="_blank" rel="noopener">Anmeldeformular als PDF</a>
+     – ausdrucken, ausfüllen und im Laden abgeben oder per Mail schicken.</p>
 
   <div class="karte" style="margin-top:20px">
   <form id="formular" novalidate autocomplete="on">
@@ -213,7 +213,7 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
         <input type="email" id="email" name="email" autocomplete="email" required>
       </label>
       <p style="margin:-6px 0 0;font-size:.82rem;color:var(--text-3)">
-        An diese Adresse geht die Bestätigung mit den Zahlungsdaten.</p>
+        An diese Adresse geht deine Anmeldebestätigung.</p>
     </fieldset>
 
     <fieldset id="ebBlock" class="klapp">
@@ -249,8 +249,8 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
             <input type="text" id="wiederholer_ort" placeholder="z. B. Dunum"></label>
         </div>
         <p style="margin:-4px 0 0;font-size:.82rem;color:var(--text-3)">
-          Liegt die letzte Prüfung weniger als 12 Monate zurück, zahlst du nur die
-          ermäßigte Prüfungsgebühr. Danach ist der komplette Lehrgang erneut nötig.</p>
+          Liegt die letzte Prüfung weniger als 12 Monate zurück, buchst du nur die Prüfung zum
+          ermäßigten Preis. Danach ist der komplette Lehrgang erneut nötig.</p>
       </div>
     </fieldset>
 
@@ -286,7 +286,7 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
 
     <button type="submit" class="btn voll gross" id="absenden">Platz verbindlich anmelden</button>
     <p style="margin:14px 0 0;font-size:.82rem;color:var(--text-3);text-align:center">
-      Nach dem Absenden bekommst du sofort eine Bestätigung per E-Mail mit den Zahlungsdaten.
+      Nach dem Absenden bekommst du sofort eine Bestätigung per E-Mail mit allen weiteren Schritten.
       Dein Platz ist ab dann für dich reserviert.</p>
   </form>
   </div>
@@ -301,13 +301,13 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
       <p class="lead" id="erfolgText" style="margin:0"></p>
     </div>
 
-    <h3>Zahlungsdaten</h3>
+    <h3>Deine Anmeldung</h3>
     <table class="zahltab" id="zahltab"></table>
 
     <div class="hinweis" id="mailHinweis" style="display:none"></div>
 
     <p style="font-size:.9rem;color:var(--text-2);margin-top:20px">
-      Bewahre die Referenz gut auf – sie ist gleichzeitig dein Verwendungszweck.
+      Bewahre die Referenz gut auf – mit ihr ordnen wir alle Rückfragen zu.
       Wenn du magst, kannst du sofort mit dem Lernen anfangen.</p>
     <a class="btn voll gross" href="app.html" style="margin-top:8px">Jetzt schon lernen mit AngelUp</a>
   </div>
@@ -340,10 +340,20 @@ let daten = null, gewaehlt = null;
 
 const $ = (id) => document.getElementById(id);
 const euro = (c) => (c/100).toLocaleString('de-DE',{minimumFractionDigits:2}) + ' €';
-/* Die Pruefungsgebuehr wird bar am Pruefungstag an den Verein gezahlt, nicht ueberwiesen. */
-const BAR_CENT = { komplett_vor_ort:7000, online_plus_vor_ort:7000, nur_pruefung:7000 };
-const bar = (v) => (v && BAR_CENT[v.variante]) || 0;
-const gesamt = (v) => ((v && v.preis_cent) || 0) + bar(v);
+/* Die Pruefungsgebuehr (70 EUR) ist im Gesamtpreis jeder Variante enthalten.
+   Die Datenbank fuehrt sie getrennt vom Lehrgangsbeitrag; hier wird nur die Summe gezeigt. */
+const GEBUEHR_CENT = { komplett_vor_ort:7000, online_plus_vor_ort:7000, nur_pruefung:7000 };
+const gebuehr = (v) => (v && GEBUEHR_CENT[v.variante]) || 0;
+const gesamt = (v) => ((v && v.preis_cent) || 0) + gebuehr(v);
+/* Eigene Kurztexte je Variante - unabhaengig von Zahlungs-Saetzen in der Datenbank. */
+const VARIANTEN_TEXT = {
+  komplett_vor_ort: 'Alle sechs Sachgebiete im Unterricht in Aurich, dazu ein eigener Praxistag mit Gerätekunde, Zusammenstellen der Angel und tierschutzgerechtem Umgang mit dem Fisch. Am Ende die Fischerprüfung des Landesfischereiverbands Weser-Ems im selben Raum. Lernapp, Online-Kurs und Prüfungsgebühr sind enthalten.',
+  online_plus_vor_ort: 'Die Theorie lernst du zu Hause mit Lernapp und Online-Kurs, in deinem Tempo. Zum Praxistag und zur Prüfung kommst du nach Aurich. Den Stundennachweis übernehmen wir. Prüfungsgebühr enthalten.',
+  nur_pruefung: 'Für Selbstlerner und Wiederholer: Du hast den Lehrgang schon woanders oder online gemacht und legst bei uns nur die Prüfung ab. Geräte und Material stellen wir, die Prüfungsgebühr ist enthalten. Bring deinen Lehrgangsnachweis mit.'
+};
+const ohneZahlart = (t) => String(t || '').split(/(?<=[.!?])\s+/)
+  .filter(s => !/überweis|ueberweis|\bbar\b|IBAN|Zahlungsziel|Tagen nach/i.test(s)).join(' ');
+const beschreibung = (v) => VARIANTEN_TEXT[v.variante] || ohneZahlart(v.beschreibung);
 const dat = (s) => s ? new Date(s+'T12:00:00').toLocaleDateString('de-DE',
   {weekday:'short', day:'2-digit', month:'long', year:'numeric'}) : '';
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
@@ -420,11 +430,9 @@ function zeichnen(){
       ${v.variante===empfohlen ? '<div class="empf">Beliebteste Wahl</div>' : ''}
       <h3>${esc(v.titel)}</h3>
       <div class="kurz">${esc(v.kurztext||'')}</div>
-      <p class="lang">${esc(v.beschreibung||'')}</p>
+      <p class="lang">${esc(beschreibung(v))}</p>
       <div class="preis">${gesamt(v)>0 ? euro(gesamt(v)) : 'auf Anfrage'}
-        <small>${v.preis_cent>0
-          ? euro(v.preis_cent)+' Überweisung + '+euro(bar(v))+' bar am Prüfungstag'
-          : (bar(v)>0 ? euro(bar(v))+' bar am Prüfungstag – keine Überweisung' : '')}</small>
+        <small>${gesamt(v)>0 ? 'inkl. MwSt. und Prüfungsgebühr' : ''}</small>
       </div>
       <div class="waehlen">Diese Variante wählen</div>
     </div>`).join('');
@@ -433,7 +441,7 @@ function zeichnen(){
     k.addEventListener('click', () => waehlen(k.dataset.v)));
 
   $('variante').innerHTML = daten.varianten.map(v =>
-    `<option value="${esc(v.variante)}">${esc(v.titel)}${v.preis_cent>0?' – '+euro(v.preis_cent):''}</option>`).join('');
+    `<option value="${esc(v.variante)}">${esc(v.titel)}${gesamt(v)>0?' – '+euro(gesamt(v)):''}</option>`).join('');
   $('variante').addEventListener('change', e => waehlen(e.target.value, true));
 
   if(daten.varianten.length){
@@ -468,16 +476,15 @@ function summeZeichnen(){
   // Betrag per Mail. Die Bestaetigungsmail rechnet aus demselben Grund voll.
   const wdh = $('wiederholer').checked;
   const ueb = gewaehlt.preis_cent || 0;
-  const b = bar(gewaehlt);
+  const g = gebuehr(gewaehlt);
   $('summe').innerHTML = `
     <div class="z"><span>Variante</span><b>${esc(gewaehlt.titel)}</b></div>
-    ${ueb>0 ? `<div class="z"><span>Lehrgangsbeitrag · Überweisung binnen 10 Tagen</span><b>${euro(ueb)}</b></div>` : ''}
-    ${b>0 ? `<div class="z"><span>Prüfungsgebühr · bar am Prüfungstag an den Verein</span><b>${euro(b)}</b></div>` : ''}
-    <div class="z gesamt"><span>Gesamt</span><b>${gesamt(gewaehlt)>0?euro(gesamt(gewaehlt)):'auf Anfrage'}</b></div>
-    <p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">${ueb>0
-      ? 'Überwiesen wird nur der Lehrgangsbeitrag. Geht er nicht innerhalb von 10 Tagen ein, wird der Platz neu vergeben. Die Prüfungsgebühr bringst du am Prüfungstag in bar mit, sie geht an den Angelverein Fisch &amp; Wasser Holtgast-Blomberg e.&nbsp;V.'
-      : 'Für diese Variante ist keine Überweisung nötig. Die Prüfungsgebühr zahlst du bar am Prüfungstag an den Angelverein Fisch &amp; Wasser Holtgast-Blomberg e.&nbsp;V.'}</p>
-    ${wdh ? `<p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">Als Wiederholer zahlst du eine ermäßigte Prüfungsgebühr. Den genauen Betrag bestätigen wir dir nach Prüfung deines letzten Prüfungsnachweises per Mail.</p>` : ''}`;
+    ${ueb>0 ? `<div class="z"><span>Lehrgang, Praxistag, Lernapp und Online-Kurs</span><b>${euro(ueb)}</b></div>` : ''}
+    ${g>0 ? `<div class="z"><span>Prüfungstag inkl. Prüfungsgebühr</span><b>${euro(g)}</b></div>` : ''}
+    <div class="z gesamt"><span>Gesamt inkl. MwSt.</span><b>${gesamt(gewaehlt)>0?euro(gesamt(gewaehlt)):'auf Anfrage'}</b></div>
+    <p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">Es kommt nichts obendrauf.
+      Alle weiteren Schritte stehen in deiner Bestätigungsmail.</p>
+    ${wdh ? `<p style="margin:8px 0 0;font-size:.8rem;color:var(--text-3);line-height:1.55">Als Wiederholer zahlst du einen ermäßigten Preis. Den genauen Betrag bestätigen wir dir nach Prüfung deines letzten Prüfungsnachweises per Mail.</p>` : ''}`;
 }
 
 /* ================================================================
@@ -598,29 +605,21 @@ function fertig(a){
     document.querySelector('#erfolg h2').textContent = 'Du stehst auf der Warteliste';
     $('erfolgText').textContent =
       'Der Kurs ist ausgebucht. Sobald ein Platz frei wird, melden wir uns bei dir. ' +
-      'Bitte überweise erst, wenn du von uns die feste Zusage bekommen hast.';
+      'Bis dahin musst du nichts weiter tun.';
   }else{
     $('erfolgText').textContent =
       'Wir haben dir eine Bestätigung an ' + $('email').value.trim() +
-      ' geschickt. Überweise den Lehrgangsbeitrag innerhalb von 10 Tagen – damit ist dein Platz endgültig ' +
-      'gesichert. Die Prüfungsgebühr von 70,00 € bringst du am Prüfungstag in bar mit, sie geht an den ' +
-      'Angelverein Fisch & Wasser Holtgast-Blomberg e. V.';
+      ' geschickt. Darin stehen alle weiteren Schritte. Dein Platz ist für dich reserviert.';
   }
 
-  const z = a.zahlung || {};
   const zeilen = [
-    ['Jetzt überweisen', a.betrag_cent > 0 ? euro(a.betrag_cent) : 'keine Überweisung nötig'],
-    ['Bar am Prüfungstag', bar(gewaehlt) > 0 ? euro(bar(gewaehlt)) + ' an den Verein' : ''],
-    ['Empfänger', z.inhaber],
-    ['IBAN', z.iban],
-    ['BIC', z.bic],
-    ['Bank', z.bank],
-    ['Verwendungszweck', z.verwendungszweck],
-    ['Zahlungsziel', z.frist_tage ? 'innerhalb von ' + z.frist_tage + ' Tagen' : ''],
+    ['Variante', gewaehlt ? gewaehlt.titel : ''],
+    ['Gesamtpreis', gesamt(gewaehlt) > 0 ? euro(gesamt(gewaehlt)) + ' inkl. MwSt. und Prüfungsgebühr' : 'wird dir mitgeteilt'],
     ['Deine Referenz', a.referenz],
+    ['Bestätigung an', $('email').value.trim()],
   ].filter(r => r[1]);
 
-  const kopierbar = ['IBAN','Verwendungszweck','Deine Referenz'];
+  const kopierbar = ['Deine Referenz'];
   $('zahltab').innerHTML = zeilen.map(r =>
     `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}` +
     (kopierbar.includes(r[0])
