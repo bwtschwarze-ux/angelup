@@ -1,4 +1,4 @@
-const CACHE = 'angelup-v42';
+const CACHE = 'angelup-v43';
 const BILD_CACHE = 'angelup-bilder-v1';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
   './live.html', './aal.html', './kurse.html', './vormerken.html',
