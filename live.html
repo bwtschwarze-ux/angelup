@@ -139,7 +139,7 @@ main h2{font-size:clamp(1.4rem,2.8vw,2rem);margin:0 0 8px}
         <ol class="schritte">
           <li>In OBS unten rechts auf <b>„Virtuelle Kamera starten"</b> klicken.</li>
           <li>Diese Seite in <b>Chrome</b> öffnen (Firefox erkennt die Virtualkamera nicht immer).</li>
-          <li>Im Videofenster oben auf das Zahnrad, bei <b>Kamera</b> „OBS Virtual Camera" wählen.</li>
+          <li>Die Seite wählt für dich automatisch die Kamera <b>OBS Virtual Camera</b> und das Mikrofon <b>Voicemeeter Out B1</b>. Falls nicht: im Vorraum auf den kleinen Pfeil über dem Kamera-Symbol klicken und dort umstellen.</li>
           <li>Als <b>Mikrofon</b> dein echtes Mikrofon wählen — <b>nicht</b> das OBS-Audio,
               sonst hörst du dich doppelt.</li>
           <li>Systemton (Musik, Videoclips) überträgt die Virtualkamera <b>nicht</b>.
@@ -291,18 +291,23 @@ function betreten(a){
     return;
   }
 
-  /* Fallback: Jitsi – wird geladen, sobald es gebraucht wird */
+  /* Fallback: Jitsi – wird geladen, sobald es gebraucht wird.
+     meet.jit.si beendet Räume ohne eingeloggten Moderator nach 5 Minuten, deshalb
+     nutzen wir den frei zugänglichen Server von Freifunk München (Deutschland, kein Zeitlimit). */
+  const jitsiDomain = (a.domain === 'meet.jit.si') ? 'meet.ffmuc.net' : a.domain;
   const s = document.createElement('script');
-  s.src = 'https://' + a.domain + '/external_api.js';
+  s.src = 'https://' + jitsiDomain + '/external_api.js';
   s.onload = () => {
     /* eslint-disable no-undef */
-    const api = new JitsiMeetExternalAPI(a.domain, {
+    const api = new JitsiMeetExternalAPI(jitsiDomain, {
       roomName: a.raum,
       parentNode: b,
       width: '100%',
       height: '100%',
       lang: 'de',
       userInfo: { displayName: a.name },
+      /* Ausbilder: OBS-Bild und Voicemeeter-Mikrofon vorwählen, sonst nimmt Jitsi die erste (oft tote) virtuelle Kamera */
+      devices: a.moderator ? { videoInput: 'OBS Virtual Camera', audioInput: 'Voicemeeter Out B1' } : undefined,
       configOverwrite: {
         startWithAudioMuted: !a.moderator,
         startWithVideoMuted: !a.moderator,
