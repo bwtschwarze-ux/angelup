@@ -171,6 +171,8 @@ const SYMBOL = { 'august-2026':'🎓', 'oktober-2026':'🎓', 'pruefung-septembe
 
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function euro(cent){ return (cent/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+/* Prüfungsgebühr je Variante – identisch mit kurs.html, damit hier derselbe Endpreis steht */
+const GEBUEHR_CENT = { komplett_vor_ort:7000, online_plus_vor_ort:7000, nur_pruefung:7000 };
 
 /* Nur mobil aufklappbares Menü – gleiche Mechanik wie auf den anderen Seiten */
 const burger = document.getElementById('burger');
@@ -251,7 +253,8 @@ async function laden(){
         if (!s) return;
         (proKurs[s] = proKurs[s] || []).push({
           kurs_slug: s, variante: v.variante, titel: v.titel,
-          zusatz: v.kurztext || null, preis_cent: v.preis_cent,
+          zusatz: v.kurztext || null,
+          preis_cent: v.preis_cent == null ? null : v.preis_cent + (GEBUEHR_CENT[v.variante] || 0),
           versand: false, sortierung: v.sortierung, aktiv: true
         });
       });
