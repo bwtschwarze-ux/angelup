@@ -143,7 +143,7 @@ main h2{font-size:clamp(1.4rem,2.8vw,2rem);margin:0 0 6px}
       wiederholen muss, bucht <strong>nur die Prüfung</strong>. Die <strong>Spezialkurse</strong> sind Zusatzwissen für
       eine Fischart und setzen keinen Schein voraus. Ruf einfach an oder schreib uns.</p>
       <div class="btn-reihe">
-        <a class="btn t" href="mailto:bwt.schwarze@gmail.com?subject=Frage%20zu%20den%20Kursen">Frage per E-Mail</a>
+        <a class="btn t" href="mailto:kontakt@angelup.de?subject=Frage%20zu%20den%20Kursen">Frage per E-Mail</a>
         <a class="btn geist" href="app.html">Erst mal kostenlos Fragen üben</a>
       </div>
     </div>
@@ -271,7 +271,7 @@ async function laden(){
     bau(kurse.filter(k => k.art !== 'lehrgang'), zielS, 'Zurzeit ist kein Spezialkurs ausgeschrieben.');
   } catch (e) {
     const txt = '<div class="fehler">Die Kursliste ließ sich gerade nicht laden. Bitte lade die Seite neu – ' +
-                'oder schreib uns an <a href="mailto:bwt.schwarze@gmail.com">bwt.schwarze@gmail.com</a>.</div>';
+                'oder schreib uns an <a href="mailto:kontakt@angelup.de">kontakt@angelup.de</a>.</div>';
     zielL.innerHTML = txt; zielS.innerHTML = '';
   }
 }

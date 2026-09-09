@@ -960,7 +960,7 @@ async function registerKlick(){
 function pwVergessen(){
   const email=document.getElementById('a_email')?document.getElementById('a_email').value.trim():'';
   const mit=email?` „${email}"`:'';
-  state.authMeldung={ok:true, text:`Kein Problem 🎣 Dein Passwort setzt dein Ausbilder für dich zurück. Schreib kurz mit deiner Anmelde-E-Mail${mit} an <a href="mailto:bwt.schwarze@gmail.com?subject=Passwort%20zur%C3%BCcksetzen" style="color:var(--wasser);font-weight:700">bwt.schwarze@gmail.com</a> (Angelschule Ostfriesland). Du bekommst dann ein neues Passwort.`};
+  state.authMeldung={ok:true, text:`Kein Problem 🎣 Dein Passwort setzt dein Ausbilder für dich zurück. Schreib kurz mit deiner Anmelde-E-Mail${mit} an <a href="mailto:kontakt@angelup.de?subject=Passwort%20zur%C3%BCcksetzen" style="color:var(--wasser);font-weight:700">kontakt@angelup.de</a> (Angelschule Ostfriesland). Du bekommst dann ein neues Passwort.`};
   render();
 }
 /* Bildschirm: neues Passwort setzen (nach Klick auf den Reset-Link in der E-Mail) */
@@ -1199,7 +1199,7 @@ function viewImpressum(){
   <div class="karte" style="font-size:.92rem;line-height:1.8">
     <p><strong>Angaben gemäß § 5 DDG</strong></p>
     <p>Mark Schwarze<br>Alter Postweg 80<br>26607 Aurich<br>Deutschland</p>
-    <p><strong>Kontakt:</strong><br>E-Mail: bwt.schwarze@gmail.com</p>
+    <p><strong>Kontakt:</strong><br>E-Mail: kontakt@angelup.de</p>
     <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong><br>Mark Schwarze, Anschrift wie oben</p>
     <p style="font-size:.8rem;color:var(--grau)">Plattform der EU-Kommission zur Online-Streitbeilegung: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.
     Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
@@ -1210,7 +1210,7 @@ function viewDatenschutz(){
   return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
   <h1>Datenschutzerklärung</h1>
   <div class="karte" style="font-size:.9rem;line-height:1.7">
-    <p><strong>1. Verantwortlicher</strong><br>Mark Schwarze, Alter Postweg 80, 26607 Aurich, E-Mail: bwt.schwarze@gmail.com</p>
+    <p><strong>1. Verantwortlicher</strong><br>Mark Schwarze, Alter Postweg 80, 26607 Aurich, E-Mail: kontakt@angelup.de</p>
     <p><strong>2. Welche Daten wir verarbeiten</strong><br>
     Bei der Registrierung: Name, E-Mail-Adresse und Passwort (verschlüsselt gespeichert). Während der Nutzung: dein Lernfortschritt (beantwortete Fragen, Ergebnisse von Prüfungssimulationen, Lernzeit) sowie – falls du einem Kurs beigetreten bist – die Zuordnung zu deinem Ausbilder. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Lernplattform).</p>
     <p><strong>3. Wer deine Daten sieht</strong><br>
@@ -1222,7 +1222,7 @@ function viewDatenschutz(){
     <p><strong>6. Externe Links</strong><br>
     Die Praxis-Videos verlinken auf YouTube. Erst wenn du einen Link anklickst, gelten die Datenschutzbestimmungen von YouTube/Google.</p>
     <p><strong>7. Deine Rechte</strong><br>
-    Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO) sowie ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Zur Löschung deines Kontos genügt eine E-Mail an bwt.schwarze@gmail.com.</p>
+    Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO) sowie ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Zur Löschung deines Kontos genügt eine E-Mail an kontakt@angelup.de.</p>
     <p style="font-size:.78rem;color:var(--grau)">Stand: Juli 2026</p>
   </div>
   ${fusszeile()}`;

@@ -298,7 +298,7 @@ main section{padding:0;margin-bottom:clamp(38px,6vw,64px)}
         rausgegangen. Schau auch kurz in den Spam-Ordner, falls sie nicht ankommt.</p>
       <a class="btn" id="eMailLink" href="#" style="display:none;margin-top:14px">Anmeldung per E-Mail bestätigen</a>
     </div>
-    <div class="hinweis">Fragen? Schreib uns an <b>bwt.schwarze@gmail.com</b> oder komm im Laden vorbei:
+    <div class="hinweis">Fragen? Schreib uns an <b>kontakt@angelup.de</b> oder komm im Laden vorbei:
       Zur Kiepe, Alter Postweg 80, 26607 Aurich.</div>
   </div>
 </section>
@@ -478,7 +478,7 @@ $('formular').addEventListener('submit', async e => {
     if(daten.tiktok_name) zeilen.push('TikTok-Name: ' + daten.tiktok_name);
     if(gewaehlt.versand) zeilen.push('Anschrift: ' + daten.strasse + ', ' + daten.plz + ' ' + daten.wohnort);
     if(daten.bemerkung) zeilen.push('Anmerkung: ' + daten.bemerkung);
-    $('eMailLink').href = 'mailto:bwt.schwarze@gmail.com'
+    $('eMailLink').href = 'mailto:kontakt@angelup.de'
       + '?subject=' + encodeURIComponent('Aalkurs ' + ref)
       + '&body=' + encodeURIComponent(zeilen.join('\n'));
 
@@ -495,7 +495,7 @@ $('formular').addEventListener('submit', async e => {
     $('erfolg').scrollIntoView({behavior:'smooth', block:'start'});
   } catch(err){
     btn.disabled = false; btn.textContent = 'Kostenpflichtig anmelden';
-    box.innerHTML = 'Das hat leider nicht geklappt. Bitte versuch es nochmal oder schreib uns an <b>bwt.schwarze@gmail.com</b>.';
+    box.innerHTML = 'Das hat leider nicht geklappt. Bitte versuch es nochmal oder schreib uns an <b>kontakt@angelup.de</b>.';
     box.classList.add('zeig');
   }
 });
