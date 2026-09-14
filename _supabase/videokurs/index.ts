@@ -626,7 +626,7 @@ Deno.serve(async (req) => {
     const titel = (kurs as { titel?: string } | null)?.titel ?? slug;
 
     const { data: vorhanden } = await db
-      .from('videokurs_zugang').select('code').eq('email', email).limit(1).maybeSingle();
+      .from('videokurs_zugang').select('code').eq('email', email).eq('kurs_slug', slug).limit(1).maybeSingle();
     const code = (vorhanden as { code?: string } | null)?.code ?? await freierCode();
 
     const { error: zErr } = await db.from('videokurs_zugang').upsert({
@@ -655,7 +655,7 @@ Deno.serve(async (req) => {
     const email = kurz(b.email, 120).toLowerCase();
     if (!slug || !MAIL_RE.test(email)) return json(req, { fehler: 'ungueltig' }, 400);
     const { data: vorhanden } = await db
-      .from('videokurs_zugang').select('code').eq('email', email).limit(1).maybeSingle();
+      .from('videokurs_zugang').select('code').eq('email', email).eq('kurs_slug', slug).limit(1).maybeSingle();
     const code = (vorhanden as { code?: string } | null)?.code ?? await freierCode();
     const { error } = await db.from('videokurs_zugang').upsert({
       kurs_slug: slug, email, code, unbegrenzt: true,
