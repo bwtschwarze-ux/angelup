@@ -240,7 +240,7 @@ function zeichne(){
       '<div class="spieler" id="spieler"><div class="platz"><span class="gross">▶</span>' +
         (fertig ? (LEKTIONEN.some(l => l.frei && l.hat_video)
                   ? 'Tipp auf eine Lektion mit „Gratis ansehen“, um reinzuschauen.'
-                  : '🔒 Die Videos siehst du nach dem Kauf.<br>Warst du beim Live-Kurs dabei? Dann bekommst du deinen Zugang per E-Mail.')
+                  : '🔒 Die Videos siehst du nach dem Kauf.<br>Warst du beim Live-Kurs dabei? <a href="mein.html#einloesen" style="color:var(--tuerkis)">Kurs-Code hier einlösen</a>')
                 : 'Die Videos werden gerade produziert. Der Kurs geht bald online.') +
       '</div></div>' +
       '<h2 style="font-size:1.15rem;margin:0 0 12px">Die Lektionen</h2>' + lekHtml +
@@ -275,8 +275,8 @@ function zeichne(){
     '<p><strong>Brauche ich ein Benutzerkonto?</strong><br>Nein. Du bekommst nach der Zahlung einen Zugangscode per ' +
     'E-Mail. Mit E-Mail und Code kommst du auf bis zu 2 eigenen Geräten an deine Kurse – der Zugang ist persönlich.</p>' +
     '<p><strong>Ich war beim Live-Kurs dabei – vor Ort oder bei TikTok.</strong><br>Dann ist die Aufzeichnung für dich inklusive. ' +
-    'Wir schalten dich mit deiner E-Mail-Adresse frei und schicken dir den Zugangscode per Mail. Damit meldest du dich unter ' +
-    '„Mein Bereich“ an – der Zugang läuft nie ab.</p>' +
+    'Löse den Kurs-Code vom Abend unter <a href="mein.html#einloesen">„Mein Bereich“</a> ein – oder wir tragen dich mit deiner E-Mail ein ' +
+    'und schicken dir den Zugangscode per Mail. Der Zugang läuft nie ab.</p>' +
     '<p><strong>Wie bezahle ich?</strong><br>Per Überweisung. Nach der Bestellung bekommst du die Kontodaten und deine ' +
     'Referenznummer per E-Mail. Sobald das Geld eingegangen ist, schalten wir dich frei und du bekommst deinen Code.</p>' +
     '<p><strong>Kann ich die Videos herunterladen?</strong><br>Die Videos laufen im Browser und lassen sich streamen. ' +

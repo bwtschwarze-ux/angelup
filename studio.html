@@ -267,6 +267,23 @@ main{max-width:1180px;margin:0 auto;padding:30px 20px 90px}
           <div id="tlErgebnis" class="rollbar" style="margin-top:14px"></div>
         </div>
       </div>
+      <div class="zeile" style="border-style:dashed">
+        <div class="zeile-kopf">
+          <div class="sym" style="--kf:#ffc247">🎟️</div>
+          <div><h3>Kurs-Code zum Selbst-Freischalten</h3><div class="meta">Code am Kursabend weitergeben – Teilnehmer lösen ihn unter „Mein Bereich“ ein</div></div>
+          <div class="weg"><button class="btn t klein" id="kcAuf">Öffnen</button></div>
+        </div>
+        <div class="klapp" id="kcKlapp">
+          <div class="feld-reihe">
+            <div class="feld"><label>Kurs</label><select id="kcKurs"></select></div>
+            <div class="feld"><label>Wie oft einlösbar</label><input type="number" id="kcMax" min="1" max="1000" value="20"></div>
+            <div class="feld"><label>Gültig bis (leer = ohne Ende)</label><input type="date" id="kcBis"></div>
+          </div>
+          <div class="feld"><label>Notiz, z. B. „Kursabend 28.08. vor Ort“</label><input type="text" id="kcNotiz" maxlength="120"></div>
+          <button class="btn" id="kcAnlegen">Code erzeugen</button>
+          <div id="kcListe" class="rollbar" style="margin-top:16px"></div>
+        </div>
+      </div>
       <div class="rollbar"><table class="tab" id="zugangTab"></table></div>
     </div>
 
@@ -375,6 +392,45 @@ async function ruf(koerper, nochmal){
     if (await erneuern()) return ruf(koerper, true);
   }
   return { status: r.status, d: d };
+}
+
+/* Datenbank-Funktionen (Kurs-Codes) direkt aufrufen, mit derselben Anmeldung */
+async function rpc(name, args, nochmal){
+  const r = await fetch(SB_URL + '/rest/v1/rpc/' + name, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Authorization: 'Bearer ' + TOKEN },
+    body: JSON.stringify(args || {})
+  });
+  let d = {}; try { d = await r.json(); } catch(e){}
+  if ((r.status === 401 || r.status === 403) && !nochmal) {
+    if (await erneuern()) return rpc(name, args, true);
+  }
+  return { status: r.status, d: d };
+}
+
+async function kurscodesLaden(){
+  const box = el('kcListe');
+  if (!box) return;
+  const a = await rpc('videokurs_kurscode_liste', {});
+  if (a.status !== 200 || !a.d || !a.d.ok) {
+    box.innerHTML = '<p class="klein">Die Kurs-Codes ließen sich nicht laden' +
+      (a.status === 404 ? ' – die Datenbank-Erweiterung fehlt noch.' : ' (' + esc((a.d && (a.d.fehler || a.d.message)) || a.status) + ').') + '</p>';
+    return;
+  }
+  const codes = a.d.codes || [];
+  if (!codes.length) { box.innerHTML = '<p class="klein">Noch kein Kurs-Code angelegt.</p>'; return; }
+  box.innerHTML = '<table class="tab"><tr><th>Code</th><th>Kurs</th><th>Eingelöst</th><th>Gültig bis</th><th></th></tr>' +
+    codes.map(c => '<tr' + (c.aktiv ? '' : ' style="opacity:.5"') + '>' +
+      '<td><b style="font-size:1.05rem;letter-spacing:.04em">' + esc(c.code) + '</b>' +
+        (c.bezeichnung ? '<br><span class="klein">' + esc(c.bezeichnung) + '</span>' : '') + '</td>' +
+      '<td>' + esc(c.titel || c.kurs_slug) + '</td>' +
+      '<td>' + c.genutzt + ' / ' + c.max_nutzungen +
+        ((c.einloesungen || []).length ? '<br><span class="klein">' +
+          c.einloesungen.map(e => esc(e.name ? e.name + ' · ' + e.email : e.email)).join('<br>') + '</span>' : '') + '</td>' +
+      '<td>' + (c.gueltig_bis ? esc(String(c.gueltig_bis).split('-').reverse().join('.')) : 'ohne Ende') + '</td>' +
+      '<td><button class="btn geist klein" data-kcsetzen="' + esc(c.code) + '|' + (c.aktiv ? '0' : '1') + '">' +
+        (c.aktiv ? 'Sperren' : 'Wieder freigeben') + '</button></td>' +
+    '</tr>').join('') + '</table>';
 }
 
 /* ---------- Daten laden ---------- */
@@ -579,6 +635,7 @@ el('lkKurs').addEventListener('change', lekZeichnen);
 el('neuKursAuf').addEventListener('click', () => el('neuKursKlapp').classList.toggle('auf'));
 el('zhAuf').addEventListener('click', () => el('zhKlapp').classList.toggle('auf'));
 el('tlAuf').addEventListener('click', () => { el('tlKurs').innerHTML = el('zhKurs').innerHTML; el('tlKlapp').classList.toggle('auf'); });
+el('kcAuf').addEventListener('click', () => { el('kcKurs').innerHTML = el('zhKurs').innerHTML; el('kcKlapp').classList.toggle('auf'); kurscodesLaden(); });
 
 /* ---------- Klicks im Studio ---------- */
 el('studio').addEventListener('click', async (e) => {
@@ -690,6 +747,34 @@ el('studio').addEventListener('click', async (e) => {
     if (a.status !== 200) { z.disabled = false; z.textContent = 'Bezahlt'; sagen('Buchen fehlgeschlagen: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
     sagen('Freigeschaltet. Code ' + a.d.code + (a.d.mail ? ' – die Mail ist raus.' : ' – die Mail ging NICHT raus, bitte den Code selbst schicken.'), a.d.mail !== false);
     await laden();
+    return;
+  }
+
+  /* Kurs-Code anlegen */
+  if (z.id === 'kcAnlegen') {
+    const kurs = el('kcKurs').value;
+    if (!kurs) { sagen('Bitte einen Kurs wählen.', false); return; }
+    z.disabled = true;
+    const a = await rpc('videokurs_kurscode_anlegen', { p_kurs: kurs, p_max: Number(el('kcMax').value) || 20,
+      p_gueltig_bis: el('kcBis').value || null, p_bezeichnung: el('kcNotiz').value.trim() || null });
+    z.disabled = false;
+    if (a.status !== 200 || !a.d || !a.d.ok) {
+      sagen('Der Code ließ sich nicht anlegen: ' + ((a.d && (a.d.fehler || a.d.message)) || a.status), false); return;
+    }
+    sagen('Kurs-Code ' + a.d.code + ' angelegt.', true);
+    el('kcNotiz').value = '';
+    await kurscodesLaden();
+    return;
+  }
+
+  /* Kurs-Code sperren oder wieder freigeben */
+  if (z.dataset.kcsetzen) {
+    const teil = z.dataset.kcsetzen.split('|');
+    z.disabled = true;
+    const a = await rpc('videokurs_kurscode_setzen', { p_code: teil[0], p_aktiv: teil[1] === '1' });
+    z.disabled = false;
+    if (a.status !== 200 || !a.d || !a.d.ok) { sagen('Das hat nicht geklappt.', false); return; }
+    await kurscodesLaden();
     return;
   }
 

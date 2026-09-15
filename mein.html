@@ -47,6 +47,10 @@ main{max-width:980px;margin:0 auto;padding:40px 22px 90px}
 .chip{background:rgba(255,255,255,.07);border:1px solid var(--linie);border-radius:999px;padding:6px 13px;font-size:.85rem}
 .hilfe{color:var(--grau);font-size:.9rem;line-height:1.6;margin-top:8px}
 .hilfe a{color:var(--tuerkis)}
+.einloese{margin-top:22px;padding-top:18px;border-top:1px solid var(--linie)}
+.einloese h3{margin:0 0 6px;font-size:1.05rem}
+.einloese p{margin:0 0 10px}
+.code-gross{display:block;font-size:1.45rem;font-weight:800;letter-spacing:.06em;margin:6px 0}
 </style>
 </head>
 <body>
@@ -118,6 +122,28 @@ main{max-width:980px;margin:0 auto;padding:40px 22px 90px}
       </form>
       <p class="hilfe">Deinen Code bekommst du nach der Bezahlung per E-Mail. Kein Code angekommen?
       Schreib kurz an <a href="mailto:kontakt@angelup.de?subject=Zugangscode%20Videokurs">kontakt@angelup.de</a>.</p>
+
+      <div class="einloese" id="einloesen">
+        <h3>Code vom Kursabend einlösen</h3>
+        <p>Du warst beim Live-Kurs dabei und hast einen Kurs-Code bekommen, z.&nbsp;B. WALLER-7K3PQX?
+        Trag ihn hier ein – du bekommst sofort deinen persönlichen Zugang, ohne Ablaufdatum.</p>
+        <form id="eform">
+          <div class="feld">
+            <label for="ecode">Kurs-Code</label>
+            <input id="ecode" type="text" autocomplete="off" autocapitalize="characters" placeholder="z. B. WALLER-7K3PQX" required>
+          </div>
+          <div class="feld">
+            <label for="ename">Dein Name</label>
+            <input id="ename" type="text" autocomplete="name" maxlength="80">
+          </div>
+          <div class="feld">
+            <label for="emailE">E-Mail</label>
+            <input id="emailE" type="email" autocomplete="email" placeholder="du@beispiel.de" required>
+          </div>
+          <div class="meld" id="emeld"></div>
+          <div class="unten-btn"><button class="btn p" type="submit" id="eknopf">Code einlösen</button></div>
+        </form>
+      </div>
     </section>
   </div>
 
@@ -201,6 +227,50 @@ document.getElementById('zform').addEventListener('submit', async (e) => {
     meld('Gerade keine Verbindung. Bitte versuch es gleich noch einmal.', false);
   } finally {
     knopf.disabled = false; knopf.textContent = 'Anmelden';
+  }
+});
+
+// Kurs-Code vom Kursabend einlösen
+const REST = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/rest/v1';
+const OEFFENTLICH = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
+function escE(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+document.getElementById('eform').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const code = document.getElementById('ecode').value.trim().toUpperCase();
+  const mail = document.getElementById('emailE').value.trim().toLowerCase();
+  const name = document.getElementById('ename').value.trim();
+  if (!code || !mail) return;
+  const m = document.getElementById('emeld');
+  const zeig = (html, gut) => { m.innerHTML = html; m.className = 'meld zeig ' + (gut ? 'gut' : 'schlecht'); };
+  const knopf = document.getElementById('eknopf');
+  knopf.disabled = true; knopf.textContent = 'Prüfe…';
+  try {
+    const r = await fetch(REST + '/rpc/videokurs_code_einloesen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: OEFFENTLICH },
+      body: JSON.stringify({ p_code: code, p_email: mail, p_name: name || null })
+    });
+    let d = {}; try { d = await r.json(); } catch (err) {}
+    if (r.ok && d && d.ok) {
+      try { localStorage.setItem(SPEICHER, JSON.stringify({ e: mail, c: d.code })); } catch (err) {}
+      zeig('✅ Freigeschaltet: <b>' + escE(d.titel || d.kurs) + '</b><br>Dein persönlicher Zugangscode:' +
+        '<span class="code-gross">' + escE(d.code) + '</span>' +
+        'Notier ihn dir – damit meldest du dich auf einem neuen Gerät wieder an.<br>' +
+        '<a class="btn p" href="player.html" style="margin-top:10px">▶ Zu meinen Videos</a>', true);
+      document.getElementById('eform').reset();
+    } else {
+      const f = d && d.fehler;
+      const t = f === 'schon' ? 'Für diese E-Mail ist ' + escE(d.titel || 'der Kurs') + ' schon freigeschaltet. Melde dich oben mit deinem Zugangscode an – er steht in deiner Zugangs-E-Mail.'
+        : f === 'voll' ? 'Dieser Kurs-Code ist schon so oft eingelöst wie vorgesehen. Schreib uns kurz an kontakt@angelup.de.'
+        : f === 'abgelaufen' ? 'Dieser Kurs-Code ist abgelaufen. Schreib uns kurz an kontakt@angelup.de.'
+        : f === 'email' ? 'Bitte prüfe deine E-Mail-Adresse.'
+        : 'Diesen Kurs-Code kennen wir nicht. Bitte prüfe die Schreibweise.';
+      zeig(t, false);
+    }
+  } catch (err) {
+    zeig('Gerade keine Verbindung. Bitte versuch es gleich noch einmal.', false);
+  } finally {
+    knopf.disabled = false; knopf.textContent = 'Code einlösen';
   }
 });
 </script>
