@@ -133,6 +133,7 @@ main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
   </div>
 </footer>
 
+<script src="folien.js"></script>
 <script>
 const API    = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/videokurs';
 const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
@@ -285,6 +286,7 @@ async function spiele(nr){
 
   const sp = document.getElementById('spieler');
   const unter = document.getElementById('unter');
+  if (window.AUFolien) AUFolien.aufraeumen(unter);
   sp.innerHTML = '<div class="platz">Video wird geladen …</div>';
   unter.innerHTML = '<h2>' + esc(lek.titel) + '</h2>' +
     (lek.beschreibung ? '<p>' + esc(lek.beschreibung) + '</p>' : '');
@@ -315,8 +317,10 @@ async function spiele(nr){
     wz.style.left = (4 + Math.random() * 55) + '%';
   }, 7000);
   if (d.material) {
-    unter.innerHTML += '<a class="btn t matbtn" href="' + esc(d.material) + '" target="_blank" rel="noopener" ' +
-      'download>📄 Anleitung herunterladen</a>';
+    const fb = document.createElement('div');
+    unter.appendChild(fb);
+    if (window.AUFolien) AUFolien.zeige(fb, d.material, { titel: 'Präsentation zum Kurs' });
+    else fb.innerHTML = '<a class="btn t matbtn" href="' + esc(d.material) + '" target="_blank" rel="noopener" download>📄 Präsentation herunterladen</a>';
   }
 
   const vid = document.getElementById('vid');

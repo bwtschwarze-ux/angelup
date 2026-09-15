@@ -144,6 +144,7 @@ main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
   </div>
 </footer>
 
+<script src="folien.js"></script>
 <script>
 const API    = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/videokurs';
 const SB_KEY = 'sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9';
@@ -289,11 +290,31 @@ function zeichne(){
     if (li) probeSpielen(Number(li.dataset.nr), li);
   });
 
+  const ersteFrei = document.querySelector('#lekliste li.spielbar');
+  if (ersteFrei) ruf({ was:'video', kurs: SLUG, nr: Number(ersteFrei.dataset.nr) })
+    .then(({ status, d }) => { if (status === 200 && d.material) zeigeFolienUnter(d.material); })
+    .catch(() => {});
+
   const kn = document.getElementById('kaufKnopf');
   if (kn) kn.addEventListener('click', () => {
     zeigeFormular();
     document.getElementById('kaufBereich').scrollIntoView({ behavior:'smooth', block:'start' });
   });
+}
+
+/* Präsentation der freien Lektion direkt unter dem Vorschau-Player zeigen */
+function zeigeFolienUnter(url){
+  let box = document.getElementById('folienBox');
+  if (!url || !window.AUFolien) return;
+  if (!box) {
+    const sp = document.getElementById('spieler');
+    if (!sp) return;
+    box = document.createElement('div');
+    box.id = 'folienBox';
+    box.style.margin = '0 0 20px';
+    sp.insertAdjacentElement('afterend', box);
+    AUFolien.zeige(box, url, { titel: 'Präsentation zum Kurs' });
+  }
 }
 
 async function probeSpielen(nr, li){
@@ -304,6 +325,7 @@ async function probeSpielen(nr, li){
   const { status, d } = await ruf({ was:'video', kurs: SLUG, nr });
   if (status === 200 && d.url) {
     sp.innerHTML = '<video controls playsinline autoplay preload="metadata" src="' + esc(d.url) + '"></video>';
+    zeigeFolienUnter(d.material);
   } else {
     sp.innerHTML = '<div class="platz"><span class="gross">▶</span>Dieses Video ist noch nicht hochgeladen.</div>';
   }

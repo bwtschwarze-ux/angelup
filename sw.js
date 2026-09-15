@@ -1,9 +1,9 @@
-const CACHE = 'angelup-v46';
+const CACHE = 'angelup-v47';
 const BILD_CACHE = 'angelup-bilder-v1';
 const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
   './live.html', './aal.html', './kurse.html', './vormerken.html',
   './videokurse.html', './videokurs.html', './player.html',
-  './kursinhalt.js', './stil.css', './impressum.html', './datenschutz.html', './agb.html',
+  './kursinhalt.js', './folien.js', './stil.css', './impressum.html', './datenschutz.html', './agb.html',
   './manifest.webmanifest', './icon-192.png', './icon-512.png',
   './lib/supabase.min.js', './fonts/inter-latin.woff2', './fonts/bricolage-latin.woff2', './fonts/caveat-latin.woff2'];
 self.addEventListener('install', e => {
