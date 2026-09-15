@@ -252,6 +252,21 @@ main{max-width:1180px;margin:0 auto;padding:30px 20px 90px}
           <button class="btn" id="zhSpeichern">Zugang vergeben</button>
         </div>
       </div>
+      <div class="zeile" style="border-style:dashed">
+        <div class="zeile-kopf">
+          <div class="sym" style="--kf:#7c8cff">📋</div>
+          <div><h3>Teilnehmerliste freischalten</h3><div class="meta">Kursteilnehmer vor Ort oder live – alle auf einmal, Zugang ohne Ablauf</div></div>
+          <div class="weg"><button class="btn t klein" id="tlAuf">Öffnen</button></div>
+        </div>
+        <div class="klapp" id="tlKlapp">
+          <div class="feld"><label>Kurs</label><select id="tlKurs"></select></div>
+          <div class="feld"><label>Teilnehmerliste – eine Person je Zeile, z. B. „Peter Meier peter@mail.de“</label>
+            <textarea id="tlListe" rows="8" placeholder="Peter Meier peter@beispiel.de&#10;anna@beispiel.de; Anna Schulz"></textarea></div>
+          <label class="haken"><input type="checkbox" id="tlSenden" checked><span>Jedem die Freischalt-Mail mit Zugangscode schicken</span></label>
+          <button class="btn" id="tlStart">Alle freischalten</button>
+          <div id="tlErgebnis" class="rollbar" style="margin-top:14px"></div>
+        </div>
+      </div>
       <div class="rollbar"><table class="tab" id="zugangTab"></table></div>
     </div>
 
@@ -563,6 +578,7 @@ document.querySelectorAll('.reiter button').forEach(b => b.addEventListener('cli
 el('lkKurs').addEventListener('change', lekZeichnen);
 el('neuKursAuf').addEventListener('click', () => el('neuKursKlapp').classList.toggle('auf'));
 el('zhAuf').addEventListener('click', () => el('zhKlapp').classList.toggle('auf'));
+el('tlAuf').addEventListener('click', () => { el('tlKurs').innerHTML = el('zhKurs').innerHTML; el('tlKlapp').classList.toggle('auf'); });
 
 /* ---------- Klicks im Studio ---------- */
 el('studio').addEventListener('click', async (e) => {
@@ -673,6 +689,47 @@ el('studio').addEventListener('click', async (e) => {
     const a = await ruf({ was:'kauf_bezahlt', id: z.dataset.bezahlt });
     if (a.status !== 200) { z.disabled = false; z.textContent = 'Bezahlt'; sagen('Buchen fehlgeschlagen: ' + (a.d.detail || a.d.fehler || a.status), false); return; }
     sagen('Freigeschaltet. Code ' + a.d.code + (a.d.mail ? ' – die Mail ist raus.' : ' – die Mail ging NICHT raus, bitte den Code selbst schicken.'), a.d.mail !== false);
+    await laden();
+    return;
+  }
+
+  /* Teilnehmerliste freischalten */
+  if (z.id === 'tlStart') {
+    const kurs = el('tlKurs').value;
+    if (!kurs) { sagen('Bitte einen Kurs wählen.', false); return; }
+    const gesehen = new Set(), liste = [];
+    for (const zeile of el('tlListe').value.split(/\n+/)) {
+      const m = zeile.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
+      if (!m) continue;
+      const mail = m[0].toLowerCase();
+      if (gesehen.has(mail)) continue;
+      gesehen.add(mail);
+      const name = zeile.replace(m[0], ' ').replace(/[<>;,|\t"()]+/g, ' ').replace(/\s+/g, ' ').trim();
+      liste.push({ mail, name });
+    }
+    if (!liste.length) { sagen('In der Liste steht keine E-Mail-Adresse.', false); return; }
+    const senden = el('tlSenden').checked;
+    const aus = el('tlErgebnis');
+    const reihen = [];
+    let ok = 0;
+    z.disabled = true;
+    for (let i = 0; i < liste.length; i++) {
+      const t = liste[i];
+      aus.innerHTML = '<p class="klein">Freischalten … ' + (i + 1) + ' von ' + liste.length + '</p>' +
+        (reihen.length ? '<table class="tab">' + reihen.join('') + '</table>' : '');
+      let a;
+      try { a = await ruf({ was:'zugang_haendisch', kurs, email: t.mail, name: t.name, mail: senden }); }
+      catch (e) { a = { status: 0, d: { fehler: String(e) } }; }
+      const gut = a.status === 200 && a.d && a.d.ok;
+      if (gut) ok++;
+      reihen.push('<tr><td>' + esc(t.mail) + '</td><td>' + esc(t.name) + '</td><td>' +
+        (gut ? '✅ Code ' + esc(a.d.code) + (senden ? ' · Mail geht raus' : '')
+             : '❌ ' + esc((a.d && (a.d.detail || a.d.fehler)) || a.status)) + '</td></tr>');
+    }
+    aus.innerHTML = '<p class="klein">' + ok + ' von ' + liste.length + ' freigeschaltet.</p><table class="tab">' + reihen.join('') + '</table>';
+    z.disabled = false;
+    sagen(ok + ' von ' + liste.length + ' Teilnehmern freigeschaltet.', ok === liste.length);
+    if (ok === liste.length) el('tlListe').value = '';
     await laden();
     return;
   }
