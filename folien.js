@@ -2,8 +2,8 @@
    pdf.js wird erst geladen, wenn jemand "Folien ansehen" antippt. */
 (function () {
   'use strict';
-  var PDFJS  = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-  var WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var PDFJS  = 'lib/pdfjs/pdf.min.js';
+  var WORKER = 'lib/pdfjs/pdf.worker.min.js';
   var ladePdfjs = null;
 
   function pdfjs() {
