@@ -277,9 +277,9 @@ main{max-width:1180px;margin:0 auto;padding:30px 20px 90px}
           <div class="feld-reihe">
             <div class="feld"><label>Kurs</label><select id="kcKurs"></select></div>
             <div class="feld"><label>Wie oft einlösbar</label><input type="number" id="kcMax" min="1" max="1000" value="20"></div>
-            <div class="feld"><label>Gültig bis (leer = ohne Ende)</label><input type="date" id="kcBis"></div>
           </div>
           <div class="feld"><label>Notiz, z. B. „Kursabend 28.08. vor Ort“</label><input type="text" id="kcNotiz" maxlength="120"></div>
+          <p class="klein" style="margin:0 0 12px">Kurs-Codes laufen nicht ab. Wer eingelöst hat, behält den Zugang für immer. Wenn ein Code die Runde macht: Sperren.</p>
           <button class="btn" id="kcAnlegen">Code erzeugen</button>
           <div id="kcListe" class="rollbar" style="margin-top:16px"></div>
         </div>
@@ -756,7 +756,7 @@ el('studio').addEventListener('click', async (e) => {
     if (!kurs) { sagen('Bitte einen Kurs wählen.', false); return; }
     z.disabled = true;
     const a = await rpc('videokurs_kurscode_anlegen', { p_kurs: kurs, p_max: Number(el('kcMax').value) || 20,
-      p_gueltig_bis: el('kcBis').value || null, p_bezeichnung: el('kcNotiz').value.trim() || null });
+      p_gueltig_bis: null, p_bezeichnung: el('kcNotiz').value.trim() || null });
     z.disabled = false;
     if (a.status !== 200 || !a.d || !a.d.ok) {
       sagen('Der Code ließ sich nicht anlegen: ' + ((a.d && (a.d.fehler || a.d.message)) || a.status), false); return;
