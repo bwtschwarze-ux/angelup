@@ -293,47 +293,27 @@ function betreten(a){
     return;
   }
 
-  /* Fallback: Jitsi – wird geladen, sobald es gebraucht wird.
-     meet.jit.si beendet Räume ohne eingeloggten Moderator nach 5 Minuten, deshalb
-     nutzen wir den frei zugänglichen Server von Freifunk München (Deutschland, kein Zeitlimit). */
+  /* Jitsi laeuft nicht mehr als eingebettetes Fenster: meet.ffmuc.net erlaubt das Einbetten
+     auf fremden Seiten nicht (frame-ancestors). Wir oeffnen den Raum deshalb in einem neuen Tab. */
   const jitsiDomain = (a.domain === 'meet.jit.si') ? 'meet.ffmuc.net' : a.domain;
-  const s = document.createElement('script');
-  s.src = 'https://' + jitsiDomain + '/external_api.js';
-  s.onload = () => {
-    /* eslint-disable no-undef */
-    const api = new JitsiMeetExternalAPI(jitsiDomain, {
-      roomName: a.raum,
-      parentNode: b,
-      width: '100%',
-      height: '100%',
-      lang: 'de',
-      userInfo: { displayName: a.name },
-      /* Ausbilder: OBS-Bild und Voicemeeter-Mikrofon vorwählen, sonst nimmt Jitsi die erste (oft tote) virtuelle Kamera */
-      devices: a.moderator ? { videoInput: 'OBS Virtual Camera', audioInput: 'Voicemeeter Out B1' } : undefined,
-      configOverwrite: {
-        startWithAudioMuted: !a.moderator,
-        startWithVideoMuted: !a.moderator,
-        prejoinPageEnabled: true,
-        disableDeepLinking: true,
-        defaultLanguage: 'de'
-      },
-      interfaceConfigOverwrite: {
-        SHOW_JITSI_WATERMARK: false,
-        SHOW_BRAND_WATERMARK: false,
-        MOBILE_APP_PROMO: false,
-        DEFAULT_BACKGROUND: '#050c13',
-        TOOLBAR_BUTTONS: ['microphone','camera','desktop','chat','raisehand','tileview',
-          'fullscreen','settings','hangup','participants-pane','toggle-camera']
-      }
-    });
-    api.addEventListener('readyToClose', () => { laeuft = false; b.innerHTML =
-      '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#9db4c5">Du hast den Raum verlassen.</div>'; });
-    laeuft = true;
-  };
-  s.onerror = () => {
-    $('fehlerText').textContent = 'Der Videoraum konnte nicht geladen werden. Bitte Seite neu laden.';
-    zeige('fehler');
-  };
+  const raumUrl = 'https://' + jitsiDomain + '/' + encodeURIComponent(a.raum)
+    + '#userInfo.displayName=' + encodeURIComponent('"' + (a.name || 'Teilnehmer') + '"')
+    + '&config.startWithAudioMuted=' + (a.moderator ? 'false' : 'true')
+    + '&config.startWithVideoMuted=' + (a.moderator ? 'false' : 'true')
+    + '&config.prejoinPageEnabled=true'
+    + '&config.defaultLanguage=%22de%22';
+  b.innerHTML =
+    '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;'
+    + 'height:100%;gap:16px;text-align:center;padding:24px">'
+    + '<p style="margin:0;color:#9db4c5;max-width:420px;line-height:1.6">Der Videoraum oeffnet sich in einem eigenen Fenster. '
+    + 'Lass diese Seite ruhig offen.</p>'
+    + '<a id="raumLink" href="' + raumUrl + '" target="_blank" rel="noopener" '
+    + 'style="display:inline-block;background:#2ee6c5;color:#04221c;font-weight:700;'
+    + 'padding:14px 26px;border-radius:12px;text-decoration:none;font-size:1.05rem">Videoraum oeffnen</a>'
+    + '<p style="margin:0;color:#6f8798;font-size:.85rem;max-width:420px">Falls nichts passiert: Pop-ups fuer angelup.de erlauben '
+    + 'und noch einmal klicken.</p></div>';
+  laeuft = true;
+
   document.head.appendChild(s);
 }
 
