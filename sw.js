@@ -1,6 +1,6 @@
-const CACHE = 'angelup-v55';
+const CACHE = 'angelup-v56';
 const BILD_CACHE = 'angelup-bilder-v1';
-const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './kurs.html',
+const DATEIEN = ['./', './index.html', './app.html', './lernen.html', './fischbilder.html', './schonzeiten.html', './fische.js', './kurs.html',
   './live.html', './aal.html', './kurse.html', './vormerken.html',
   './videokurse.html', './videokurs.html', './player.html',
   './kursinhalt.js', './folien.js', './stil.css', './impressum.html', './datenschutz.html', './agb.html',

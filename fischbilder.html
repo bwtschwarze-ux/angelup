@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<title>Fischbilder üben – 48 Fische erkennen | AngelUp</title>
+<meta name="description" content="Fischerkennung für die Fischerprüfung Niedersachsen: 48 heimische Fische aus Fluss, See und Küste als Foto-Abfrage und Lernkarten, mit Steckbrief, Mindestmaß und Schonzeit.">
+<link rel="canonical" href="https://angelup.de/fischbilder.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fischbilder üben – Welcher Fisch ist das? | AngelUp">
+<meta property="og:description" content="48 Fische erkennen lernen: Foto sehen, Art wählen, Steckbrief mit Mindestmaß und Schonzeit. Kostenlos üben.">
+<meta property="og:url" content="https://angelup.de/fischbilder.html">
+<meta property="og:image" content="https://angelup.de/fische-fotos/24.jpg">
+<meta property="og:locale" content="de_DE">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="stil.css">
+<style>
+.fb{padding:30px 0 70px}
+.fb h1{font-size:clamp(1.9rem,4.5vw,2.7rem);font-weight:900;letter-spacing:-.02em;margin:0 0 8px}
+.start-gitter{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:22px}
+.start-gitter .karte h2{font-size:1.15rem;margin:0 0 8px}
+.start-gitter .karte p{color:var(--text-2);font-size:.95rem;line-height:1.65;margin:0 0 16px}
+.filter{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+.filter button{font-family:inherit;font-size:.86rem;font-weight:700;cursor:pointer;border-radius:100px;padding:8px 14px;
+  border:1px solid var(--linie);background:rgba(255,255,255,.04);color:var(--text-2)}
+.filter button.an{border-color:rgba(46,230,197,.5);background:rgba(46,230,197,.14);color:var(--text)}
+
+.uebung{max-width:760px;margin:0 auto}
+.kopfzeile-u{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.kopfzeile-u .zaehler{font-weight:800;font-size:.95rem}
+.kopfzeile-u .punkte{color:var(--tuerkis);font-weight:800}
+.balken-u{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:18px}
+.balken-u i{display:block;height:100%;background:linear-gradient(90deg,var(--tuerkis),var(--tuerkis-2));transition:width .3s}
+.foto{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--linie);background:#0d2130;box-shadow:var(--glanz)}
+.foto img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.foto .nachweis{position:absolute;right:10px;bottom:8px;font-size:.68rem;color:rgba(255,255,255,.75);background:rgba(0,0,0,.35);padding:3px 8px;border-radius:100px}
+.foto .nachweis a{color:#fff}
+.antworten{display:grid;gap:10px;margin-top:16px}
+.antw{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-family:inherit;font-size:1.02rem;cursor:pointer;
+  background:rgba(255,255,255,.035);border:2px solid var(--linie);border-radius:13px;padding:13px 16px;color:var(--text);transition:.18s;min-height:56px}
+.antw:hover{border-color:var(--linie-2);background:var(--glas-2)}
+.antw .b{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;background:rgba(255,255,255,.08)}
+.antw.gewaehlt{border-color:var(--tuerkis)}
+.antw.richtig{border-color:var(--gruen);background:rgba(53,208,127,.14)}
+.antw.richtig .b{background:var(--gruen);color:#03211c}
+.antw.falsch{border-color:var(--rot);background:rgba(255,107,107,.12)}
+.antw.falsch .b{background:var(--rot);color:#fff}
+.antw.aus{cursor:default}
+.ergebnis{margin-top:16px;border-radius:var(--r-s);padding:18px 20px;border:1px solid var(--linie);background:rgba(255,255,255,.035)}
+.ergebnis.gut{border-color:rgba(53,208,127,.5)}
+.ergebnis.schlecht{border-color:rgba(255,107,107,.5)}
+.ergebnis .urteil{font-weight:800;font-size:1rem;margin-bottom:6px}
+.ergebnis.gut .urteil{color:var(--gruen)}
+.ergebnis.schlecht .urteil{color:var(--rot)}
+.ergebnis .name{font-size:1.5rem;font-weight:900;letter-spacing:-.01em}
+.ergebnis .latein{color:var(--text-3);font-style:italic;margin-bottom:10px}
+.ergebnis .fam{color:var(--tuerkis);font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.ergebnis ul{margin:0 0 8px;padding-left:20px;color:var(--text-2);line-height:1.6}
+.ergebnis .z{color:var(--text-2);line-height:1.6;font-size:.95rem}
+.ergebnis .z b{color:var(--text)}
+.ergebnis .z .rot{color:var(--rot);font-weight:700}
+.ergebnis .hin{color:var(--text-3);font-style:italic;font-size:.9rem;margin-top:6px}
+.knoepfe{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.ende{text-align:center;padding:40px 20px}
+.ende .gross-zahl{font-size:3.4rem;font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--tuerkis)}
+.abo-hinweis{margin-top:14px;font-size:.88rem;color:var(--text-3)}
+.quellen{margin-top:40px;font-size:.78rem;color:var(--text-3);line-height:1.6}
+.quellen summary{cursor:pointer;color:var(--text-2);font-weight:700}
+.quellen ol{padding-left:20px;margin:10px 0 0;columns:2;column-gap:28px}
+@media(max-width:700px){.quellen ol{columns:1}}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="fischbilder.html">Fischbilder</a>
+      <a href="schonzeiten.html">Schonzeiten</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a class="btn t" href="mein.html">Mein Bereich</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main class="wrap fb">
+  <!-- Startansicht -->
+  <section id="start">
+    <span class="etikett"><span class="punkt"></span>Fischerkennung · Sachgebiet 2</span>
+    <h1>Welcher Fisch ist das?</h1>
+    <p class="lead">48 Fische aus Fluss, See und Küste. Erst nur das Foto, dann die Art wählen – danach der Steckbrief mit Merkmalen, Mindestmaß und Schonzeit nach Landesrecht Niedersachsen.</p>
+
+    <div class="filter" id="filter" aria-label="Auswahl der Fische">
+      <button class="an" data-f="alle">Alle 48</button>
+      <button data-f="friedfisch">Friedfische</button>
+      <button data-f="raubfisch">Raub- und Salmoniden</button>
+      <button data-f="klein">Kleinfische &amp; geschützte</button>
+      <button data-f="meer">Meeresfische</button>
+    </div>
+
+    <div class="start-gitter">
+      <div class="karte">
+        <h2>🎯 Abfrage</h2>
+        <p>Foto sehen, aus drei Namen wählen. Die falschen Namen kommen meist aus derselben Familie – so, wie es in der Prüfung gemein wird.</p>
+        <button class="btn gross" id="startAbfrage">Abfrage starten</button>
+      </div>
+      <div class="karte">
+        <h2>🃏 Lernkarten</h2>
+        <p>Foto anschauen, selbst überlegen, dann Name und Steckbrief aufdecken. Gut zum Einprägen, bevor du dich abfragen lässt.</p>
+        <button class="btn geist gross" id="startKarten">Lernkarten starten</button>
+      </div>
+      <div class="karte">
+        <h2>📏 Mindestmaße &amp; Schonzeiten</h2>
+        <p>Alle Werte nach Landesrecht Niedersachsen auf einen Blick, dazu die strengeren Regeln von Verein und Bezirksverband Ostfriesland.</p>
+        <a class="btn geist gross" href="schonzeiten.html">Tabelle öffnen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Übung -->
+  <section id="uebung" class="uebung" hidden>
+    <div class="kopfzeile-u">
+      <button class="zurueck" id="abbrechen" type="button">‹ Übung beenden</button>
+      <span class="zaehler" id="zaehler"></span>
+      <span class="punkte" id="punkte"></span>
+    </div>
+    <div class="balken-u"><i id="balken" style="width:0"></i></div>
+
+    <div class="foto">
+      <img id="foto" alt="Foto des zu bestimmenden Fisches" decoding="async">
+      <span class="nachweis" id="nachweis"></span>
+    </div>
+
+    <div class="antworten" id="antworten" role="radiogroup"></div>
+    <div id="ergebnis"></div>
+    <div class="knoepfe" id="knoepfe"></div>
+  </section>
+
+  <!-- Ende -->
+  <section id="ende" class="uebung ende" hidden>
+    <div class="karte">
+      <div class="gross-zahl" id="endeZahl"></div>
+      <h2 id="endeTitel" style="margin:12px 0 8px"></h2>
+      <p id="endeText" class="lead" style="margin-bottom:22px"></p>
+      <div class="btn-reihe" style="justify-content:center">
+        <button class="btn gross" id="nochmal">Noch einmal</button>
+        <button class="btn geist gross" id="zurAuswahl">Zur Auswahl</button>
+      </div>
+    </div>
+  </section>
+
+  <details class="quellen" id="quellen">
+    <summary>Bildnachweise (Wikimedia Commons, freie Lizenzen)</summary>
+    <ol id="quellenListe"></ol>
+  </details>
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <p class="klein" style="margin:0 0 10px;opacity:.75;line-height:1.6">AngelUp ist ein privates Lernangebot und vertritt keine Behörde und keine staatliche Stelle. Wir nehmen keine Prüfungen ab und stellen keine Fischereischeine aus. Mindestmaße und Schonzeiten ohne Gewähr – maßgeblich sind die Nds. Binnenfischereiordnung und deine Erlaubniskarte.</p>
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="fische.js"></script>
+<script>
+(function(){
+  const nav = document.getElementById('nav'), burger = document.getElementById('burger'), navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => { const a = navLinks.classList.toggle('offen'); burger.setAttribute('aria-expanded', a ? 'true' : 'false'); burger.textContent = a ? '✕' : '☰'; });
+  addEventListener('scroll', () => nav.classList.toggle('fest', scrollY > 12), {passive:true});
+
+  const ALLE = window.FISCHE;
+  const KLEIN = new Set(['Bitterling','Moderlieschen','Elritze','Dreistachliger Stichling','Bachschmerle','Groppe (Mühlkoppe)','Schlammpeitzger','Steinbeißer','Gründling','Kaulbarsch','Ukelei (Laube)']);
+  const RAUB = new Set(['Hechte','Barschartige','Welse','Aale','Dorschartige','Lachsartige','Störe']);
+  const GRUPPEN = {
+    alle: f => true,
+    friedfisch: f => f.familie === 'Karpfenartige' && !KLEIN.has(f.name),
+    raubfisch: f => RAUB.has(f.familie) && !f.meer && !KLEIN.has(f.name),
+    klein: f => KLEIN.has(f.name),
+    meer: f => f.meer
+  };
+  let gruppe = 'alle', modus = 'abfrage', aufgaben = [], pos = 0, gewaehlt = null, aufgedeckt = false, richtige = 0;
+  const $ = id => document.getElementById(id);
+
+  function mische(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function bauen(pool){
+    return mische(pool).map(fisch => {
+      const fam = ALLE.filter(x => x.familie === fisch.familie && x.nr !== fisch.nr);
+      const rest = ALLE.filter(x => x.familie !== fisch.familie);
+      const falsche = mische(fam).concat(mische(rest)).slice(0, 2).map(x => x.name);
+      const reihe = mische([fisch.name].concat(falsche));
+      return { fisch, antworten: reihe, richtig: reihe.indexOf(fisch.name) };
+    });
+  }
+  function zeige(id){ ['start','uebung','ende'].forEach(s => $(s).hidden = s !== id); window.scrollTo({top:0, behavior:'smooth'}); }
+
+  document.querySelectorAll('#filter button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#filter button').forEach(x => x.classList.remove('an')); b.classList.add('an'); gruppe = b.dataset.f;
+  }));
+  function starten(m){
+    modus = m; const pool = ALLE.filter(GRUPPEN[gruppe]); aufgaben = bauen(pool); pos = 0; richtige = 0; gewaehlt = null; aufgedeckt = false;
+    zeige('uebung'); render();
+    // nächste Fotos vorladen
+    aufgaben.slice(0, 4).forEach(a => { const i = new Image(); i.src = a.fisch.bild; });
+  }
+  $('startAbfrage').addEventListener('click', () => starten('abfrage'));
+  $('startKarten').addEventListener('click', () => starten('karten'));
+  $('abbrechen').addEventListener('click', () => zeige('start'));
+  $('nochmal').addEventListener('click', () => starten(modus));
+  $('zurAuswahl').addEventListener('click', () => zeige('start'));
+
+  function steckbrief(f, urteil){
+    const rot = f.geschont ? ' rot' : '';
+    return `${urteil}<div class="name">${f.name}</div><div class="latein">${f.latein}</div>
+      <div class="fam">${f.familie}</div>
+      <ul>${f.merkmale.map(m => `<li>${m}</li>`).join('')}</ul>
+      <div class="z"><b>Lebensraum:</b> ${f.lebensraum}</div>
+      <div class="z"><b>Laichzeit:</b> ${f.laich}</div>
+      <div class="z"><b>${f.meer ? 'Mindestmaß' : 'Mindestmaß Nds.'}:</b> ${f.mass}</div>
+      <div class="z"><b>${f.meer ? 'Schonzeit' : 'Schonzeit Nds.'}:</b> <span class="${rot.trim()}">${f.schon}</span></div>
+      <div class="hin">${f.hinweis}</div>`;
+  }
+  function render(){
+    const a = aufgaben[pos];
+    if (!a) { ende(); return; }
+    const f = a.fisch;
+    $('zaehler').textContent = `Fisch ${pos + 1} von ${aufgaben.length}`;
+    $('punkte').textContent = modus === 'abfrage' ? `✓ ${richtige} richtig` : 'Lernkarten';
+    $('balken').style.width = `${Math.round((pos + 1) / aufgaben.length * 100)}%`;
+    $('foto').src = f.bild;
+    $('nachweis').innerHTML = `Bild: <a href="${f.quelle}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${f.autor} · ${f.lizenz}`;
+    const ant = $('antworten'); ant.innerHTML = '';
+    if (modus === 'abfrage') {
+      a.antworten.forEach((t, i) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'antw'; b.setAttribute('role','radio');
+        b.innerHTML = `<span class="b">${'ABC'[i]}</span><span>${t}</span>`;
+        if (aufgedeckt) { b.classList.add('aus'); if (i === a.richtig) b.classList.add('richtig'); else if (i === gewaehlt) b.classList.add('falsch'); b.disabled = true; }
+        else if (i === gewaehlt) b.classList.add('gewaehlt');
+        b.setAttribute('aria-checked', i === gewaehlt ? 'true' : 'false');
+        b.addEventListener('click', () => { if (aufgedeckt) return; gewaehlt = i; render(); });
+        ant.appendChild(b);
+      });
+    }
+    const erg = $('ergebnis');
+    if (aufgedeckt) {
+      const ok = modus === 'karten' ? null : gewaehlt === a.richtig;
+      const urteil = ok === null ? '' : `<div class="urteil">${ok ? '✓ Richtig' : '✕ Leider falsch'}</div>`;
+      erg.innerHTML = `<div class="ergebnis ${ok === null ? '' : ok ? 'gut' : 'schlecht'}">${steckbrief(f, urteil)}</div>`;
+    } else erg.innerHTML = '';
+    const k = $('knoepfe'); k.innerHTML = '';
+    const letzte = pos + 1 >= aufgaben.length;
+    if (!aufgedeckt) {
+      const b = document.createElement('button'); b.className = 'btn gross';
+      if (modus === 'abfrage') { b.textContent = 'Antwort prüfen'; b.disabled = gewaehlt === null; b.addEventListener('click', () => { aufgedeckt = true; if (gewaehlt === a.richtig) richtige++; render(); }); }
+      else { b.textContent = 'Name und Steckbrief zeigen'; b.addEventListener('click', () => { aufgedeckt = true; render(); }); }
+      k.appendChild(b);
+    } else {
+      const b = document.createElement('button'); b.className = 'btn gross'; b.textContent = letzte ? 'Durchgang beenden' : 'Nächster Fisch';
+      b.addEventListener('click', () => { pos++; gewaehlt = null; aufgedeckt = false; render(); const n = aufgaben[pos + 2]; if (n) { const i = new Image(); i.src = n.fisch.bild; } });
+      k.appendChild(b);
+    }
+  }
+  function ende(){
+    zeige('ende');
+    if (modus === 'abfrage') {
+      const q = Math.round(richtige / aufgaben.length * 100);
+      $('endeZahl').textContent = `${richtige} / ${aufgaben.length}`;
+      $('endeTitel').textContent = q >= 75 ? 'Stark – die Fischerkennung sitzt.' : 'Noch einmal durchgehen.';
+      $('endeText').textContent = q >= 75 ? 'In der Prüfung sind das sichere Punkte. Jetzt die anderen Gruppen probieren.' : 'Achte auf Rückenflosse, Maulstellung, Barteln und Flossenfarbe – die Lernkarten helfen beim Einprägen.';
+    } else {
+      $('endeZahl').textContent = aufgaben.length; $('endeTitel').textContent = 'Alle Karten gesehen.'; $('endeText').textContent = 'Jetzt die Abfrage starten und schauen, was hängen geblieben ist.';
+    }
+  }
+  $('quellenListe').innerHTML = ALLE.map(f => `<li>${f.name}: ${f.datei} – ${f.autor} – ${f.lizenz} (<a href="${f.quelle}" target="_blank" rel="noopener">Quelle</a>)</li>`).join('');
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+</script>
+</body>
+</html>
