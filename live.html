@@ -301,7 +301,14 @@ function betreten(a){
     + '&config.startWithAudioMuted=' + (a.moderator ? 'false' : 'true')
     + '&config.startWithVideoMuted=' + (a.moderator ? 'false' : 'true')
     + '&config.prejoinPageEnabled=true'
-    + '&config.defaultLanguage=%22de%22';
+    + '&config.defaultLanguage=%22de%22'
+    /* Schwache Geraete (Tablet, Handy, langsames WLAN) verlieren sonst staendig das Bild:
+       Sendeaufloesung begrenzen und Rechenlast senken. */
+    + '&config.resolution=720'
+    + '&config.constraints.video.height.ideal=720'
+    + '&config.constraints.video.height.max=720'
+    + '&config.disableAudioLevels=true'
+    + '&config.channelLastN=4';
   b.innerHTML =
     '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;'
     + 'height:100%;gap:16px;text-align:center;padding:24px">'
@@ -310,8 +317,10 @@ function betreten(a){
     + '<a id="raumLink" href="' + raumUrl + '" target="_blank" rel="noopener" '
     + 'style="display:inline-block;background:#2ee6c5;color:#04221c;font-weight:700;'
     + 'padding:14px 26px;border-radius:12px;text-decoration:none;font-size:1.05rem">Videoraum oeffnen</a>'
-    + '<p style="margin:0;color:#6f8798;font-size:.85rem;max-width:420px">Falls nichts passiert: Pop-ups fuer angelup.de erlauben '
-    + 'und noch einmal klicken.</p></div>';
+    + '<p style="margin:0;color:#6f8798;font-size:.85rem;max-width:460px;line-height:1.7">Falls nichts passiert: Pop-ups fuer angelup.de erlauben '
+    + 'und noch einmal klicken.<br><br>Verschwindet das Bild immer wieder oder meldet der Raum einen Sparmodus? '
+    + 'Dann schalte am Handy oder Tablet den Energiesparmodus aus, haeng das Geraet ans Ladekabel und lass das Kursfenster im Vordergrund. '
+    + 'Wechselst du die App, schaltet der Raum das Video ab.</p></div>';
   laeuft = true;
 
   document.head.appendChild(s);
