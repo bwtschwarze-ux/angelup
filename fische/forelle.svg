@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+<defs>
+<style>
+.k{stroke:#1a2733;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;fill:none}
+.f{stroke:#1a2733;stroke-width:1.2;fill:#fff}
+.eye{fill:#1a2733}
+.pup{fill:#fff}
+.gil{stroke:#1a2733;stroke-width:1;fill:none;opacity:.5}
+.dot{fill:#1a2733;opacity:.75}
+.sc{stroke:#1a2733;stroke-width:.6;fill:none;opacity:.35}
+.txt{font-family:sans-serif;font-size:11px;fill:#455}
+</style>
+
+</defs>
+
+<path class="f" d="M40,110 Q55,78 130,76 Q225,76 310,82 L355,62 L347,110 L355,158 L310,138 Q225,146 130,146 Q55,144 40,110 Z"/>
+<!-- typische rote+schwarze Tupfen -->
+<circle class="dot" cx="110" cy="95" r="2" opacity=".7"/>
+<circle class="dot" cx="140" cy="100" r="2" opacity=".7"/>
+<circle class="dot" cx="170" cy="94" r="2" opacity=".7"/>
+<circle class="dot" cx="200" cy="102" r="2" opacity=".7"/>
+<circle class="dot" cx="230" cy="97" r="2" opacity=".7"/>
+<circle class="dot" cx="260" cy="103" r="2" opacity=".7"/>
+<circle fill="#c94" cx="125" cy="115" r="2.2" opacity=".85"/>
+<circle fill="#c94" cx="160" cy="117" r="2.2" opacity=".85"/>
+<circle fill="#c94" cx="195" cy="120" r="2.2" opacity=".85"/>
+<circle fill="#c94" cx="230" cy="122" r="2.2" opacity=".85"/>
+<circle fill="#c94" cx="265" cy="118" r="2.2" opacity=".85"/>
+<!-- Rueckenflosse -->
+<path class="f" d="M155,76 Q180,45 220,50 Q230,65 225,78 Q190,74 155,76 Z"/>
+<!-- kleine Fettflosse (Salmoniden-Kennzeichen) -->
+<path class="f" d="M275,80 Q288,66 300,80 Q290,84 275,80 Z"/>
+<!-- Bauch-, Brust-, Afterflosse -->
+<path class="f" d="M105,130 Q118,158 148,148 L128,132 Z"/>
+<path class="f" d="M175,140 Q195,162 220,150 L205,140 Z"/>
+<path class="f" d="M245,146 Q270,170 295,155 L280,143 Z"/>
+<circle class="eye" cx="60" cy="97" r="3.5"/><circle class="pup" cx="60.6" cy="96.6" r="1.4"/>
+
+</svg>

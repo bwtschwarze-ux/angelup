@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050c13">
+<meta name="description" content="Vertrag mit AngelUp online widerrufen – Widerrufsfunktion nach § 356a BGB.">
+<title>Vertrag widerrufen – AngelUp</title>
+<link rel="canonical" href="https://angelup.de/widerruf.html">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link rel="stylesheet" href="stil.css">
+<style>
+  .recht{padding:34px 0 70px}
+  .recht h1{font-size:clamp(1.9rem,4.5vw,2.7rem);font-weight:900;letter-spacing:-.02em;margin:0 0 8px}
+  .recht .karte{padding:26px 26px 22px}
+  .recht h2{font-size:1.02rem;font-weight:800;color:var(--tuerkis);margin:26px 0 8px;letter-spacing:.01em}
+  .recht h2:first-of-type{margin-top:4px}
+  .recht p{margin:0 0 12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  .recht p strong{color:var(--text);font-weight:700}
+  .recht a{color:var(--tuerkis);text-decoration:none;border-bottom:1px solid rgba(46,230,197,.35)}
+  .recht a:hover{border-bottom-color:var(--tuerkis)}
+  @media(max-width:600px){ .recht .karte{padding:20px 17px 18px} }
+  .wf{display:block;margin:0 0 14px}
+  .wf label{display:block;font-size:.88rem;font-weight:700;color:var(--text);margin:0 0 6px}
+  .wf input,.wf textarea{width:100%;box-sizing:border-box;padding:11px 13px;font:inherit;font-size:.95rem;color:var(--text);
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.28);border-radius:10px}
+  .wf input:focus-visible,.wf textarea:focus-visible,.recht button:focus-visible{outline:3px solid var(--tuerkis);outline-offset:2px}
+  .wf .hilfe{display:block;font-size:.82rem;color:var(--text-2);margin-top:5px}
+  .fehler{color:#ffb4a8;font-weight:700}
+  .zusammen{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:14px 16px;margin:0 0 16px}
+  .zusammen dt{font-size:.8rem;color:var(--text-2)} .zusammen dd{margin:0 0 10px;color:var(--text);font-weight:700;word-break:break-word}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="inhalt">
+    <a class="marke" href="./">
+      <svg class="zeichen" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="mg" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#ffc247"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)"/>
+        <path d="M8 26c3.2 0 3.2-3.4 6.4-3.4S17.6 26 20.8 26s3.2-3.4 6.4-3.4S30.4 26 33 26" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M20.5 8v7.5a3.6 3.6 0 1 1-3.6-3.6" stroke="url(#mg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Angel<span class="up">Up</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./">Start</a>
+      <a href="app.html">Fragen üben</a>
+      <a href="fischbilder.html">Fischbilder</a>
+      <a href="schonzeiten.html">Schonzeiten</a>
+      <a href="lernen.html">Online-Kurs</a>
+      <a href="videokurse.html">Videokurse</a>
+      <a href="kurse.html">Alle Kurse</a>
+      <a href="live.html">Live</a>
+      <a class="btn t" href="mein.html">Mein Bereich</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main class="wrap-schmal recht">
+  <span class="etikett grau">Rechtliches</span>
+  <h1>Vertrag widerrufen</h1>
+  <div class="karte">
+    <p>Hier kannst du einen Vertrag mit uns (Videokurs, Online-Kurs, Lehrgang oder Prüfungsanmeldung) innerhalb der
+    Widerrufsfrist online widerrufen. Du musst keinen Grund angeben. Den Eingang bestätigen wir dir sofort per E-Mail.
+    Alle Details stehen in der <a href="agb.html#p6">Widerrufsbelehrung</a>.</p>
+
+    <form id="schritt1" novalidate>
+      <h2>Schritt 1: Deine Angaben</h2>
+      <div class="wf"><label for="wName">Vor- und Nachname *</label>
+        <input id="wName" name="name" autocomplete="name" required maxlength="120"></div>
+      <div class="wf"><label for="wMail">E-Mail-Adresse *</label>
+        <input id="wMail" name="email" type="email" autocomplete="email" required maxlength="160">
+        <span class="hilfe">An diese Adresse schicken wir die Eingangsbestätigung.</span></div>
+      <div class="wf"><label for="wVertrag">Welchen Vertrag widerrufst du? *</label>
+        <input id="wVertrag" name="vertrag" required maxlength="200" placeholder="z. B. Videokurs Karpfen, Lehrgang März">
+      </div>
+      <div class="wf"><label for="wRef">Referenz- oder Bestellnummer</label>
+        <input id="wRef" name="referenz" maxlength="60" aria-describedby="wRefHilfe">
+        <span class="hilfe" id="wRefHilfe">Steht in deiner Bestätigungsmail. Falls du sie nicht findest, lass das Feld leer.</span></div>
+      <div class="wf"><label for="wBestellt">Bestellt oder angemeldet am</label>
+        <input id="wBestellt" name="bestellt_am" type="date"></div>
+      <div class="wf"><label for="wBem">Bemerkung (freiwillig)</label>
+        <textarea id="wBem" name="bemerkung" rows="3" maxlength="1000"></textarea></div>
+      <input type="text" id="wWeb" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
+        style="position:absolute;left:-9999px;width:1px;height:1px">
+      <p class="fehler" id="fehler1" role="alert" hidden></p>
+      <button type="submit" class="btn t">Weiter zur Bestätigung</button>
+    </form>
+
+    <div id="schritt2" hidden>
+      <h2 tabindex="-1" id="s2Titel">Schritt 2: Widerruf bestätigen</h2>
+      <p>Bitte prüfe deine Angaben. Mit dem Klick auf „Widerruf bestätigen“ erklärst du den Widerruf.</p>
+      <dl class="zusammen" id="zusammen"></dl>
+      <p class="fehler" id="fehler2" role="alert" hidden></p>
+      <div class="btn-reihe" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button type="button" class="btn t" id="bestaetigen">Widerruf bestätigen</button>
+        <button type="button" class="btn geist" id="zurueck">Angaben ändern</button>
+      </div>
+    </div>
+
+    <div id="fertig" hidden>
+      <h2 tabindex="-1" id="fertigTitel">Dein Widerruf ist eingegangen</h2>
+      <p id="fertigText"></p>
+    </div>
+
+    <h2>Lieber per E-Mail oder Brief?</h2>
+    <p>Das geht natürlich auch: <a href="mailto:kontakt@angelup.de">kontakt@angelup.de</a> oder
+    Mark Schwarze, Alter Postweg 80, 26607 Aurich. Das <a href="agb.html#p7">Muster-Widerrufsformular</a> kannst du
+    verwenden, musst du aber nicht.</p>
+  </div>
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <p class="klein" style="margin:0 0 10px;opacity:.75;line-height:1.6">AngelUp ist ein privates Lernangebot und vertritt keine Behörde und keine staatliche Stelle. Wir nehmen keine Prüfungen ab und stellen keine Fischereischeine aus. Amtliche Quellen zur Fischerprüfung in Niedersachsen: <a href="https://www.lfv-weser-ems.de/fischerpruefung.php" target="_blank" rel="noopener">Fischerprüfung Niedersachsen (LFV Weser-Ems)</a> · <a href="https://www.anglerverband-niedersachsen.de/fischerpruefung/" target="_blank" rel="noopener">Anglerverband Niedersachsen</a> · <a href="https://www.nds-voris.de" target="_blank" rel="noopener">Niedersächsische Vorschriften</a>.</p>
+    <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
+      <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="widerruf.html">Vertrag widerrufen</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav'), burger = document.getElementById('burger'), navLinks = document.getElementById('navLinks');
+burger.addEventListener('click', () => {
+  const a = navLinks.classList.toggle('offen');
+  burger.setAttribute('aria-expanded', a ? 'true' : 'false');
+  burger.textContent = a ? '✕' : '☰';
+});
+addEventListener('scroll', () => nav.classList.toggle('fest', scrollY > 12), {passive:true});
+</script>
+
+<script>
+(function () {
+  var API = 'https://vqjpwhqpcybpblgtjuxw.supabase.co/functions/v1/widerruf';
+  var MAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var $ = function (id) { return document.getElementById(id); };
+  var daten = null;
+  function esc(s) { return String(s || '').replace(/[&<>"']/g, function (c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function zeige(id) { ['schritt1','schritt2','fertig'].forEach(function (x) { $(x).hidden = (x !== id); }); }
+  function fehler(el, text) { el.textContent = text; el.hidden = !text; }
+
+  $('schritt1').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = {
+      name: $('wName').value.trim(), email: $('wMail').value.trim(), vertrag: $('wVertrag').value.trim(),
+      referenz: $('wRef').value.trim(), bestellt_am: $('wBestellt').value, bemerkung: $('wBem').value.trim(),
+      website: $('wWeb').value
+    };
+    if (!d.name) { fehler($('fehler1'), 'Bitte gib deinen Namen an.'); $('wName').focus(); return; }
+    if (!MAIL_RE.test(d.email)) { fehler($('fehler1'), 'Bitte gib eine gültige E-Mail-Adresse an.'); $('wMail').focus(); return; }
+    if (!d.vertrag) { fehler($('fehler1'), 'Bitte nenne den Vertrag, den du widerrufen willst.'); $('wVertrag').focus(); return; }
+    fehler($('fehler1'), '');
+    daten = d;
+    var zeilen = [['Name', d.name], ['E-Mail', d.email], ['Vertrag', d.vertrag]];
+    if (d.referenz) zeilen.push(['Referenz', d.referenz]);
+    if (d.bestellt_am) zeilen.push(['Bestellt am', new Date(d.bestellt_am).toLocaleDateString('de-DE')]);
+    if (d.bemerkung) zeilen.push(['Bemerkung', d.bemerkung]);
+    $('zusammen').innerHTML = zeilen.map(function (z) { return '<dt>' + z[0] + '</dt><dd>' + esc(z[1]) + '</dd>'; }).join('');
+    zeige('schritt2'); $('s2Titel').focus();
+  });
+
+  $('zurueck').addEventListener('click', function () { zeige('schritt1'); $('wName').focus(); });
+
+  $('bestaetigen').addEventListener('click', function () {
+    var knopf = this; knopf.disabled = true; knopf.textContent = 'Wird gesendet …';
+    fehler($('fehler2'), '');
+    fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(daten) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.ok) throw new Error(j.fehler || 'Fehler'); return j; }); })
+      .then(function (j) {
+        $('fertigText').innerHTML = 'Eingegangen am <strong>' + esc(j.eingang) + '</strong>. Deine Vorgangsnummer: <strong>' +
+          esc(j.vorgang) + '</strong>. Eine Bestätigung haben wir an <strong>' + esc(daten.email) +
+          '</strong> geschickt. Findest du sie nicht, schau bitte im Spam-Ordner nach.';
+        zeige('fertig'); $('fertigTitel').focus();
+      })
+      .catch(function () {
+        knopf.disabled = false; knopf.textContent = 'Widerruf bestätigen';
+        var text = 'Hiermit widerrufe ich den folgenden Vertrag:%0D%0A' +
+          encodeURIComponent('Vertrag: ' + daten.vertrag + '\nReferenz: ' + (daten.referenz || '-') +
+          '\nBestellt am: ' + (daten.bestellt_am || '-') + '\nName: ' + daten.name + '\nE-Mail: ' + daten.email +
+          (daten.bemerkung ? '\nBemerkung: ' + daten.bemerkung : ''));
+        $('fehler2').innerHTML = 'Das Senden hat gerade nicht geklappt. Bitte schick deinen Widerruf per ' +
+          '<a href="mailto:kontakt@angelup.de?subject=Widerruf&body=' + text + '">E-Mail an kontakt@angelup.de</a> – ' +
+          'die Widerrufsfrist ist gewahrt, wenn du die E-Mail rechtzeitig absendest.';
+        $('fehler2').hidden = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>

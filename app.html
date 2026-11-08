@@ -20,7 +20,7 @@
     --nacht:#050c13; --tief:#081722; --flaeche:#0d2130; --flaeche-2:#122c3e; --flaeche-3:#183a4a;
     --akzent:#ffc247; --akzent2:#ff9430;
     --gruen:#35d07f; --gruen-dkl:#2fb87c; --rot:#ff6b6b; --rot-dkl:#ff9c9c;
-    --karte:#0d2130; --text:#eaf3f9; --grau:#9db4c5; --grau-2:#6b8598;
+    --karte:#0d2130; --text:#eaf3f9; --grau:#9db4c5; --grau-2:#869db0;
     --linie:rgba(255,255,255,.10); --linie-2:rgba(255,255,255,.18);
     --glas:rgba(255,255,255,.045); --glas-2:rgba(255,255,255,.07);
     --radius:20px; --radius-s:13px;
@@ -48,6 +48,8 @@
   input[type=range]{accent-color:var(--wasser);background:transparent;border:none;box-shadow:none}
   input[type=checkbox],input[type=radio]{accent-color:var(--wasser)}
   ::selection{background:rgba(46,230,197,.3)}
+  /* Barrierefreiheit: sichtbarer Tastaturfokus */
+  :focus-visible{outline:2px dashed #ffc247;outline-offset:3px;border-radius:4px}
   /* ---------- Kopf ---------- */
   header.top{background:rgba(8,23,34,.82);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
     color:var(--text);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -714,6 +716,13 @@ const XP_PRO_LEVEL = 120;
 /* =========================== SUPABASE (Login & Cloud-Speicherung) =========================== */
 const SB_URL = "https://vqjpwhqpcybpblgtjuxw.supabase.co";
 const SB_KEY = "sb_publishable_s_DhmeR783YASY9D2G90ew_6E8mVBP9";
+// Barrierefreiheit: Elemente mit role="button" per Enter/Leertaste bedienbar
+document.addEventListener('keydown',e=>{
+  const el=e.target;
+  if(el&&el.getAttribute&&el.getAttribute('role')==='button'&&el.tagName!=='BUTTON'&&(e.key==='Enter'||e.key===' ')){
+    e.preventDefault(); el.click();
+  }
+});
 const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 /* Ausbilder-Rolle wird serverseitig geprüft (DB-Trigger profil_anlegen):
    Der eingegebene Code geht als Metadaten-Feld ausbilder_code mit und wird
@@ -830,7 +839,7 @@ function kopf(){
   const rolleTxt=state.rolle==='ausbilder'?'👨‍🏫':'🎓';
   const name=state.profil&&state.profil.name?state.profil.name.split(' ')[0]:'';
   return `<header class="top">
-    <div class="logo" onclick="go('dashboard')">${LOGO_SVG} Angel<span class="up">Up</span></div>
+    <div class="logo" role="button" tabindex="0" aria-label="Zur Übersicht" onclick="go('dashboard')">${LOGO_SVG} Angel<span class="up">Up</span></div>
     <div class="kopf-rechts">
       <a class="zur-website" href="index.html">← Website</a>
       <span class="chip">📍 ${reg?reg.name:''}</span>
@@ -843,7 +852,7 @@ function kopf(){
 /* =========================== REGION =========================== */
 function viewRegion(){
   const karten=REGIONEN.map(r=>{
-    if(r.aktiv) return `<div class="karte klick region" onclick="setRegion('${r.id}')">
+    if(r.aktiv) return `<div class="karte klick region" role="button" tabindex="0" onclick="setRegion('${r.id}')">
       <span class="aktiv-tag">Verfügbar</span><h3>📍 ${r.name}</h3><p>${r.traeger}</p>
       <p style="margin-top:8px;font-weight:700;color:var(--gruen-dkl)">Jetzt lernen →</p></div>`;
     return `<div class="karte region gesperrt"><span class="bald">Bald</span><h3>📍 ${r.name}</h3><p>${r.traeger}</p></div>`;
@@ -874,7 +883,7 @@ function viewAuth(){
     <button class="btn ${t==='login'?'':'ghost'}" onclick="authTab('login')">Anmelden</button>
     <button class="btn ${t==='register'?'':'ghost'}" onclick="authTab('register')">Registrieren</button>
   </div>`;
-  const feld=(id,label,typ,ph)=>`<label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">${label}</label>
+  const feld=(id,label,typ,ph)=>`<label for="${id}" style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">${label}</label>
     <input id="${id}" type="${typ}" placeholder="${ph}" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">`;
   let form='';
   if(t==='login'){
@@ -889,18 +898,18 @@ function viewAuth(){
     form=`${feld('a_name','Dein Name','text','Vorname Nachname')}
     ${feld('a_email','E-Mail','email','du@beispiel.de')}
     ${feld('a_pw','Passwort (mind. 6 Zeichen)','password','••••••••')}
-    <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Ich bin …</label>
+    <label for="a_rolle" style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Ich bin …</label>
     <select id="a_rolle" onchange="document.getElementById('a_extra_wrap').style.display=this.value==='ausbilder'?'block':'block';document.getElementById('a_extra_label').textContent=this.value==='ausbilder'?'Ausbilder-Freischaltcode':'Kurs-Code vom Ausbilder (optional)'"
       style="width:100%;padding:12px 14px;font-size:.95rem">
       <option value="pruefling">🎓 Prüfling</option>
       <option value="ausbilder">👨‍🏫 Ausbilder</option>
     </select>
     <div id="a_extra_wrap">
-      <label id="a_extra_label" style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Kurs-Code vom Ausbilder (optional)</label>
+      <label id="a_extra_label" for="a_extra" style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Kurs-Code vom Ausbilder (optional)</label>
       <input id="a_extra" type="text" placeholder="z.B. WE-A1B2C3" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">
     </div>
     <button class="btn gross gruen" style="margin-top:16px" onclick="registerKlick()" ${state.authBusy?'disabled':''}>${state.authBusy?'Bitte warten…':'Kostenlos registrieren'}</button>
-    <p style="font-size:.72rem;color:var(--grau);margin-top:10px">Mit der Registrierung akzeptierst du die <a href="#" onclick="go('datenschutz');return false" style="color:var(--wasser)">Datenschutzerklärung</a>. Du bekommst eine Bestätigungs-E-Mail.</p>`;
+    <p style="font-size:.72rem;color:var(--grau);margin-top:10px">Wie wir deine Daten verarbeiten, steht in der <a href="datenschutz.html" target="_blank" rel="noopener" style="color:var(--wasser)">Datenschutzerklärung</a>. Du bekommst eine Bestätigungs-E-Mail.</p>`;
   }
   return `<div class="held">
     <a class="zur-website" href="index.html">← Website</a>
@@ -974,7 +983,7 @@ function viewPwNeu(){
     <main style="padding-top:0;max-width:430px">
       <div class="karte" style="text-align:center">
         ${meld}
-        <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Neues Passwort (mind. 6 Zeichen)</label>
+        <label for="pw_neu" style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Neues Passwort (mind. 6 Zeichen)</label>
         <input id="pw_neu" type="password" placeholder="••••••••" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">
         <label style="display:block;text-align:left;font-size:.85rem;font-weight:700;margin:10px 0 4px">Passwort wiederholen</label>
         <input id="pw_neu2" type="password" placeholder="••••••••" style="width:100%;padding:12px 14px;border:1.5px solid var(--linie);border-radius:11px;font-size:.95rem;font-family:inherit">
@@ -1059,8 +1068,10 @@ function fusszeile(){
     <a href="#" onclick="go('pruefungsinfo');return false" style="color:var(--grau)">So läuft die Prüfung</a> ·
     <a href="kurs.html" style="color:var(--grau)">Präsenzkurs</a> ·
     <a href="live.html" style="color:var(--grau)">Livekurs</a> ·
-    <a href="#" onclick="go('impressum');return false" style="color:var(--grau)">Impressum</a> ·
-    <a href="#" onclick="go('datenschutz');return false" style="color:var(--grau)">Datenschutz</a>
+    <a href="agb.html" style="color:var(--grau)">AGB &amp; Widerruf</a> ·
+    <a href="widerruf.html" style="color:var(--grau)">Vertrag widerrufen</a> ·
+    <a href="impressum.html" style="color:var(--grau)">Impressum</a> ·
+    <a href="datenschutz.html" style="color:var(--grau)">Datenschutz</a>
     ${state.user?` · <a href="#" onclick="logout();return false" style="color:var(--grau)">Abmelden</a>`:''}
     <p style="max-width:560px;margin:14px auto 0;line-height:1.7">AngelUp ist ein privates Lernangebot und vertritt keine Behörde und keine staatliche Stelle.
     Wir nehmen keine Prüfungen ab und stellen keine Fischereischeine aus.<br>
@@ -1199,40 +1210,15 @@ async function codeEinloesen(){
 }
 
 function viewImpressum(){
-  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
-  <h1>Impressum</h1>
-  <div class="karte" style="font-size:.92rem;line-height:1.8">
-    <p><strong>Angaben gemäß § 5 DDG</strong></p>
-    <p>Mark Schwarze<br>Alter Postweg 80<br>26607 Aurich<br>Deutschland</p>
-    <p><strong>Kontakt:</strong><br>E-Mail: kontakt@angelup.de</p>
-    <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong><br>Mark Schwarze, Anschrift wie oben</p>
-    <p style="font-size:.8rem;color:var(--grau)">Plattform der EU-Kommission zur Online-Streitbeilegung: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.
-    Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
-  </div>
-  ${fusszeile()}`;
+  // Eine einzige, aktuelle Fassung: impressum.html (vorher veraltete Kopie in der App)
+  location.href='impressum.html';
+  return '';
 }
 function viewDatenschutz(){
-  return `<button class="zurueck" onclick="go(state.user?'dashboard':'rolle')">← Zurück</button>
-  <h1>Datenschutzerklärung</h1>
-  <div class="karte" style="font-size:.9rem;line-height:1.7">
-    <p><strong>1. Verantwortlicher</strong><br>Mark Schwarze, Alter Postweg 80, 26607 Aurich, E-Mail: kontakt@angelup.de</p>
-    <p><strong>2. Welche Daten wir verarbeiten</strong><br>
-    Bei der Registrierung: Name, E-Mail-Adresse und Passwort (verschlüsselt gespeichert). Während der Nutzung: dein Lernfortschritt (beantwortete Fragen, Ergebnisse von Prüfungssimulationen, Lernzeit) sowie – falls du einem Kurs beigetreten bist – die Zuordnung zu deinem Ausbilder. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Lernplattform).</p>
-    <p><strong>3. Wer deine Daten sieht</strong><br>
-    Dein Ausbilder sieht deinen Lernstand, deine Lernzeit und deine Simulationsergebnisse, wenn du seinem Kurs per Kurs-Code beigetreten bist. Andere Nutzer sehen deine Daten nicht.</p>
-    <p><strong>4. Hosting &amp; Auftragsverarbeiter</strong><br>
-    Die Website wird über GitHub Pages (GitHub B.V./GitHub Inc.) ausgeliefert; dabei fallen technisch notwendige Server-Logs (z.B. IP-Adresse) an. Konten und Lerndaten werden bei Supabase gespeichert – Serverstandort Frankfurt am Main (EU). E-Mails (Registrierungs-Bestätigung, Passwort zurücksetzen) werden über Supabase versendet.</p>
-    <p><strong>5. Cookies &amp; lokale Speicherung</strong><br>
-    AngelUp verwendet keine Werbe- oder Tracking-Cookies. Für die Anmeldung wird eine Sitzung lokal in deinem Browser gespeichert (technisch notwendig).</p>
-    <p><strong>6. Externe Links</strong><br>
-    Die Praxis-Videos verlinken auf YouTube. Erst wenn du einen Link anklickst, gelten die Datenschutzbestimmungen von YouTube/Google.</p>
-    <p><strong>7. Deine Rechte</strong><br>
-    Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO) sowie ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Zur Löschung deines Kontos genügt eine E-Mail an kontakt@angelup.de.</p>
-    <p style="font-size:.78rem;color:var(--grau)">Stand: Juli 2026</p>
-  </div>
-  ${fusszeile()}`;
+  // Eine einzige, aktuelle Fassung: datenschutz.html (vorher veraltete Kopie in der App)
+  location.href='datenschutz.html';
+  return '';
 }
-
 /* =========================== PRÜFLING – DASHBOARD =========================== */
 function viewDashboard(){
   const lvl=level();
@@ -1262,7 +1248,7 @@ function viewDashboard(){
   <h1>Moin! 👋</h1>
   <p class="lead">Weiter geht's – jede Frage bringt dich näher an deinen Angelschein.</p>
 
-  ${voll?'':`<div class="hinweis" style="cursor:pointer" onclick="go('vollzugang')">
+  ${voll?'':`<div class="hinweis" role="button" tabindex="0" style="cursor:pointer" onclick="go('vollzugang')">
     <b>Kostenlose Version:</b> je Sachgebiet die ersten ${FREI_PRO_GEBIET} Fragen. Alle ${FRAGEN.length} Fragen und die
     Prüfungssimulation gibt es im Vollzugang ab 9,99 € im Jahr – im Lehrgang ist er enthalten. <u>Mehr erfahren →</u>
   </div>`}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+<defs>
+<style>
+.k{stroke:#1a2733;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;fill:none}
+.f{stroke:#1a2733;stroke-width:1.2;fill:#fff}
+.eye{fill:#1a2733}
+.pup{fill:#fff}
+.gil{stroke:#1a2733;stroke-width:1;fill:none;opacity:.5}
+.dot{fill:#1a2733;opacity:.75}
+.sc{stroke:#1a2733;stroke-width:.6;fill:none;opacity:.35}
+.txt{font-family:sans-serif;font-size:11px;fill:#455}
+</style>
+
+</defs>
+
+<path class="f" d="M30,110 Q40,95 120,98 Q220,100 320,102 L365,90 L358,110 L365,130 L320,118 Q220,120 120,122 Q40,125 30,110 Z"/>
+<!-- schnabelartige LANGE Kiefer -->
+<path class="k" d="M30,110 L-10,105 L-10,108 M30,113 L-10,118 L-10,115"/>
+<!-- Rueckenflosse WEIT HINTEN, klein -->
+<path class="f" d="M260,98 Q285,80 315,92 Q315,100 310,105 Q285,102 260,104 Z"/>
+<!-- Afterflosse gegenueber -->
+<path class="f" d="M260,122 Q285,140 315,128 Q315,120 310,115 Q285,118 260,116 Z"/>
+<!-- Brustflosse -->
+<path class="f" d="M80,115 Q90,140 120,128 L105,115 Z"/>
+<!-- grünliche Andeutung (Hornhecht-Gräten grün!) -->
+<path class="sc" d="M60,110 Q150,108 250,110" stroke="#2a6" opacity=".5"/>
+<circle class="eye" cx="20" cy="110" r="2.5"/><circle class="pup" cx="20.6" cy="109.6" r="1"/>
+</svg>

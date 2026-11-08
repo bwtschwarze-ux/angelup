@@ -179,13 +179,21 @@
     <p class="klein" style="margin:0 0 10px;opacity:.75;line-height:1.6">AngelUp ist ein privates Lernangebot und vertritt keine Behörde und keine staatliche Stelle. Wir nehmen keine Prüfungen ab und stellen keine Fischereischeine aus. Mindestmaße und Schonzeiten ohne Gewähr – maßgeblich sind die Nds. Binnenfischereiordnung und deine Erlaubniskarte.</p>
     <div class="unten" style="margin-top:0;padding-top:0;border-top:none">
       <span>© 2026 Mark Schwarze · Alter Postweg 80 · 26607 Aurich</span>
-      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+      <span><a href="./">Start</a> · <a href="agb.html">AGB &amp; Widerruf</a> · <a href="widerruf.html">Vertrag widerrufen</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
     </div>
   </div>
 </footer>
 
 <script src="fische.js"></script>
 <script>
+// Lizenz-Kürzel -> Link auf den Lizenztext (Pflicht bei CC BY / CC BY-SA)
+function lizenzLink(l){
+  const m=/^CC (BY(?:-SA)?) (\d\.\d)$/.exec(l||'');
+  if(m) return `<a href="https://creativecommons.org/licenses/${m[1].toLowerCase()}/${m[2]}/deed.de" target="_blank" rel="noopener">${l}</a>`;
+  if(l==='CC0') return '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.de" target="_blank" rel="noopener">CC0</a>';
+  return l||'';
+}
+
 (function(){
   const nav = document.getElementById('nav'), burger = document.getElementById('burger'), navLinks = document.getElementById('navLinks');
   burger.addEventListener('click', () => { const a = navLinks.classList.toggle('offen'); burger.setAttribute('aria-expanded', a ? 'true' : 'false'); burger.textContent = a ? '✕' : '☰'; });
@@ -250,7 +258,7 @@
     $('punkte').textContent = modus === 'abfrage' ? `✓ ${richtige} richtig` : 'Lernkarten';
     $('balken').style.width = `${Math.round((pos + 1) / aufgaben.length * 100)}%`;
     $('foto').src = f.bild;
-    $('nachweis').innerHTML = `Bild: <a href="${f.quelle}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${f.autor} · ${f.lizenz}`;
+    $('nachweis').innerHTML = `Bild: <a href="${f.quelle}" target="_blank" rel="noopener">Wikimedia Commons</a> · ${f.autor} · ${lizenzLink(f.lizenz)} · freigestellt von AngelUp`;
     const ant = $('antworten'); ant.innerHTML = '';
     if (modus === 'abfrage') {
       a.antworten.forEach((t, i) => {
@@ -293,7 +301,7 @@
       $('endeZahl').textContent = aufgaben.length; $('endeTitel').textContent = 'Alle Karten gesehen.'; $('endeText').textContent = 'Jetzt die Abfrage starten und schauen, was hängen geblieben ist.';
     }
   }
-  $('quellenListe').innerHTML = ALLE.map(f => `<li>${f.name}: ${f.datei} – ${f.autor} – ${f.lizenz} (<a href="${f.quelle}" target="_blank" rel="noopener">Quelle</a>)</li>`).join('');
+  $('quellenListe').innerHTML = ALLE.map(f => `<li>${f.name}: ${f.datei} – ${f.autor} – ${lizenzLink(f.lizenz)} – Hintergrund freigestellt von AngelUp (<a href="${f.quelle}" target="_blank" rel="noopener">Quelle</a>)</li>`).join('');
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 </script>
